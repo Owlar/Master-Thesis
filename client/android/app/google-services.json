@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "412147547079",
+    "project_id": "masterthesis-77b98",
+    "storage_bucket": "masterthesis-77b98.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:412147547079:android:44fd8328ff44051beb37e2",
+        "android_client_info": {
+          "package_name": "com.example.client"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "412147547079-goqlq4t0jm1umgh324d3qopmc1bnkgnn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhXBBmLEtXXkvOpm8W3CPGbcCT5fHQVoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "412147547079-goqlq4t0jm1umgh324d3qopmc1bnkgnn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

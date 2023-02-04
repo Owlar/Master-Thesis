@@ -1,0 +1,12 @@
+class Hello(String message)
+    Unit displayMessage()
+        print(this.message);
+    end
+end
+
+main
+    print("Let's print message from class!");
+    Hello hello = new Hello("Test!");
+    breakpoint;
+    hello.displayMessage();
+end
