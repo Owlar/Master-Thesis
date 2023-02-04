@@ -1,4 +1,4 @@
-# client
+# Client
 
 Client for sending position and status
 
