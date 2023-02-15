@@ -137,6 +137,7 @@ class _MapState extends State<Map> {
           zoom: _zoomLevel
       )
     ));
+    _showSnackBar(_smartphonePosition.toString());
     _sendData();
   }
 
@@ -195,6 +196,14 @@ class _MapState extends State<Map> {
     double x = (pY - n) / m;
 
     return x > pX;
+  }
+
+  void _showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(text)
+        )
+    );
   }
 
 }
