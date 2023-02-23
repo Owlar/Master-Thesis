@@ -1,0 +1,384 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#"
+     xml:base="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:buildingV3="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#">
+    <owl:Ontology rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasDoor -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasDoor">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isDoorIn"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasRoom -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasRoom">
+        <owl:inverseOf rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isRoomIn"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasWall -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasWall">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isDoorIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isDoorIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isRoomIn -->
+
+    <owl:ObjectProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isRoomIn">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <rdfs:range rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasAreaId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasAreaId">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasCoordinate -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasCoordinate"/>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLatitude -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLatitude">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasCoordinate"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLongitude -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLongitude">
+        <rdfs:subPropertyOf rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasCoordinate"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasMovableEntityId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasMovableEntityId">
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasRoomId -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasRoomId">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasSideLength -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasSideLength">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isCriticalArea -->
+
+    <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isCriticalArea">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasAreaId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLatitude"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLongitude"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isCriticalArea"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#boolean"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment>The longitude (x) and latitude (y) can be defined as decimal ranges to define an area.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#isDoorIn"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLatitude"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasLongitude"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasMovableEntityId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasWall"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasRoomId"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasSideLength"/>
+                <owl:someValuesFrom rdf:resource="http://www.w3.org/2001/XMLSchema#decimal"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall -->
+
+    <owl:Class rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#hasDoor"/>
+                <owl:someValuesFrom rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#area -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#area">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+        <hasRoom rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room1"/>
+        <hasRoom rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room2"/>
+        <hasAreaId rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasAreaId>
+        <hasLatitude>[&gt;=0, &lt;=5]</hasLatitude>
+        <hasLongitude>[&gt;=0, &lt;=11]</hasLongitude>
+        <isCriticalArea rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</isCriticalArea>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#door -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#door">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door"/>
+        <isDoorIn rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#wall"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <isRoomIn rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#area"/>
+        <hasLatitude>[&gt;=0, &lt;=5]</hasLatitude>
+        <hasLongitude>[&gt;=0, &lt;=5]</hasLongitude>
+        <hasRoomId rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasRoomId>
+        <hasSideLength rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</hasSideLength>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#room2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+        <isRoomIn rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#area"/>
+        <hasLongitude>[&gt;=0, &lt;= 5]</hasLongitude>
+        <hasLongitude>[&gt;=5, &lt;=11]</hasLongitude>
+        <hasRoomId rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</hasRoomId>
+        <hasSideLength rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">5</hasSideLength>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#smartphone1 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#smartphone1">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
+        <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasLatitude>
+        <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasLongitude>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#smartphone2 -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#smartphone2">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
+        <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</hasLatitude>
+        <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</hasLongitude>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#wall -->
+
+    <owl:NamedIndividual rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#wall">
+        <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+        <hasDoor rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#door"/>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Area"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Door"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Room"/>
+            <rdf:Description rdf:about="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#Wall"/>
+        </owl:members>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
