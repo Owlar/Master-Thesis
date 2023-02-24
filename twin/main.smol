@@ -1,3 +1,40 @@
+class Area(Int areaId, Coordinate corner1, Coordinate corner2, Boolean isCriticalArea, Room room1, Room room2) end
+
+class Room(Int roomId, Coordinate corner1, Coordinate corner2, Double sideLength, Wall wall) end
+
+class Door() end
+
+class MovableEntity(Int movableEntityId, Coordinate position) end
+
+class Wall(Door door) end
+
+class Coordinate(Double latitude, Double longitude) end
+
+
+
 main
-    print("SMOL!");
+    // Illustrating an area with two rooms, separated by a wall with a door in it.
+    //  _ _ _ _ _ _ _
+    // |     | |     | 
+    // |      -      |
+    // |     | |     |
+    //  - - - - - - - 
+
+    Coordinate areaCorner1 = new Coordinate(0.0, 0.0);
+    Coordinate areaCorner2 = new Coordinate(5.0, 11.0);
+    Coordinate room1Corner2 = new Coordinate(5.0, 5.0);
+    Coordinate room2Corner1 = new Coordinate(0.0, 5.0);
+    
+    Door door = new Door();
+    Wall wall = new Wall(door);
+
+    Room room1 = new Room(1, areaCorner1, room1Corner2, 5.0, wall);
+    Room room2 = new Room(2, room2Corner1, areaCorner2, 5.0, wall);
+
+    Area area = new Area(1, areaCorner1, areaCorner2, False, room1, room2);
+
+    Coordinate smartphone1Coordinate = new Coordinate(1.0, 1.0);
+    Coordinate smartphone2Coordinate = new Coordinate(10.0, 4.0);
+    MovableEntity smartphone1 = new MovableEntity(1, smartphone1Coordinate);
+    MovableEntity smartphone2 = new MovableEntity(2, smartphone2Coordinate);
 end

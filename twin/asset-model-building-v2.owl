@@ -335,6 +335,7 @@
         <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasLongitude>
+        <hasMovableEntityId rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">1</hasMovableEntityId>
     </owl:NamedIndividual>
     
 
@@ -345,6 +346,7 @@
         <rdf:type rdf:resource="http://www.semanticweb.org/oscarlr/ontologies/2023/1/buildingV3#MovableEntity"/>
         <hasLatitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">4</hasLatitude>
         <hasLongitude rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">10</hasLongitude>
+        <hasMovableEntityId rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">2</hasMovableEntityId>
     </owl:NamedIndividual>
     
 
