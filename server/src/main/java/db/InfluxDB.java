@@ -46,7 +46,7 @@ public class InfluxDB {
         for (FluxTable fluxTable : tables) {
             System.out.println("Number of records: " + fluxTable.getRecords().size());
             for (FluxRecord record : fluxTable.getRecords()) {
-                System.out.println(record.record.getTime() + ", value: " + record.getValue() + ", field: " + record.getField() + ", measurement: " + record.getMeasurement());
+                System.out.println(record.getTime() + ", value: " + record.getValue() + ", field: " + record.getField() + ", measurement: " + record.getMeasurement());
             }
         }
     }

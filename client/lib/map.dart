@@ -81,7 +81,7 @@ class _MapState extends State<Map> {
     final message = Message(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-        status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside dangerous space" : "Outside dangerous space",
+        status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside critical area" : "Outside critical area",
         dateTime: DateTime.now()
     );
     _messages.add(message);
@@ -99,7 +99,7 @@ class _MapState extends State<Map> {
           body: GoogleMap(
             onTap: (LatLng pos) {
               print("Position is: " + pos.toString());
-              print("Inside critial area: " + _isInsidePolygon(pos, _roomCorners).toString());
+              print("Inside critical area: " + _isInsidePolygon(pos, _roomCorners).toString());
             },
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
