@@ -6,7 +6,7 @@ import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
-import model.Status;
+import model.Data;
 
 import java.time.Instant;
 import java.util.List;
@@ -28,13 +28,15 @@ public class InfluxDB {
 
     public void insertDataPoint(String string) {
         String[] parts = string.split(";");
-        Status status = new Status();
-        status.id = Integer.parseInt(parts[0]);
-        status.value = parts[2]; // The status
-        status.instant = Instant.now();
+        Data data = new Data();
+        data.id = Integer.parseInt(parts[0]);
+        data.latitude = Double.parseDouble(parts[1].split(",")[0]);
+        data.longitude = Double.parseDouble(parts[1].split(",")[1]);
+        data.value = parts[2]; // The status
+        data.instant = Instant.now();
 
         WriteApiBlocking writeApi = db.getWriteApiBlocking();
-        writeApi.writeMeasurement(bucket, org, WritePrecision.MS, status);
+        writeApi.writeMeasurement(bucket, org, WritePrecision.MS, data);
     }
 
     public void printFluxRecords() {
@@ -44,7 +46,7 @@ public class InfluxDB {
         for (FluxTable fluxTable : tables) {
             System.out.println("Number of records: " + fluxTable.getRecords().size());
             for (FluxRecord record : fluxTable.getRecords()) {
-                System.out.println(record.getTime() + ": " + record.getValue());
+                System.out.println(record.record.getTime() + ", value: " + record.getValue() + ", field: " + record.getField() + ", measurement: " + record.getMeasurement());
             }
         }
     }

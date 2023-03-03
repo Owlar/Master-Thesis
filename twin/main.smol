@@ -38,7 +38,6 @@ main
     MovableEntity smartphone1 = new MovableEntity(1, smartphone1Coordinate);
     MovableEntity smartphone2 = new MovableEntity(2, smartphone2Coordinate);
 
-    // access("SELECT ?obj WHERE {?obj prog:C_b ?b. ?b prog:D_c %1 }", this.x);
     List<Room> rooms = access("SELECT ?obj WHERE{ ?obj a prog:Room }");
     Int length = rooms.length();
 
@@ -48,4 +47,23 @@ main
         print(room.name);
         i = i + 1;
     end
+
+    List<Double> statusList = access(
+    "from(bucket: \"Data\")
+        |> range(start: -24h)
+        |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
+        |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
+        |> filter(fn: (r) => r[\"id\"] == \"1\")
+        |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+        |> yield(name: \"mean\")",
+    INFLUXDB("influx.yml"));
+
+    Int length = statusList.length();
+    i = 0;
+    while (i < length) do
+        Double next = statusList.get(i);
+        print(next);
+        i = i + 1;
+    end
+
 end

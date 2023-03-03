@@ -80,7 +80,7 @@ class _MapState extends State<Map> {
     final id = Increment.id;
     final message = Message(
         id: id,
-        position: _smartphonePosition,
+        position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
         status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside dangerous space" : "Outside dangerous space",
         dateTime: DateTime.now()
     );

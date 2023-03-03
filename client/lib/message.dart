@@ -2,7 +2,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Message {
   final int? id;
-  final LatLng? position;
+  final String? position;
   final String? status;
   final DateTime? dateTime;
 
