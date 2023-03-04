@@ -13,10 +13,10 @@ class Coordinate(Double latitude, Double longitude) end
 
 
 main
-    // Illustrating an area with two rooms, separated by a wall with a door in it.
+    // A building area with two rooms that are separated by a wall with a door in it.
     //  _ _ _ _ _ _ _
     // |     | |     | 
-    // |      -      |
+    // |      .      |
     // |     | |     |
     //  - - - - - - - 
 
@@ -33,10 +33,8 @@ main
 
     Area area = new Area(1, areaCorner1, areaCorner2, False, room1, room2);
 
-    Coordinate smartphone1Coordinate = new Coordinate(1.0, 1.0);
-    Coordinate smartphone2Coordinate = new Coordinate(10.0, 4.0);
-    MovableEntity smartphone1 = new MovableEntity(1, smartphone1Coordinate);
-    MovableEntity smartphone2 = new MovableEntity(2, smartphone2Coordinate);
+    //Coordinate smartphone2Coordinate = new Coordinate(10.0, 4.0);
+    //MovableEntity smartphone2 = new MovableEntity(2, smartphone2Coordinate);
 
     List<Room> rooms = access("SELECT ?obj WHERE{ ?obj a prog:Room }");
     Int length = rooms.length();
@@ -58,12 +56,29 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    Int length = statusList.length();
+    length = statusList.length();
+    length = length / 2;
+
     i = 0;
     while (i < length) do
-        Double next = statusList.get(i);
-        print(next);
+        Double latitude = statusList.get(i);
+        Double longitude = statusList.get(length + i);
+
+        Coordinate smartphoneCoordinate = new Coordinate(latitude, longitude);
+        MovableEntity smartphone = new MovableEntity(1, smartphoneCoordinate);
+
+        print(smartphone.position.latitude);
+        print(smartphone.position.longitude);
+        
         i = i + 1;
     end
+
+    // Accessing all MovableEntity objects (smartphones)
+    List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
+
+    print("Validating SHACL shapes..");
+    Boolean b = validate("output.ttl");
+
+    print(b);
 
 end

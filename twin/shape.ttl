@@ -1,9 +1,19 @@
+@prefix smol: <https://github.com/Edkamb/SemanticObjects#> .
+           @prefix prog: <https://github.com/Edkamb/SemanticObjects/Program#>.
+           @prefix domain: <https://github.com/Edkamb/SemanticObjects/ontologies/default#>.
+           @prefix run: <https://github.com/Edkamb/SemanticObjects/Run1677951167051#> .
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#>.
 @prefix smol:    <https://github.com/Edkamb/SemanticObjects#> .
 @prefix owl:     <http://www.w3.org/2002/07/owl#> .
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix domain:  <https://github.com/Edkamb/SemanticObjects/ontologies/default#> .
 @prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
-@prefix run:     <https://github.com/Edkamb/SemanticObjects/Run1677951167051#> .
+@prefix run:     <https://github.com/Edkamb/SemanticObjects/Run1677843425729#> .
 @prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prog:    <https://github.com/Edkamb/SemanticObjects/Program#> .
 
@@ -38,20 +48,6 @@ owl:backwardCompatibleWith
 owl:TransitiveProperty
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf owl:ObjectProperty .
-
-run:obj73
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj73 ;
-      prog:List_content "37.4219983"^^xsd:double ;
-      prog:List_next run:obj72 .
-
-run:obj61
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj61 ;
-      prog:Coordinate_latitude
-              "0.0"^^xsd:double ;
-      prog:Coordinate_longitude
-              "5.0"^^xsd:double .
 
 smol:SequenceStatement
       a       rdfs:Resource , owl:Class , rdfs:Class ;
@@ -113,20 +109,6 @@ rdf:type
       rdfs:range rdfs:Resource , rdfs:Class ;
       rdfs:subPropertyOf rdf:type .
 
-run:obj72
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj72 ;
-      prog:List_content "37.4219983"^^xsd:double ;
-      prog:List_next run:obj71 .
-
-run:obj60
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj60 ;
-      prog:Coordinate_latitude
-              "5.0"^^xsd:double ;
-      prog:Coordinate_longitude
-              "5.0"^^xsd:double .
-
 owl:OntologyProperty
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf rdf:Property .
@@ -181,6 +163,12 @@ domain:models
 xsd:negativeInteger
       a       rdfs:Resource , rdfs:Datatype , rdfs:Class .
 
+run:obj40
+      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj40 ;
+      prog:List_content "59.9441767"^^xsd:double ;
+      prog:List_next run:obj39 .
+
 owl:sameAs
       a       owl:SymmetricProperty , rdfs:Resource , rdf:Property , owl:ObjectProperty ;
       rdfs:subPropertyOf owl:sameAs .
@@ -211,18 +199,6 @@ smol:hasOperandIndex
 
 owl:versionInfo
       a       owl:AnnotationProperty .
-
-run:obj83
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj83 ;
-      prog:List_content run:obj80 ;
-      prog:List_next run:obj82 .
-
-run:obj71
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj71 ;
-      prog:List_content "10.7194317"^^xsd:double ;
-      prog:List_next run:obj70 .
 
 xsd:long
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
@@ -289,12 +265,6 @@ smol:TickStatement
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf smol:Statement .
 
-run:obj70
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj70 ;
-      prog:List_content "-122.084"^^xsd:double ;
-      prog:List_next run:obj69 .
-
 xsd:float
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
       owl:disjointWith xsd:string , xsd:duration , xsd:decimal , xsd:unsignedInt , xsd:long , xsd:int , xsd:short , xsd:unsignedShort , xsd:time , xsd:unsignedByte , xsd:date , xsd:boolean , xsd:byte , xsd:nonNegativeInteger , xsd:dateTime , xsd:nonPositiveInteger , xsd:unsignedLong , xsd:integer .
@@ -304,11 +274,11 @@ owl:Class
       rdfs:subClassOf rdfs:Resource , owl:Class , rdfs:Class ;
       owl:equivalentClass owl:Class .
 
-run:obj82
+run:obj41
       a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj82 ;
-      prog:List_content run:obj78 ;
-      prog:List_next run:obj81 .
+      owl:sameAs run:obj41 ;
+      prog:List_content "59.9441767"^^xsd:double ;
+      prog:List_next run:obj40 .
 
 smol:hasQuery
       a       rdfs:Resource , rdf:Property , owl:ObjectProperty ;
@@ -378,24 +348,16 @@ owl:equivalentClass
 xsd:gYearMonth
       a       rdfs:Resource , rdfs:Datatype , rdfs:Class .
 
-run:obj77
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj77 ;
-      prog:Coordinate_latitude
-              "37.4219983"^^xsd:double ;
-      prog:Coordinate_longitude
-              "-122.084"^^xsd:double .
-
-run:obj65
+run:obj30
       a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Room , prog:Object , smol:Object ;
-      owl:sameAs run:obj65 ;
-      prog:Room_corner1 run:obj61 ;
-      prog:Room_corner2 run:obj59 ;
+      owl:sameAs run:obj30 ;
+      prog:Room_corner1 run:obj26 ;
+      prog:Room_corner2 run:obj24 ;
       prog:Room_name "Bathroom" ;
       prog:Room_roomId 2 ;
       prog:Room_sideLength
               "5.0"^^xsd:double ;
-      prog:Room_wall run:obj63 .
+      prog:Room_wall run:obj28 .
 
 smol:ReturnStatement
       a       rdfs:Resource , rdfs:Class ;
@@ -425,6 +387,17 @@ smol:CreateStatement
 prog:_Entry_
       a       smol:Class , rdfs:Resource , owl:Class , rdfs:Class , owl:NamedIndividual .
 
+run:obj31
+      a       prog:Area , owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj31 ;
+      prog:Area_areaId 1 ;
+      prog:Area_corner1 run:obj23 ;
+      prog:Area_corner2 run:obj24 ;
+      prog:Area_isCriticalArea
+              "false"^^xsd:boolean ;
+      prog:Area_room1 run:obj29 ;
+      prog:Area_room2 run:obj30 .
+
 smol:hasCallee
       a       rdfs:Resource , rdf:Property , owl:ObjectProperty ;
       rdfs:domain owl:Thing , smol:CallStatement , rdfs:Resource , smol:VarLengthStatement , smol:Statement , smol:TargetStatement ;
@@ -436,25 +409,6 @@ smol:hasOperand
       rdfs:domain owl:Thing , rdfs:Resource , smol:Expression , smol:ArithExpression ;
       rdfs:range owl:Thing , smol:Operand , rdfs:Resource ;
       rdfs:subPropertyOf smol:hasOperand .
-
-run:obj76
-      a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object , prog:MovableEntity ;
-      owl:sameAs run:obj76 ;
-      prog:MovableEntity_movableEntityId
-              1 ;
-      prog:MovableEntity_position
-              run:obj75 .
-
-run:obj64
-      a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Room , prog:Object , smol:Object ;
-      owl:sameAs run:obj64 ;
-      prog:Room_corner1 run:obj58 ;
-      prog:Room_corner2 run:obj60 ;
-      prog:Room_name "Livingroom" ;
-      prog:Room_roomId 1 ;
-      prog:Room_sideLength
-              "5.0"^^xsd:double ;
-      prog:Room_wall run:obj63 .
 
 xsd:gYear
       a       rdfs:Resource , rdfs:Datatype , rdfs:Class .
@@ -487,23 +441,18 @@ smol:IfStatement
       rdfs:subClassOf rdfs:Resource , smol:GuardedStatement , smol:IfStatement ;
       owl:equivalentClass smol:IfStatement .
 
-run:obj63
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , prog:Wall , smol:Object ;
-      owl:sameAs run:obj63 ;
-      prog:Wall_door run:obj62 .
+run:obj32
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj32 ;
+      prog:Coordinate_latitude
+              "1.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "1.0"^^xsd:double .
 
 rdfs:Container
       a       rdfs:Resource , rdfs:Class .
 
 ()    a       rdfs:Resource , rdf:List .
-
-run:obj75
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj75 ;
-      prog:Coordinate_latitude
-              "59.9441767"^^xsd:double ;
-      prog:Coordinate_longitude
-              "10.7194317"^^xsd:double .
 
 smol:hasField
       a       rdfs:Resource , rdf:Property , owl:ObjectProperty ;
@@ -546,24 +495,22 @@ xsd:nonPositiveInteger
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
       owl:disjointWith xsd:time , xsd:string , xsd:date , xsd:boolean , xsd:duration , xsd:float , xsd:dateTime .
 
+run:obj33
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj33 ;
+      prog:Coordinate_latitude
+              "10.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "4.0"^^xsd:double .
+
 prog:LISTT
       a       rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subClassOf prog:LISTT , rdfs:Resource ;
       owl:equivalentClass prog:LISTT .
 
-run:obj74
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj74 ;
-      prog:List_content "59.9441767"^^xsd:double ;
-      prog:List_next run:obj73 .
-
 smol:VarInit
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf smol:Expression .
-
-run:obj62
-      a       owl:Thing , rdfs:Resource , prog:Door , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj62 .
 
 smol:hasName
       a       owl:DatatypeProperty , rdfs:Resource , rdf:Property ;
@@ -615,6 +562,10 @@ prog:Area
       owl:sameAs prog:Area ;
       smol:hasField prog:Area_areaId , prog:Area_corner1 , prog:Area_corner2 , prog:Area_isCriticalArea , prog:Area_room1 , prog:Area_room2 .
 
+run:obj22
+      a       owl:Thing , prog:_Entry_ , rdfs:Resource , owl:NamedIndividual , smol:Object ;
+      owl:sameAs run:obj22 .
+
 prog:Area_corner2
       a       owl:Thing , smol:Field , rdfs:Resource , rdf:Property , owl:FunctionalProperty , owl:ObjectProperty ;
       rdfs:domain prog:Area , owl:Thing , rdfs:Resource , prog:Object ;
@@ -627,6 +578,14 @@ xsd:string
       rdfs:subClassOf xsd:string , rdfs:Resource ;
       owl:disjointWith xsd:duration , xsd:float , xsd:decimal , xsd:unsignedInt , xsd:long , xsd:int , xsd:short , xsd:unsignedShort , xsd:time , xsd:unsignedByte , xsd:date , xsd:boolean , xsd:byte , xsd:nonNegativeInteger , xsd:dateTime , xsd:nonPositiveInteger , xsd:unsignedLong , xsd:integer ;
       owl:equivalentClass xsd:string .
+
+run:obj34
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object , prog:MovableEntity ;
+      owl:sameAs run:obj34 ;
+      prog:MovableEntity_movableEntityId
+              1 ;
+      prog:MovableEntity_position
+              run:obj32 .
 
 xsd:decimal
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
@@ -675,16 +634,6 @@ smol:LiteralExpression
 rdfs:seeAlso
       a       rdfs:Resource , rdf:Property ;
       rdfs:subPropertyOf rdfs:seeAlso .
-
-run:obj69
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj69 ;
-      prog:List_content "-122.084"^^xsd:double ;
-      prog:List_next smol:null .
-
-run:obj57
-      a       owl:Thing , prog:_Entry_ , rdfs:Resource , owl:NamedIndividual , smol:Object ;
-      owl:sameAs run:obj57 .
 
 rdf:Seq
       a       rdfs:Resource , rdfs:Class ;
@@ -743,10 +692,26 @@ prog:MovableEntity_movableEntityId
       rdfs:subPropertyOf prog:MovableEntity_movableEntityId ;
       owl:sameAs prog:MovableEntity_movableEntityId .
 
+run:obj35
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object , prog:MovableEntity ;
+      owl:sameAs run:obj35 ;
+      prog:MovableEntity_movableEntityId
+              2 ;
+      prog:MovableEntity_position
+              run:obj33 .
+
 xsd:double
       a       rdfs:Resource , owl:Class , rdfs:Class , rdfs:Datatype ;
       rdfs:subClassOf xsd:double , rdfs:Resource ;
       owl:equivalentClass xsd:double .
+
+run:obj23
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj23 ;
+      prog:Coordinate_latitude
+              "0.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "0.0"^^xsd:double .
 
 smol:hasTarget
       a       rdfs:Resource , rdf:Property , owl:ObjectProperty ;
@@ -769,12 +734,6 @@ rdfs:range
       rdfs:range rdfs:Resource , rdfs:Class ;
       rdfs:subPropertyOf rdfs:range .
 
-run:obj68
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj68 ;
-      prog:List_content run:obj65 ;
-      prog:List_next run:obj67 .
-
 smol:Expression
       a       rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subClassOf owl:Thing , rdfs:Resource , smol:Expression ;
@@ -793,10 +752,24 @@ prog:List_last
       a       smol:Method , owl:Thing , rdfs:Resource , owl:NamedIndividual ;
       owl:sameAs prog:List_last .
 
+run:obj36
+      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj36 ;
+      prog:List_content run:obj29 ;
+      prog:List_next smol:null .
+
 smol:Process
       a       rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subClassOf owl:Thing , rdfs:Resource , smol:Process ;
       owl:equivalentClass smol:Process .
+
+run:obj24
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj24 ;
+      prog:Coordinate_latitude
+              "5.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "11.0"^^xsd:double .
 
 prog:Coordinate_latitude
       a       owl:Thing , smol:Field , owl:DatatypeProperty , rdfs:Resource , rdf:Property ;
@@ -808,12 +781,6 @@ prog:Coordinate_latitude
 owl:topDataProperty
       a       rdfs:Resource , rdf:Property ;
       rdfs:subPropertyOf owl:topDataProperty .
-
-run:obj67
-      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj67 ;
-      prog:List_content run:obj64 ;
-      prog:List_next smol:null .
 
 xsd:unsignedShort
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
@@ -834,14 +801,6 @@ smol:CallStatement
 xsd:time
       a       rdfs:Resource , owl:Class , rdfs:Datatype , rdfs:Class ;
       owl:disjointWith xsd:string , xsd:duration , xsd:float , xsd:decimal , xsd:unsignedInt , xsd:long , xsd:int , xsd:short , xsd:unsignedShort , xsd:unsignedByte , xsd:date , xsd:boolean , xsd:byte , xsd:nonNegativeInteger , xsd:dateTime , xsd:nonPositiveInteger , xsd:unsignedLong , xsd:integer .
-
-run:obj79
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj79 ;
-      prog:Coordinate_latitude
-              "37.4219983"^^xsd:double ;
-      prog:Coordinate_longitude
-              "-122.084"^^xsd:double .
 
 smol:hasValue
       a       rdfs:Resource , rdf:Property , owl:ObjectProperty ;
@@ -865,6 +824,20 @@ rdf:first
       a       rdfs:Resource , rdf:Property , owl:FunctionalProperty ;
       rdfs:domain rdfs:Resource , rdf:List ;
       rdfs:subPropertyOf rdf:first .
+
+run:obj37
+      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj37 ;
+      prog:List_content run:obj30 ;
+      prog:List_next run:obj36 .
+
+run:obj25
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj25 ;
+      prog:Coordinate_latitude
+              "5.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "5.0"^^xsd:double .
 
 prog:Area_isCriticalArea
       a       owl:Thing , smol:Field , owl:DatatypeProperty , rdfs:Resource , rdf:Property ;
@@ -899,25 +872,6 @@ rdfs:ContainerMembershipProperty
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf rdf:Property .
 
-run:obj78
-      a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object , prog:MovableEntity ;
-      owl:sameAs run:obj78 ;
-      prog:MovableEntity_movableEntityId
-              1 ;
-      prog:MovableEntity_position
-              run:obj77 .
-
-run:obj66
-      a       prog:Area , owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj66 ;
-      prog:Area_areaId 1 ;
-      prog:Area_corner1 run:obj58 ;
-      prog:Area_corner2 run:obj59 ;
-      prog:Area_isCriticalArea
-              "false"^^xsd:boolean ;
-      prog:Area_room1 run:obj64 ;
-      prog:Area_room2 run:obj65 .
-
 smol:DestroyStatement
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf smol:Statement .
@@ -939,6 +893,14 @@ smol:Location
       rdfs:subClassOf rdfs:Resource , smol:Expression , smol:Location ;
       owl:equivalentClass smol:Location .
 
+run:obj26
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
+      owl:sameAs run:obj26 ;
+      prog:Coordinate_latitude
+              "0.0"^^xsd:double ;
+      prog:Coordinate_longitude
+              "5.0"^^xsd:double .
+
 owl:ObjectProperty
       a       rdfs:Resource , rdfs:Class ;
       rdfs:subClassOf rdf:Property .
@@ -948,10 +910,10 @@ owl:intersectionOf
       rdfs:domain rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subPropertyOf owl:intersectionOf .
 
-run:obj81
+run:obj38
       a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
-      owl:sameAs run:obj81 ;
-      prog:List_content run:obj76 ;
+      owl:sameAs run:obj38 ;
+      prog:List_content "10.7194317"^^xsd:double ;
       prog:List_next smol:null .
 
 prog:List
@@ -1015,10 +977,20 @@ smol:OthersVarLocation
       rdfs:subClassOf rdfs:Resource , smol:Location , smol:OthersVarLocation ;
       owl:equivalentClass smol:OthersVarLocation .
 
+run:obj39
+      a       owl:Thing , rdfs:Resource , prog:List , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj39 ;
+      prog:List_content "10.7194317"^^xsd:double ;
+      prog:List_next run:obj38 .
+
 smol:TargetStatement
       a       rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subClassOf rdfs:Resource , smol:Statement , smol:TargetStatement ;
       owl:equivalentClass smol:TargetStatement .
+
+run:obj27
+      a       owl:Thing , rdfs:Resource , prog:Door , owl:NamedIndividual , prog:Object , smol:Object ;
+      owl:sameAs run:obj27 .
 
 prog:MovableEntity_position
       a       owl:Thing , smol:Field , rdfs:Resource , rdf:Property , owl:FunctionalProperty , owl:ObjectProperty ;
@@ -1043,14 +1015,6 @@ prog:List_append
 prog:List_reverse
       a       smol:Method , owl:Thing , rdfs:Resource , owl:NamedIndividual ;
       owl:sameAs prog:List_reverse .
-
-run:obj80
-      a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Object , smol:Object , prog:MovableEntity ;
-      owl:sameAs run:obj80 ;
-      prog:MovableEntity_movableEntityId
-              1 ;
-      prog:MovableEntity_position
-              run:obj79 .
 
 smol:modelName
       a       owl:DatatypeProperty , rdfs:Resource , rdf:Property ;
@@ -1113,6 +1077,11 @@ smol:Line
       rdfs:range rdfs:Resource , xsd:decimal , xsd:integer ;
       rdfs:subPropertyOf smol:Line .
 
+run:obj28
+      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Object , prog:Wall , smol:Object ;
+      owl:sameAs run:obj28 ;
+      prog:Wall_door run:obj27 .
+
 rdfs:isDefinedBy
       a       rdfs:Resource , rdf:Property ;
       rdfs:subPropertyOf rdfs:seeAlso , rdfs:isDefinedBy .
@@ -1140,18 +1109,21 @@ owl:oneOf
       rdfs:domain rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subPropertyOf owl:oneOf .
 
-run:obj59
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj59 ;
-      prog:Coordinate_latitude
-              "5.0"^^xsd:double ;
-      prog:Coordinate_longitude
-              "11.0"^^xsd:double .
-
 smol:ArithExpression
       a       rdfs:Resource , owl:Class , rdfs:Class ;
       rdfs:subClassOf rdfs:Resource , smol:Expression , smol:ArithExpression ;
       owl:equivalentClass smol:ArithExpression .
+
+run:obj29
+      a       owl:Thing , prog:LISTT , rdfs:Resource , owl:NamedIndividual , prog:Room , prog:Object , smol:Object ;
+      owl:sameAs run:obj29 ;
+      prog:Room_corner1 run:obj23 ;
+      prog:Room_corner2 run:obj25 ;
+      prog:Room_name "Livingroom" ;
+      prog:Room_roomId 1 ;
+      prog:Room_sideLength
+              "5.0"^^xsd:double ;
+      prog:Room_wall run:obj28 .
 
 prog:Room_sideLength
       a       owl:Thing , smol:Field , owl:DatatypeProperty , rdfs:Resource , rdf:Property ;
@@ -1232,14 +1204,6 @@ smol:hasOutPort
 
 xsd:base64Binary
       a       rdfs:Resource , rdfs:Datatype , rdfs:Class .
-
-run:obj58
-      a       owl:Thing , rdfs:Resource , owl:NamedIndividual , prog:Coordinate , prog:Object , smol:Object ;
-      owl:sameAs run:obj58 ;
-      prog:Coordinate_latitude
-              "0.0"^^xsd:double ;
-      prog:Coordinate_longitude
-              "0.0"^^xsd:double .
 
 smol:Class
       a       rdfs:Resource , owl:Class , rdfs:Class ;
