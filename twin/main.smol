@@ -48,10 +48,9 @@ main
 
     List<Double> statusList = access(
     "from(bucket: \"Data\")
-        |> range(start: -24h)
+        |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
         |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
-        |> filter(fn: (r) => r[\"id\"] == \"1\")
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
@@ -75,6 +74,8 @@ main
 
     // Accessing all MovableEntity objects (smartphones)
     List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
+
+    
 
     print("Validating SHACL shapes..");
     Boolean b = validate("output.ttl");
