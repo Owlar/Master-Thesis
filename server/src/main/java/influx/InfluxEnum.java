@@ -1,4 +1,4 @@
-package db;
+package influx;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 

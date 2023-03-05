@@ -1,6 +1,6 @@
 import com.google.common.base.Charsets;
-import db.InfluxDB;
-import db.InfluxEnum;
+import influx.InfluxDB;
+import influx.InfluxEnum;
 import org.apache.commons.io.IOUtils;
 
 import java.io.EOFException;
@@ -16,9 +16,6 @@ public class Main {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("Server has started! Now waiting for a client.");
 
-            socket = serverSocket.accept();
-            System.out.println("Client has been accepted!");
-
             InfluxDB influxDB = new InfluxDB(
                     InfluxEnum.TOKEN.toString(),
                     InfluxEnum.BUCKET.toString(),
@@ -27,14 +24,17 @@ public class Main {
             );
 
             while (true) {
+                socket = serverSocket.accept();
+                System.out.println("Client has been accepted!");
+
                 try {
                     String data = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
 
                     if (!data.isEmpty()) {
                         influxDB.insertDataPoint(data);
                         influxDB.printFluxRecords();
+                    } else {
                         influxDB.closeInfluxClient();
-
                         socket.close();
                         break;
                     }

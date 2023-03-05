@@ -1,4 +1,4 @@
-package db;
+package influx;
 
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
