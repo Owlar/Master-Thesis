@@ -1,4 +1,14 @@
-class Area(Int areaId, Coordinate corner1, Coordinate corner2, Boolean isCriticalArea, Room room1, Room room2) end
+class Area(Int areaId, Coordinate corner1, Coordinate corner2, Boolean isCriticalArea, Room room1, Room room2)
+    Boolean hasPosition(MovableEntity movableEntity)
+        Boolean inLatitudeRange = (movableEntity.position.latitude >= this.corner1.latitude & movableEntity.position.latitude <= this.corner2.latitude);
+        Boolean inLongitudeRange = (movableEntity.position.longitude >= this.corner1.longitude & movableEntity.position.longitude <= this.corner2.longitude);
+
+        if (inLatitudeRange & inLongitudeRange) then
+            return True;
+        end
+        return False;
+    end
+end
 
 class Room(Int roomId, String name, Coordinate corner1, Coordinate corner2, Double sideLength, Wall wall) end
 
@@ -12,6 +22,8 @@ class Coordinate(Double latitude, Double longitude) end
 
 
 
+
+
 main
     // A building area with two rooms that are separated by a wall with a door in it.
     //  _ _ _ _ _ _ _
@@ -20,10 +32,13 @@ main
     // |     | |     |
     //  - - - - - - - 
 
+    // These should be (longitude, latitude)
     Coordinate areaCorner1 = new Coordinate(0.0, 0.0);
     Coordinate areaCorner2 = new Coordinate(5.0, 11.0);
     Coordinate room1Corner2 = new Coordinate(5.0, 5.0);
     Coordinate room2Corner1 = new Coordinate(0.0, 5.0);
+
+    Coordinate criticalAreaCorner2 = new Coordinate(200.0, 200.0);
     
     Door door = new Door();
     Wall wall = new Wall(door);
@@ -32,6 +47,7 @@ main
     Room room2 = new Room(2, "Bathroom", room2Corner1, areaCorner2, 5.0, wall);
 
     Area area = new Area(1, areaCorner1, areaCorner2, False, room1, room2);
+    Area criticalArea = new Area(2, areaCorner1, criticalAreaCorner2, True, room1, room2);
 
     //Coordinate smartphone2Coordinate = new Coordinate(10.0, 4.0);
     //MovableEntity smartphone2 = new MovableEntity(2, smartphone2Coordinate);
@@ -65,17 +81,26 @@ main
 
         Coordinate smartphoneCoordinate = new Coordinate(latitude, longitude);
         MovableEntity smartphone = new MovableEntity(1, smartphoneCoordinate);
+    
+        print("Is smartphone inside the area?");
 
-        print(smartphone.position.latitude);
-        print(smartphone.position.longitude);
+        //Smartphone should not be inside the area, nor should the area be critical
+        Boolean isInside = area.hasPosition(smartphone);
+        if (!isInside & !area.isCriticalArea) then
+            print("The smartphone is not inside the area, nor is the area critical!");
+        end
+
+        //Smartphone should be inside the critical area
+        isInside = criticalArea.hasPosition(smartphone);
+        if (isInside & criticalArea.isCriticalArea) then 
+            print("Smartphone is inside a critical area!"); 
+        end
         
         i = i + 1;
     end
 
     // Accessing all MovableEntity objects (smartphones)
     List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
-
-    
 
     print("Validating SHACL shapes..");
     Boolean b = validate("output.ttl");
