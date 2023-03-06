@@ -22,11 +22,13 @@ public class Main {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("Server has started! Now waiting for clients.");
 
+            int counter = 1;
             while (true) {
                 // Let clients connect to server
                 socket = serverSocket.accept();
                 System.out.println("A client has been accepted!");
-                new Worker(socket).start();
+                new Worker(socket, counter).start();
+                counter++;
             }
 
         } catch (IOException ioException) {
@@ -41,10 +43,12 @@ public class Main {
 
         private Socket socket;
         private InfluxDB influxDB;
+        private int id;
 
-        public Worker(Socket socket) {
+        public Worker(Socket socket, int counter) {
             this.socket = socket;
-            influxDB = new InfluxDB(
+            this.id = counter;
+            this.influxDB = new InfluxDB(
                     InfluxEnum.TOKEN.toString(),
                     InfluxEnum.BUCKET.toString(),
                     InfluxEnum.ORG.toString(),
@@ -54,6 +58,7 @@ public class Main {
 
         @Override
         public void run() {
+            System.out.println("Thread: " + id + " is running.");
             try {
                 // Server tells client to send position
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);

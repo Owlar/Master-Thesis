@@ -23,7 +23,7 @@ class _MapState extends State<Map> {
   final Set<Polygon> _polygon = {};
   List<LatLng> _roomCorners = [];
   // Set to room @ IFI by default
-  LatLng _smartphonePosition = const LatLng(59.944174, 10.719388);
+  LatLng _smartphonePosition = const LatLng(59.94416434370449, 10.719385296106339);
   final double _zoomLevel = 15.0;
   Set<Message> _messages = {};
 
@@ -215,7 +215,7 @@ class _MapState extends State<Map> {
 
   Future<void> _streamPosition() async {
     const locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
+        accuracy: LocationAccuracy.best,
         distanceFilter: 0
     );
     Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
