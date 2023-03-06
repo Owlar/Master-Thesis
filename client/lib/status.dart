@@ -1,19 +1,17 @@
 
-class Message {
+class Status {
   final int? id;
   final String? position;
-  final String? status;
   final DateTime? dateTime;
 
-  Message({
+  Status({
     required this.id,
     required this.position,
-    required this.status,
     required this.dateTime
   });
 
   @override
   String toString() {
-    return "$id;$position;$status;$dateTime";
+    return "$id;$position;$dateTime";
   }
 }

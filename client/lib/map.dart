@@ -8,7 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'increment.dart';
-import 'message.dart';
+import 'status.dart';
 
 
 class Map extends StatefulWidget {
@@ -20,38 +20,15 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
-  final Set<Polygon> _polygon = {};
-  List<LatLng> _roomCorners = [];
+  final double _zoomLevel = 15.0;
   // Set to room @ IFI by default
   LatLng _smartphonePosition = const LatLng(59.94416434370449, 10.719385296106339);
-  final double _zoomLevel = 15.0;
-  Set<Message> _messages = {};
-
+  Set<Status> _messages = {};
   late Socket _socket;
 
   @override
   void initState() {
     super.initState();
-    _createPolygon();
-  }
-
-  void _createPolygon() {
-    // Room @ IFI
-    _roomCorners = [
-      const LatLng(59.944211697376325, 10.719388984143734),
-      const LatLng(59.944176937772774, 10.719477161765099),
-      const LatLng(59.944117493728605, 10.71938395500183),
-      const LatLng(59.94415074210543, 10.71929544210434)
-    ];
-
-    _polygon.add(
-        Polygon(
-            polygonId: const PolygonId("1"),
-            points: _roomCorners,
-            fillColor: Colors.redAccent
-        )
-    );
-
   }
 
   Future<void> _createSocket() async {
@@ -77,19 +54,17 @@ class _MapState extends State<Map> {
 
   Future<void> _sendData() async {
     final id = Increment.id;
-    final message = Message(
+    final status = Status(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-        status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside critical area" : "Outside critical area",
         dateTime: DateTime.now()
-      //dateTime: _times[i]
     );
     //For recording on/off
     setState(() {
-      _messages.add(message);
+      _messages.add(status);
     });
 
-    _socket.add(utf8.encode(message.toString()));
+    _socket.add(utf8.encode(status.toString()));
   }
 
   @override
@@ -99,14 +74,12 @@ class _MapState extends State<Map> {
         Scaffold(
           body: GoogleMap(
             onTap: (LatLng pos) {
-              print("Position is: " + pos.toString());
-              print("Inside critical area: " + _isInsidePolygon(pos, _roomCorners).toString());
+              print(pos.toString());
             },
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
             },
             myLocationEnabled: true,
-            polygons: _polygon,
             myLocationButtonEnabled: false,
             compassEnabled: true,
             zoomGesturesEnabled: true,
@@ -169,40 +142,6 @@ class _MapState extends State<Map> {
     }
 
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
-  }
-
-  bool _isInsidePolygon(LatLng point, List<LatLng> polygon) {
-    int intersectCount = 0;
-
-    for (int i = 0; i < polygon.length - 1; i++) {
-      if (rayCasting(point, polygon[i], polygon[i + 1])) {
-        intersectCount++;
-      }
-    }
-    // If odd is returned, the point is inside the polygon
-    return ((intersectCount % 2) == 1);
-  }
-
-  bool rayCasting(LatLng point, LatLng a, LatLng b) {
-    double aY = a.latitude;
-    double aX = a.longitude;
-
-    double bY = b.latitude;
-    double bX = b.longitude;
-
-    double pY = point.latitude;
-    double pX = point.longitude;
-
-    if ((aY > pY && bY > pY) || (aY < pY && bY < pY) || (aX < pX && bX < pX)) {
-      return false;
-    }
-
-    double m = (aY - bY) / (aX - bX);
-    double n = (-aX) * m + aY;
-
-    double x = (pY - n) / m;
-
-    return x > pX;
   }
 
   void _showSnackBar(String text) {

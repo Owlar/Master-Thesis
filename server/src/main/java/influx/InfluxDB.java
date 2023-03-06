@@ -32,7 +32,7 @@ public class InfluxDB {
         data.id = Integer.parseInt(parts[0]);
         data.latitude = Double.parseDouble(parts[1].split(",")[0]);
         data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-        data.value = parts[2]; // The status
+        // TODO: Use received date
         data.instant = Instant.now();
 
         WriteApiBlocking writeApi = db.getWriteApiBlocking();
