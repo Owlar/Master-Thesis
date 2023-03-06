@@ -12,48 +12,66 @@ import java.net.Socket;
 public class Main {
 
     public static void main(String[] args) {
-        Socket socket = null;
+        Main main = new Main();
+        main.initialize();
+    }
+
+    public void initialize() {
+        Socket socket;
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Server has started! Now waiting for a client.");
+            System.out.println("Server has started! Now waiting for clients.");
 
-            InfluxDB influxDB = new InfluxDB(
+            while (true) {
+                // Let clients connect to server
+                socket = serverSocket.accept();
+                System.out.println("A client has been accepted!");
+                new Worker(socket).start();
+            }
+
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+    }
+
+
+
+    /* Thread class to handle multiple clients connecting to the server */
+    class Worker extends Thread {
+
+        private Socket socket;
+        private InfluxDB influxDB;
+
+        public Worker(Socket socket) {
+            this.socket = socket;
+            influxDB = new InfluxDB(
                     InfluxEnum.TOKEN.toString(),
                     InfluxEnum.BUCKET.toString(),
                     InfluxEnum.ORG.toString(),
                     InfluxEnum.URL.toString()
             );
+        }
 
-            while (true) {
-                try {
-                    // First make sure client connects to server
-                    // TODO: Use threads so multiple clients can connect
-                    socket = serverSocket.accept();
-                    System.out.println("Client has been accepted!");
+        @Override
+        public void run() {
+            try {
+                // Server tells client to send position
+                PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+                out.println(1);
 
-                    // After client has connected, server tells client to send position
-                    // TODO: Tell multiple clients to send their positions
-                    PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                    out.println(1);
+                // The position received from the client
+                String data = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
 
-                    String data = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
-
-                    if (!data.isEmpty()) {
-                        influxDB.insertDataPoint(data);
-                        influxDB.printFluxRecords();
-                    } else {
-                        influxDB.closeInfluxClient();
-                        socket.close();
-                        break;
-                    }
-
-                } catch (EOFException eofException) {
-                    eofException.printStackTrace();
+                if (!data.isEmpty()) {
+                    influxDB.insertDataPoint(data);
+                    influxDB.printFluxRecords();
+                } else {
+                    influxDB.closeInfluxClient();
+                    socket.close();
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
         }
     }
 }

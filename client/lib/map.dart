@@ -85,7 +85,9 @@ class _MapState extends State<Map> {
       //dateTime: _times[i]
     );
     //For recording on/off
-    _messages.add(message);
+    setState(() {
+      _messages.add(message);
+    });
 
     _socket.add(utf8.encode(message.toString()));
   }
