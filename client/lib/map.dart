@@ -22,8 +22,6 @@ class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
   final Set<Polygon> _polygon = {};
   List<LatLng> _roomCorners = [];
-  List<LatLng> _positions = [];
-  List<DateTime> _times = [];
   // Set to room @ IFI by default
   LatLng _smartphonePosition = const LatLng(59.944174, 10.719388);
   final double _zoomLevel = 15.0;
@@ -73,8 +71,23 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
-      print(utf8.decode(event));
+      _sendData();
     });
+  }
+
+  Future<void> _sendData() async {
+    final id = Increment.id;
+    final message = Message(
+        id: id,
+        position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
+        status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside critical area" : "Outside critical area",
+        dateTime: DateTime.now()
+      //dateTime: _times[i]
+    );
+    //For recording on/off
+    _messages.add(message);
+
+    _socket.add(utf8.encode(message.toString()));
   }
 
   @override
@@ -116,6 +129,7 @@ class _MapState extends State<Map> {
 
   Future<void> _animateToPosition() async {
     await _createSocket();
+
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
@@ -129,7 +143,7 @@ class _MapState extends State<Map> {
       )
     ));
     _showSnackBar(_smartphonePosition.toString());
-    _sendData();
+    _streamPosition();
   }
 
   Future<Position> _getPosition() async {
@@ -197,34 +211,18 @@ class _MapState extends State<Map> {
     );
   }
 
-  Future<void> _sendData() async {
-    final id = Increment.id;
+  Future<void> _streamPosition() async {
     const locationSettings = LocationSettings(
         accuracy: LocationAccuracy.high,
         distanceFilter: 0
     );
-
     Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
       _smartphonePosition = LatLng(pos.latitude, pos.longitude);
     });
-    final message = Message(
-        id: id,
-        position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-        status: _isInsidePolygon(_smartphonePosition, _roomCorners) ? "Inside critical area" : "Outside critical area",
-        dateTime: DateTime.now()
-      //dateTime: _times[i]
-    );
-    _messages.add(message);
-
-    for (final message in _messages) {
-      _socket.add(utf8.encode(message.toString()));
-    }
-
   }
 
   Future<void> _stopSharing() async {
     _socket.close();
-    _positions = [];
     setState(() {
       _messages = {};
     });
