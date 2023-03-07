@@ -46,32 +46,40 @@ main
         i = i + 1;
     end
 
-    // Getting both in consistent order by sorting didn't work
-    List<Double> latitudeList = access(
+// TODO: Sort by recording date
+// TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
+// TODO: Figure: SPARQL in SMOL > Asset Model and InfluxDB: Seperate static from dynamic (red and blue)
+// TODO: Only have one SPARQL. Sorting lats and longs didn't work
+    List<Double> lats = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
         |> filter(fn: (r) => r[\"_field\"] == \"latitude\")
+        |> sort(columns: [\"_time\"])
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
-    List<Double> longitudeList = access(
+    List<Double> longs = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
         |> filter(fn: (r) => r[\"_field\"] == \"longitude\")
+        |> sort(columns: [\"_time\"])
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    length = latitudeList.length();
+    length = lats.length();
+    
     i = 0;
+
+    // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
     while (i < length) do
         print("Run:")
         print(i + 1);
 
-        Double latitude = latitudeList.get(i);
-        Double longitude = longitudeList.get(i);
+        Double latitude = lats.get(i);
+        Double longitude = longs.get(i);
 
         Coordinate coordinate = new Coordinate(latitude, longitude);
         MovableEntity smartphone = new MovableEntity(1, coordinate);

@@ -3,7 +3,6 @@ import influx.InfluxDB;
 import influx.InfluxEnum;
 import org.apache.commons.io.IOUtils;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -21,14 +20,11 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("Server has started! Now waiting for clients.");
-
-            int counter = 1;
             while (true) {
                 // Let clients connect to server
                 socket = serverSocket.accept();
                 System.out.println("A client has been accepted!");
-                new Worker(socket, counter).start();
-                counter++;
+                new Worker(socket).start();
             }
 
         } catch (IOException ioException) {
@@ -43,11 +39,9 @@ public class Main {
 
         private Socket socket;
         private InfluxDB influxDB;
-        private int id;
 
-        public Worker(Socket socket, int counter) {
+        public Worker(Socket socket) {
             this.socket = socket;
-            this.id = counter;
             this.influxDB = new InfluxDB(
                     InfluxEnum.TOKEN.toString(),
                     InfluxEnum.BUCKET.toString(),
@@ -58,7 +52,6 @@ public class Main {
 
         @Override
         public void run() {
-            System.out.println("Thread: " + id + " is running.");
             try {
                 // Server tells client to send position
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);

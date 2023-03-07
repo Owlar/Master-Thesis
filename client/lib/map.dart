@@ -93,7 +93,7 @@ class _MapState extends State<Map> {
               onPressed: () => _animateToPosition(),
               child: const Icon(Icons.location_on_outlined, size: 60),
           ) : FloatingActionButton.large (
-              onPressed: () => _stopSharing(),
+              onPressed: () => _stopStream(),
               backgroundColor: Colors.redAccent,
               child: const Icon(Icons.location_off_outlined, size: 60)
           ),
@@ -118,7 +118,7 @@ class _MapState extends State<Map> {
       )
     ));
     _showSnackBar(_smartphonePosition.toString());
-    _streamPosition();
+    _startStream();
   }
 
   Future<Position> _getPosition() async {
@@ -152,7 +152,7 @@ class _MapState extends State<Map> {
     );
   }
 
-  Future<void> _streamPosition() async {
+  Future<void> _startStream() async {
     const locationSettings = LocationSettings(
         accuracy: LocationAccuracy.best,
         distanceFilter: 0
@@ -162,7 +162,7 @@ class _MapState extends State<Map> {
     });
   }
 
-  Future<void> _stopSharing() async {
+  Future<void> _stopStream() async {
     _socket.close();
     setState(() {
       _messages = {};
