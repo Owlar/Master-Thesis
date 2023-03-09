@@ -69,6 +69,16 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
+    print("Breakpoint:");
+    breakpoint;
+    // query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
+
+    //List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a domain:MovableEntity }");
+    //Int i = smartphones.length();
+    //print("Number of smartphones:");
+    //print(i);
+    
+
     length = lats.length();
     
     i = 0;

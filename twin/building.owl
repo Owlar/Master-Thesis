@@ -1,0 +1,139 @@
+@prefix : <http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/oscarlr/ontologies/2023/2/building> .
+
+<http://www.semanticweb.org/oscarlr/ontologies/2023/2/building> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasArea
+:hasArea rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasDoor
+:hasDoor rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasWall
+:hasWall rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasAreaId
+:hasAreaId rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasLatitude
+:hasLatitude rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasLatitudeRange
+:hasLatitudeRange rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasLongitude
+:hasLongitude rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasLongitudeRange
+:hasLongitudeRange rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasMovableEntityId
+:hasMovableEntityId rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasName
+:hasName rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasRoomId
+:hasRoomId rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#isCriticalArea
+:isCriticalArea rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Area
+:Area rdf:type owl:Class ;
+      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasAreaId ;
+                        owl:someValuesFrom xsd:integer
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasLatitudeRange ;
+                        owl:someValuesFrom xsd:double
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasLongitudeRange ;
+                        owl:someValuesFrom xsd:double
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :isCriticalArea ;
+                        owl:someValuesFrom xsd:boolean
+                      ] .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Door
+:Door rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#MovableEntity
+:MovableEntity rdf:type owl:Class ;
+               rdfs:subClassOf [ rdf:type owl:Restriction ;
+                                 owl:onProperty :hasLatitude ;
+                                 owl:someValuesFrom xsd:double
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :hasLongitude ;
+                                 owl:someValuesFrom xsd:double
+                               ] ,
+                               [ rdf:type owl:Restriction ;
+                                 owl:onProperty :hasMovableEntityId ;
+                                 owl:someValuesFrom xsd:integer
+                               ] .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Room
+:Room rdf:type owl:Class ;
+      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasArea ;
+                        owl:someValuesFrom :Area
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasWall ;
+                        owl:someValuesFrom :Wall
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasName ;
+                        owl:someValuesFrom xsd:string
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasRoomId ;
+                        owl:someValuesFrom xsd:integer
+                      ] .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Wall
+:Wall rdf:type owl:Class ;
+      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasDoor ;
+                        owl:someValuesFrom :Door
+                      ] .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
