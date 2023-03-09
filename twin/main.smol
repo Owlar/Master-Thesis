@@ -10,12 +10,11 @@ class Area(Int areaId, Coordinate c1, Coordinate c2, Boolean isCriticalArea)
     end
 end
 
-// TODO: UPDATE ONTOLOGY: REMOVE SIDE LENGTH & COORDINATES FROM ROOM, ADD ROOM HAS AREA, REMOVE ROOMS FROM AREA 
 class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Coordinate position) end
+class MovableEntity(Int movableEntityId, Coordinate position) models "a :MovableEntity"; end
 
 class Wall(Door door) end
 
@@ -50,7 +49,9 @@ main
 // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
 // TODO: Figure: SPARQL in SMOL > Asset Model and InfluxDB: Seperate static from dynamic (red and blue)
 // TODO: Only have one SPARQL. Sorting lats and longs didn't work
-    List<Double> lats = access(
+    List<Double> lats = null;
+    List<Double> longs = null;
+    lats = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
@@ -59,7 +60,7 @@ main
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
-    List<Double> longs = access(
+    longs = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
@@ -71,7 +72,10 @@ main
 
     print("Breakpoint:");
     breakpoint;
+    // * Queries *
     // query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
+    // query SELECT ?id ?latitude WHERE{ ?id rdf:type domain:MovableEntity . ?id domain:hasLatitude ?latitude . }
+    // query SELECT DISTINCT ?property ?value WHERE{ domain:MovableEntity ?property ?value .}
 
     //List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a domain:MovableEntity }");
     //Int i = smartphones.length();
@@ -85,7 +89,7 @@ main
 
     // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
     while (i < length) do
-        print("Run:")
+        print("Run:");
         print(i + 1);
 
         Double latitude = lats.get(i);
