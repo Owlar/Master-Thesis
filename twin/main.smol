@@ -14,7 +14,7 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Coordinate position) models "a :MovableEntity"; end
+class MovableEntity(Int movableEntityId, Coordinate position) end
 
 class Wall(Door door) end
 
@@ -71,14 +71,14 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    print("Breakpoint:");
-    breakpoint;
+//    print("Breakpoint:");
+//    breakpoint;
 // * Queries *
 // query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
 // query SELECT ?id ?latitude WHERE{ ?id rdf:type domain:MovableEntity . ?id domain:hasLatitude ?latitude . }
 // query SELECT DISTINCT ?property ?value WHERE{ domain:MovableEntity ?property ?value .}
 
-    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a MovableEntity }");
+    List<Int> smartphones = access("SELECT ?obj WHERE{?a a domain:MovableEntity . ?a domain:hasMovableEntityId ?obj }");
     i = smartphones.length();
     print("Number of smartphones:");
     print(i);
@@ -88,7 +88,7 @@ main
     
     i = 0;
 
-// To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
+    // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
     while (i < length) do
         print("Run:");
         print(i + 1);
