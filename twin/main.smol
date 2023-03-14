@@ -1,7 +1,7 @@
-class Area(Int areaId, Coordinate c1, Coordinate c2, Boolean isCriticalArea)
+class Area(Int areaId, Double latitude1, Double longitude1, Double latitude2, Double longitude2, Boolean isCriticalArea)
     Boolean hasPosition(MovableEntity movableEntity)
-        Boolean inLatitudeRange = (movableEntity.position.latitude >= this.c1.latitude & movableEntity.position.latitude <= this.c2.latitude);
-        Boolean inLongitudeRange = (movableEntity.position.longitude >= this.c1.longitude & movableEntity.position.longitude <= this.c2.longitude);
+        Boolean inLatitudeRange = (movableEntity.latitude >= this.latitude1 & movableEntity.latitude <= this.latitude2);
+        Boolean inLongitudeRange = (movableEntity.longitude >= this.longitude1 & movableEntity.longitude <= this.longitude2);
 
         if (inLatitudeRange & inLongitudeRange) then
             return True;
@@ -14,22 +14,22 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Coordinate position) end
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude) end
 
 class Wall(Door door) end
 
-class Coordinate(Double latitude, Double longitude) end
-
 
 main
-    Coordinate c1 = new Coordinate(59.9441196, 10.7193836);
-    Coordinate c2 = new Coordinate(59.9442128, 10.7194811);
-    
     Door door = new Door();
     Wall wall = new Wall(door);
 
-    Area area = new Area(1, c1, c2, False);
-    Area criticalArea = new Area(2, c1, c2, True);
+    Double corner1Latitude = 59.9441196;
+    Double corner1Longitude = 10.7193836;
+    Double corner2Latitude = 59.9442128;
+    Double corner2Longitude = 10.7194811;
+
+    Area area = new Area(1, corner1Latitude, corner1Longitude, corner2Latitude, corner2Longitude, False);
+    Area criticalArea = new Area(2, corner1Latitude, corner1Longitude, corner2Latitude, corner2Longitude, True);
 
     Room roomIFI = new Room(3, "IFI Study Room - Open", wall, area);
     Room criticalRoomIFI = new Room(3, "IFI Study Room - Closed", wall, criticalArea);
@@ -78,13 +78,28 @@ main
 // query SELECT ?id ?latitude WHERE{ ?id rdf:type domain:MovableEntity . ?id domain:hasLatitude ?latitude . }
 // query SELECT DISTINCT ?property ?value WHERE{ domain:MovableEntity ?property ?value .}
 
-    List<Int> smartphones = access("SELECT ?obj WHERE{?a a domain:MovableEntity . ?a domain:hasMovableEntityId ?obj }");
-    i = smartphones.length();
-    print("Number of smartphones:");
-    print(i);
+    //List<Int> numObjects = access("SELECT ?obj WHERE{?a a domain:MovableEntity . ?a domain:hasMovableEntityId ?obj }");
+    //Int numSmartphones = numObjects.length();
+    //print("Number of smartphones:");
+    //print(numSmartphones);
+
+    // TODO: Change to number of smartphones
+    Int numberSmartphones = 2;
+
+    // "SELECT ?j1 ?j2 WHERE { ?y a prog:B. ?y prog:B_i2 ?j2.?y prog:B_a ?x.?x a prog:A. ?x prog:A_i1 ?j1 }"
+    i = 0;
+    //while (i < numberSmartphones) do
+    //end
+    //List<MovableEntity> smartphones = construct("SELECT ?i1 ?i2 WHERE{ ?obj a domain:MovableEntity.  }");
+    
+
+    
+
+    //List<MovableEntity> smartphones = access("SELECT ?obj WHERE{?obj a domain:MovableEntity }", );
     
 
     length = lats.length();
+
     
     i = 0;
 
@@ -96,8 +111,7 @@ main
         Double latitude = lats.get(i);
         Double longitude = longs.get(i);
 
-        Coordinate coordinate = new Coordinate(latitude, longitude);
-        MovableEntity smartphone = new MovableEntity(1, coordinate);
+        MovableEntity smartphone = new MovableEntity(1, latitude, longitude);
 
     // Test case: 1
     // The smartphone should be inside the non-critical area (room) when it's open during the day
