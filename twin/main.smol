@@ -45,11 +45,9 @@ main
         i = i + 1;
     end
 
-// TODO: Sort by recording date
-// TODO: Only have one SPARQL query. Sorting lats and longs didn't work
-// TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
-// TODO: Figure: SPARQL in SMOL > Asset Model and InfluxDB: Seperate static from dynamic (red and blue)
-
+    // TODO: Sort by recording date
+    // TODO: Only have one SPARQL query. Sorting lats and longs didn't work
+    // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
     List<Double> lats = null;
     List<Double> longs = null;
     lats = access(
@@ -71,58 +69,47 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-//    print("Breakpoint:");
-//    breakpoint;
-// * Queries *
-// query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
-// query SELECT ?id ?latitude WHERE{ ?id rdf:type domain:MovableEntity . ?id domain:hasLatitude ?latitude . }
-// query SELECT DISTINCT ?property ?value WHERE{ domain:MovableEntity ?property ?value .}
+    List<MovableEntity> objects = construct("SELECT ?movableEntityId ?latitude ?longitude WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
+    Int numSmartphones = objects.length();
 
-    //List<Int> numObjects = access("SELECT ?obj WHERE{?a a domain:MovableEntity . ?a domain:hasMovableEntityId ?obj }");
-    //Int numSmartphones = numObjects.length();
-    //print("Number of smartphones:");
-    //print(numSmartphones);
-
-    // TODO: Change to number of smartphones
-    Int numberSmartphones = 2;
-
-    // "SELECT ?j1 ?j2 WHERE { ?y a prog:B. ?y prog:B_i2 ?j2.?y prog:B_a ?x.?x a prog:A. ?x prog:A_i1 ?j1 }"
+    print("---");
+    print("The smartphones before adding position(s)");
     i = 0;
-    //while (i < numberSmartphones) do
-    //end
-    //List<MovableEntity> smartphones = construct("SELECT ?i1 ?i2 WHERE{ ?obj a domain:MovableEntity.  }");
-    
-
-    
-
-    //List<MovableEntity> smartphones = access("SELECT ?obj WHERE{?obj a domain:MovableEntity }", );
-    
+    while (i < numSmartphones) do
+        MovableEntity next = objects.get(i);
+        print(next.movableEntityId);
+        print(next.latitude);
+        print(next.longitude);
+        i = i + 1;
+    end
+    print("---");
 
     length = lats.length();
-
-    
     i = 0;
 
     // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
-    while (i < length) do
-        print("Run:");
-        print(i + 1);
-
+    while (i < numSmartphones) do
         Double latitude = lats.get(i);
         Double longitude = longs.get(i);
+        
+        MovableEntity newSmartphone = objects.get(i);
+        newSmartphone.latitude = latitude;
+        newSmartphone.longitude = longitude;
+        print("ID:");
+        print(newSmartphone.movableEntityId);
+        print(newSmartphone.latitude);
+        print(newSmartphone.longitude);
 
-        MovableEntity smartphone = new MovableEntity(1, latitude, longitude);
-
-    // Test case: 1
-    // The smartphone should be inside the non-critical area (room) when it's open during the day
-        Boolean isInside = roomIFI.area.hasPosition(smartphone);
+        // Test case: 1
+        // The smartphone should be inside the non-critical area (room) when it's open during the day
+        Boolean isInside = roomIFI.area.hasPosition(newSmartphone);
         if (isInside & !roomIFI.area.isCriticalArea) then
             print("Smartphone is inside the safe area!");
         end
 
         // Test case: 2 (Should print False)
         //Smartphone should be outside the critical area (room) when it's closed at night
-        isInside = criticalRoomIFI.area.hasPosition(smartphone);
+        isInside = criticalRoomIFI.area.hasPosition(newSmartphone);
         if (!isInside & criticalRoomIFI.area.isCriticalArea) then 
             print("Smartphone is outside the critical area!"); 
         else
@@ -132,7 +119,7 @@ main
         i = i + 1;
     end
 
-// Accessing all MovableEntity objects (smartphones)
+    // Accessing all MovableEntity objects (smartphones)
     List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
 
     print("Validating SHACL shapes..");
