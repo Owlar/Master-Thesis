@@ -14,7 +14,7 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Double latitude, Double longitude) end
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude) models "domain:MovableEntity"; end
 
 class Wall(Door door) end
 

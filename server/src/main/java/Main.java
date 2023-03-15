@@ -2,6 +2,8 @@ import com.google.common.base.Charsets;
 import influx.InfluxDB;
 import influx.InfluxEnum;
 import org.apache.commons.io.IOUtils;
+import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
+import owl.Owl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -53,6 +55,9 @@ public class Main {
         @Override
         public void run() {
             try {
+                // TODO: Id from smartphone
+                Owl.addIndividual(3);
+
                 // Server tells client to send position
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(1);
@@ -67,7 +72,7 @@ public class Main {
                     influxDB.closeInfluxClient();
                     socket.close();
                 }
-            } catch (IOException e) {
+            } catch (IOException | OWLOntologyCreationIOException e) {
                 e.printStackTrace();
             }
         }

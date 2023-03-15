@@ -42,7 +42,6 @@ public class InfluxDB {
     public void printFluxRecords() {
         String query = "from(bucket: \"" + bucket + "\") |> range(start: 0)";
         List<FluxTable> tables = db.getQueryApi().query(query, org);
-        System.out.println(tables.size());
         for (FluxTable fluxTable : tables) {
             System.out.println("Number of records: " + fluxTable.getRecords().size());
             for (FluxRecord record : fluxTable.getRecords()) {
