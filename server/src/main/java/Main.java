@@ -56,9 +56,9 @@ public class Main {
         public void run() {
             try {
                 // TODO: Id from smartphone
-                Owl.addIndividual(3);
+                Owl.addIndividual(5);
 
-                // Server tells client to send position
+                // Server tells client position can be sent and gives ID
                 PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                 out.println(1);
 
@@ -66,8 +66,8 @@ public class Main {
                 String data = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
 
                 if (!data.isEmpty()) {
+                    System.out.println("Stopped sending position");
                     influxDB.insertDataPoint(data);
-                    influxDB.printFluxRecords();
                 } else {
                     influxDB.closeInfluxClient();
                     socket.close();

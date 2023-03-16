@@ -39,17 +39,6 @@ public class InfluxDB {
         writeApi.writeMeasurement(bucket, org, WritePrecision.MS, data);
     }
 
-    public void printFluxRecords() {
-        String query = "from(bucket: \"" + bucket + "\") |> range(start: 0)";
-        List<FluxTable> tables = db.getQueryApi().query(query, org);
-        for (FluxTable fluxTable : tables) {
-            System.out.println("Number of records: " + fluxTable.getRecords().size());
-            for (FluxRecord record : fluxTable.getRecords()) {
-                System.out.println(record.getTime() + ", value: " + record.getValue() + ", field: " + record.getField() + ", measurement: " + record.getMeasurement());
-            }
-        }
-    }
-
     public void closeInfluxClient() {
         db.close();
     }

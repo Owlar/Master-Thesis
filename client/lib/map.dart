@@ -48,6 +48,7 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
+      _showSnackBar(utf8.decode(event));
       _sendData();
     });
   }
