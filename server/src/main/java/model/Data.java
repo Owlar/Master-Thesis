@@ -9,9 +9,7 @@ import java.time.Instant;
 public class Data {
 
     @Column(tag = true)
-    public int id;
-
-    public String value;
+    public String id;
 
     @Column(name = "latitude")
     public Double latitude;

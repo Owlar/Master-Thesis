@@ -1,6 +1,6 @@
 
 class Status {
-  final int? id;
+  final String? id;
   final String? position;
   final DateTime? dateTime;
 

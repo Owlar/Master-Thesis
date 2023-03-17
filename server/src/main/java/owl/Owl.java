@@ -9,7 +9,7 @@ import java.io.File;
 
 public class Owl {
 
-    public static void addIndividual(int id) throws OWLOntologyCreationIOException {
+    public static void addIndividual(String id) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         File file = new File("../twin/building.owl");
         IRI ontologyIRI = IRI.create("http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#");
@@ -20,14 +20,10 @@ public class Owl {
             OWLDataFactory factory = manager.getOWLDataFactory();
             OWLClass movableEntity = manager.getOWLDataFactory().getOWLClass(ontologyIRI + "MovableEntity");
 
-            OWLIndividual smartphone1 = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + id);
-            OWLIndividual smartphone2 = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + (id + 1));
+            OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + id);
 
-            OWLClassAssertionAxiom assertion1 = factory.getOWLClassAssertionAxiom(movableEntity, smartphone1);
-            OWLClassAssertionAxiom assertion2 = factory.getOWLClassAssertionAxiom(movableEntity, smartphone2);
-
-            manager.addAxiom(ontology, assertion1);
-            manager.addAxiom(ontology, assertion2);
+            OWLClassAssertionAxiom assertion = factory.getOWLClassAssertionAxiom(movableEntity, smartphone);
+            manager.addAxiom(ontology, assertion);
 
             manager.saveOntology(ontology, new TurtleDocumentFormat(), docIRI);
         } catch (OWLOntologyCreationException | OWLOntologyStorageException e) {

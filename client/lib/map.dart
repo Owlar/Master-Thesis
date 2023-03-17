@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'increment.dart';
 import 'status.dart';
 
 
@@ -48,13 +47,11 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
-      _showSnackBar(utf8.decode(event));
-      _sendData();
+      _sendData(utf8.decode(event));
     });
   }
 
-  Future<void> _sendData() async {
-    final id = Increment.id;
+  Future<void> _sendData(String id) async {
     final status = Status(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),

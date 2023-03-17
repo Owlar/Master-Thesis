@@ -128,6 +128,11 @@
 #    Individuals
 #################################################################
 
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone0
+:smartphone0 rdf:type owl:NamedIndividual ,
+                      :MovableEntity .
+
+
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1
 :smartphone1 rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
@@ -161,6 +166,11 @@
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone6
 :smartphone6 rdf:type owl:NamedIndividual ,
+                      :MovableEntity .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone7
+:smartphone7 rdf:type owl:NamedIndividual ,
                       :MovableEntity .
 
 

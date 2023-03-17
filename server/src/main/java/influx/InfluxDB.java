@@ -4,12 +4,7 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.query.FluxRecord;
-import com.influxdb.query.FluxTable;
 import model.Data;
-
-import java.time.Instant;
-import java.util.List;
 
 public class InfluxDB {
 
@@ -26,15 +21,7 @@ public class InfluxDB {
         );
     }
 
-    public void insertDataPoint(String string) {
-        String[] parts = string.split(";");
-        Data data = new Data();
-        data.id = Integer.parseInt(parts[0]);
-        data.latitude = Double.parseDouble(parts[1].split(",")[0]);
-        data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-        // TODO: Use received date
-        data.instant = Instant.now();
-
+    public void insertDataPoint(Data data) {
         WriteApiBlocking writeApi = db.getWriteApiBlocking();
         writeApi.writeMeasurement(bucket, org, WritePrecision.MS, data);
     }
