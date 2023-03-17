@@ -95,7 +95,7 @@ public class Main {
                     dataList.add(data);
                     printDataList();
 
-                    Owl.addIndividual(data.id);
+                    Owl.addIndividual(data);
                     influxDB.insertDataPoint(data);
 
                     workers.remove(this);
