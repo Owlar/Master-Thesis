@@ -21,7 +21,7 @@ class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
   final double _zoomLevel = 15.0;
   // Set to room @ IFI by default
-  LatLng _smartphonePosition = const LatLng(59.94416434370449, 10.719385296106339);
+  late LatLng _smartphonePosition;
   Set<Status> _messages = {};
   late Socket _socket;
 
@@ -83,7 +83,7 @@ class _MapState extends State<Map> {
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
             initialCameraPosition: CameraPosition(
-                target: _smartphonePosition,
+                target: const LatLng(59.94416434370449, 10.719385296106339),
                 zoom: _zoomLevel
             ),
           ),
