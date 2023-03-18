@@ -21,8 +21,10 @@ public class Main {
 
     private void printDataList() {
         System.out.println("Total number of data records whilst server has been running: " + dataList.size());
+        int i = 1;
         for (Data d : dataList) {
-            System.out.println("   * Client " + d.id + " has data: (" + d.latitude + ", " + d.longitude + "), " + d.instant);
+            System.out.println("   Record " + i + ": Client " + d.id + " has data [(" + d.latitude + ", " + d.longitude + "), " + d.instant + "]");
+            i++;
         }
     }
 

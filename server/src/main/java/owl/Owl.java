@@ -10,6 +10,7 @@ import java.io.File;
 
 public class Owl {
 
+    // TODO: Remove MovableEntity individuals in asset model each server run to deal with ID ordering?
     public static void addIndividual(Data data) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         File file = new File(OwlEnum.FILEPATH.toString());
