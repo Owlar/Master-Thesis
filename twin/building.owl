@@ -131,16 +131,16 @@
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1
 :smartphone1 rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
-             :latitude "59.9399583"^^xsd:double ;
-             :longitude "10.7217483"^^xsd:double ;
+             :latitude "59.9441767"^^xsd:double ;
+             :longitude "10.7194317"^^xsd:double ;
              :movableEntityId "1" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone2
 :smartphone2 rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
-             :latitude "37.421998333333335"^^xsd:double ;
-             :longitude "-122.084"^^xsd:double ;
+             :latitude "37.422065"^^xsd:double ;
+             :longitude "-122.0840883"^^xsd:double ;
              :movableEntityId "2" .
 
 

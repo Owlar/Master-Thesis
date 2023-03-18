@@ -84,21 +84,24 @@ public class Main {
                 if (!message.isEmpty()) {
                     String[] parts = message.split(";");
 
-                    Data data = new Data();
-                    data.id = parts[0].trim();
-                    data.latitude = Double.parseDouble(parts[1].split(",")[0]);
-                    data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-                    data.instant = Instant.now(); // TODO: Use received date
+                    if (String.valueOf(id).equals(parts[0].trim())) {
+                        Data data = new Data();
+                        data.id = parts[0].trim();
+                        data.latitude = Double.parseDouble(parts[1].split(",")[0]);
+                        data.longitude = Double.parseDouble(parts[1].split(",")[1]);
+                        data.instant = Instant.now(); // TODO: Use received date
 
-                    System.out.println("Client " + data.id + " stopped sending position!");
+                        System.out.println("Client " + data.id + " stopped sending position!");
 
-                    dataList.add(data);
-                    printDataList();
+                        dataList.add(data);
+                        printDataList();
 
-                    Owl.addIndividual(data);
-                    influxDB.insertDataPoint(data);
+                        Owl.addIndividual(data);
+                        influxDB.insertDataPoint(data);
 
-                    workers.remove(this);
+                        workers.remove(this);
+                    }
+
                 } else {
                     influxDB.closeInfluxClient();
                     socket.close();
