@@ -12,26 +12,26 @@ public class Owl {
 
     public static void addIndividual(Data data) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        File file = new File("../twin/building.owl");
-        IRI ontologyIRI = IRI.create("http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#");
+        File file = new File(OwlEnum.FILEPATH.toString());
+        IRI ontologyIRI = IRI.create(OwlEnum.ONTOLOGY.toString());
         try {
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(file);
             IRI docIRI = manager.getOntologyDocumentIRI(ontology);
 
             OWLDataFactory factory = manager.getOWLDataFactory();
-            OWLClass movableEntity = factory.getOWLClass(ontologyIRI + "MovableEntity");
+            OWLClass movableEntity = factory.getOWLClass(ontologyIRI + OwlEnum.MOVABLEENTITY.toString());
 
             OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
 
-            OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + "movableEntityId");
+            OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.MOVABLEENTITYID.toString());
             OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
             manager.addAxiom(ontology, idAssertion);
 
-            OWLDataProperty latitudeProperty = factory.getOWLDataProperty(ontologyIRI + "latitude");
+            OWLDataProperty latitudeProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.LATITUDE.toString());
             OWLDataPropertyAssertionAxiom latitudeAssertion = factory.getOWLDataPropertyAssertionAxiom(latitudeProperty, smartphone, data.latitude);
             manager.addAxiom(ontology, latitudeAssertion);
 
-            OWLDataProperty longitudeProperty = factory.getOWLDataProperty(ontologyIRI + "longitude");
+            OWLDataProperty longitudeProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.LONGITUDE.toString());
             OWLDataPropertyAssertionAxiom longitudeAssertion = factory.getOWLDataPropertyAssertionAxiom(longitudeProperty, smartphone, data.longitude);
             manager.addAxiom(ontology, longitudeAssertion);
 

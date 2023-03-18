@@ -20,9 +20,9 @@ public class Main {
     private List<Worker> workers = new ArrayList<>();
 
     private void printDataList() {
-        System.out.println("Total number of data records: " + dataList.size());
+        System.out.println("Total number of data records whilst server has been running: " + dataList.size());
         for (Data d : dataList) {
-            System.out.println("Client " + d.id + " has data: (" + d.latitude + ", " + d.longitude + "), " + d.instant);
+            System.out.println("   * Client " + d.id + " has data: (" + d.latitude + ", " + d.longitude + "), " + d.instant);
         }
     }
 
@@ -70,20 +70,21 @@ public class Main {
         @Override
         public void run() {
             try {
-                // Server assigns ID to client and client can now send position
+                // Server assigns ID to client and informs the client its position can be sent to server
                 PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
                 int id = workers.size();
                 writer.println(id);
 
                 System.out.println("The client's ID is " + id + ".");
 
-                // The position received from the client
+                // The message received from the client
                 String message = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
 
-                // Happens when clients send their latest position and stop tracking it
+                // Is true when a client sends its latest position
                 if (!message.isEmpty()) {
                     String[] parts = message.split(";");
 
+                    // Identify client
                     if (String.valueOf(id).equals(parts[0].trim())) {
                         Data data = new Data();
                         data.id = parts[0].trim();
