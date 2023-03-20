@@ -77,6 +77,7 @@ class _MapState extends State<Map> {
             },
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
+
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -102,12 +103,11 @@ class _MapState extends State<Map> {
   }
 
   Future<void> _animateToPosition() async {
-    await _createSocket();
-
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
     });
+    await _createSocket();
 
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
