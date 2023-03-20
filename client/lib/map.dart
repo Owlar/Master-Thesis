@@ -20,10 +20,11 @@ class Map extends StatefulWidget {
 class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
   final double _zoomLevel = 15.0;
-  // Set to room @ IFI by default
+
   late LatLng _smartphonePosition;
-  Set<Status> _messages = {};
   late Socket _socket;
+
+  Set<Status> _messages = {};
 
   @override
   void initState() {
@@ -47,7 +48,6 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
-      /* Parameter is the ID assigned by the server when the client starts tracking its position */
       _sendData(utf8.decode(event));
     });
   }
@@ -58,7 +58,7 @@ class _MapState extends State<Map> {
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
         dateTime: DateTime.now()
     );
-    //For recording on/off
+    //For toggling position recording on/off
     setState(() {
       _messages.add(status);
     });
@@ -77,7 +77,6 @@ class _MapState extends State<Map> {
             },
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
-
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -90,10 +89,10 @@ class _MapState extends State<Map> {
             ),
           ),
           floatingActionButton: _messages.isEmpty ? FloatingActionButton.large (
-              onPressed: () => _animateToPosition(),
+              onPressed: () => _start(),
               child: const Icon(Icons.location_on_outlined, size: 60),
           ) : FloatingActionButton.large (
-              onPressed: () => _stopStream(),
+              onPressed: () => _stop(),
               backgroundColor: Colors.redAccent,
               child: const Icon(Icons.location_off_outlined, size: 60)
           ),
@@ -102,7 +101,7 @@ class _MapState extends State<Map> {
     );
   }
 
-  Future<void> _animateToPosition() async {
+  Future<void> _start() async {
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
@@ -117,7 +116,7 @@ class _MapState extends State<Map> {
       )
     ));
     _showSnackBar(_smartphonePosition.toString());
-    _startStream();
+    _streamLatestPosition();
   }
 
   Future<Position> _getPosition() async {
@@ -151,17 +150,17 @@ class _MapState extends State<Map> {
     );
   }
 
-  Future<void> _startStream() async {
+  Future<void> _streamLatestPosition() async {
     const locationSettings = LocationSettings(
         accuracy: LocationAccuracy.best,
-        distanceFilter: 0
+        distanceFilter: 1
     );
     Geolocator.getPositionStream(locationSettings: locationSettings).listen((Position pos) {
       _smartphonePosition = LatLng(pos.latitude, pos.longitude);
     });
   }
 
-  Future<void> _stopStream() async {
+  Future<void> _stop() async {
     _socket.close();
     setState(() {
       _messages = {};
