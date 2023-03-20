@@ -47,6 +47,7 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
+      /* Parameter is the ID assigned by the server when the client starts tracking its position */
       _sendData(utf8.decode(event));
     });
   }
