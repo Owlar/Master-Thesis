@@ -45,75 +45,67 @@ main
         i = i + 1;
     end
 
-    // TODO: Sort by recording date
-    // TODO: Only have one SPARQL query. Sorting lats and longs didn't work
     // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
-    List<Double> lats = null;
-    List<Double> longs = null;
-    lats = access(
+    List<Double> latLongs = null;
+    latLongs = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
-        |> filter(fn: (r) => r[\"_field\"] == \"latitude\")
-        |> sort(columns: [\"_time\"])
-        |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
-        |> yield(name: \"mean\")",
-    INFLUXDB("influx.yml"));
-    longs = access(
-    "from(bucket: \"Data\")
-        |> range(start: 0)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
-        |> filter(fn: (r) => r[\"_field\"] == \"longitude\")
-        |> sort(columns: [\"_time\"])
+        |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
         |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    List<MovableEntity> objects = construct("SELECT ?movableEntityId ?latitude ?longitude WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
+    Int influxListLength = latLongs.length();
+    influxListLength = influxListLength / 2;
+
+    List<MovableEntity> objects = construct("SELECT * WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
     Int numSmartphones = objects.length();
 
     print("---");
-    print("The smartphones before adding position(s)");
+    print("The smartphone(s):");
     i = 0;
     while (i < numSmartphones) do
         MovableEntity next = objects.get(i);
+        Double lat = latLongs.get(i);
+        Double long = latLongs.get(influxListLength + i);
+        print(lat);
+        print(long);
+        if (next.latitude == lat & next.longitude == long) then
+            print("The smartphone's latest position is registered");
+        end
         print(next.movableEntityId);
         print(next.latitude);
         print(next.longitude);
         i = i + 1;
     end
     print("---");
+    print("Checking location of smartphone(s):");
 
-    length = lats.length();
     i = 0;
-
     // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
     while (i < numSmartphones) do
-        Double latitude = lats.get(i);
-        Double longitude = longs.get(i);
-        
-        MovableEntity newSmartphone = objects.get(i);
-        newSmartphone.latitude = latitude;
-        newSmartphone.longitude = longitude;
-        print("ID:");
-        print(newSmartphone.movableEntityId);
-        print(newSmartphone.latitude);
-        print(newSmartphone.longitude);
+        //MovableEntity next = objects.get(i);
+        //print(next.movableEntityId);
 
         // Test case: 1
         // The smartphone should be inside the non-critical area (room) when it's open during the day
-        Boolean isInside = roomIFI.area.hasPosition(newSmartphone);
+        // Else print False
+        Boolean isInside = roomIFI.area.hasPosition(next);
         if (isInside & !roomIFI.area.isCriticalArea) then
             print("Smartphone is inside the safe area!");
+        else
+            print(False);
         end
 
-        // Test case: 2 (Should print False)
+        // Test case: 2
         //Smartphone should be outside the critical area (room) when it's closed at night
-        isInside = criticalRoomIFI.area.hasPosition(newSmartphone);
+        // Else print False
+        isInside = criticalRoomIFI.area.hasPosition(next);
         if (!isInside & criticalRoomIFI.area.isCriticalArea) then 
             print("Smartphone is outside the critical area!"); 
         else
-            print("False");
+            print(False);
         end
         
         i = i + 1;

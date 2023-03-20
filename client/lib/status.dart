@@ -2,16 +2,16 @@
 class Status {
   final String? id;
   final String? position;
-  final DateTime? dateTime;
+  final String? instant;
 
   Status({
     required this.id,
     required this.position,
-    required this.dateTime
+    required this.instant
   });
 
   @override
   String toString() {
-    return "$id;$position;$dateTime";
+    return "$id;$position;$instant";
   }
 }

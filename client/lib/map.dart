@@ -53,10 +53,12 @@ class _MapState extends State<Map> {
   }
 
   Future<void> _sendData(String id) async {
+    final String dateTime = DateTime.now().toUtc().toIso8601String();
     final status = Status(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-        dateTime: DateTime.now()
+        // To be parsed by Instant class used in server and InfluxDB
+        instant: dateTime
     );
     //For toggling position recording on/off
     setState(() {
