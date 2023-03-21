@@ -37,14 +37,6 @@ public class Owl {
                 OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
                 manager.addAxiom(ontology, idAssertion);
 
-                OWLDataProperty latitudeProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.LATITUDE.toString());
-                OWLDataPropertyAssertionAxiom latitudeAssertion = factory.getOWLDataPropertyAssertionAxiom(latitudeProperty, smartphone, data.latitude.toString());
-                manager.addAxiom(ontology, latitudeAssertion);
-
-                OWLDataProperty longitudeProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.LONGITUDE.toString());
-                OWLDataPropertyAssertionAxiom longitudeAssertion = factory.getOWLDataPropertyAssertionAxiom(longitudeProperty, smartphone, data.longitude.toString());
-                manager.addAxiom(ontology, longitudeAssertion);
-
                 OWLClassAssertionAxiom assertion = factory.getOWLClassAssertionAxiom(movableEntity, smartphone);
                 manager.addAxiom(ontology, assertion);
             }

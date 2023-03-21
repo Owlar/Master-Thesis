@@ -14,7 +14,7 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Double latitude, Double longitude) models "domain:MovableEntity"; end
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude) end
 
 class Wall(Door door) end
 
@@ -57,7 +57,8 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    List<MovableEntity> objects = construct("SELECT * WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
+    //List<MovableEntity> objects = construct("SELECT * WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
+    List<Int> objects = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
 
     length = coordinates.length();
     Int half = length / 2;
@@ -65,15 +66,14 @@ main
 
     print("---");
     print("The smartphone(s) as instance(s) of domain:MovableEntity:");
-    // BUG in SMOL? Doesn't stop at index 0 in array, prints value on index 0 for any index less than it, e.g while(j > -100)
     while (i < half) do
         Double lat = coordinates.get(half + i);
         Double long = coordinates.get(i);
 
+        // TODO: Get reverse order from InfluxDB instead
         Int index = half - i;
-        MovableEntity smartphone = objects.get(index - 1);
-        smartphone.latitude = lat;
-        smartphone.longitude = long;
+        Int id = objects.get(index - 1);
+        MovableEntity smartphone = new MovableEntity(id, lat, long);
 
         print(smartphone.movableEntityId);
         print(smartphone.latitude);
@@ -102,34 +102,9 @@ main
     print("TODO: Check with SparQL query instead!");
     
     i = 0;
-    // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
+    
     // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
-    while (i < length) do
-        MovableEntity next = objects.get(i);
-        print(next.movableEntityId);
-
-        // Test case: 1
-        // The smartphone should be inside the non-critical area (room) when it's open during the day
-        // Else print False
-        Boolean isInside = roomIFI.area.hasPosition(next);
-        if (isInside & !roomIFI.area.isCriticalArea) then
-            print("Smartphone is inside the safe area!");
-        else
-            print(False);
-        end
-
-        // Test case: 2
-        //Smartphone should be outside the critical area (room) when it's closed at night
-        // Else print False
-        isInside = criticalRoomIFI.area.hasPosition(next);
-        if (!isInside & criticalRoomIFI.area.isCriticalArea) then 
-            print("Smartphone is outside the critical area!"); 
-        else
-            print(False);
-        end
-        
-        i = i + 1;
-    end
+    
 
     // Accessing all MovableEntity objects (smartphones)
     List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");

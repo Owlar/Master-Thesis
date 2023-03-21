@@ -57,8 +57,6 @@ class _MapState extends State<Map> {
     final status = Status(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-        // To be parsed by Instant class used in server and InfluxDB
-        instant: dateTime
     );
     //For toggling position recording on/off
     setState(() {

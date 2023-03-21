@@ -94,7 +94,7 @@ public class Main {
                         data.id = parts[0].trim();
                         data.latitude = Double.parseDouble(parts[1].split(",")[0]);
                         data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-                        data.instant = Instant.parse(parts[2]);
+                        data.instant = Instant.now();
 
                         System.out.println("Client " + data.id + " stopped sending position!");
 
