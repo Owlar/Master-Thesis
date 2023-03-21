@@ -45,48 +45,68 @@ main
         i = i + 1;
     end
 
-    // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
-    List<Double> latLongs = null;
-    latLongs = access(
+    List<Double> coordinates = null;
+    coordinates = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
         |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
-        |> aggregateWindow(every: 5m, fn: mean, createEmpty: false)
+        |> sort(columns: [\"_time\"], desc: true)
+        |> unique(column: \"id\")
+        |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    Int influxListLength = latLongs.length();
-    influxListLength = influxListLength / 2;
-
     List<MovableEntity> objects = construct("SELECT * WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
-    Int numSmartphones = objects.length();
+
+    length = coordinates.length();
+    Int half = length / 2;
+    i = 0;
 
     print("---");
-    print("The smartphone(s):");
-    i = 0;
-    while (i < numSmartphones) do
-        MovableEntity next = objects.get(i);
-        Double lat = latLongs.get(i);
-        Double long = latLongs.get(influxListLength + i);
-        print(lat);
-        print(long);
-        if (next.latitude == lat & next.longitude == long) then
-            print("The smartphone's latest position is registered");
-        end
-        print(next.movableEntityId);
-        print(next.latitude);
-        print(next.longitude);
+    print("The smartphone(s) as instance(s) of domain:MovableEntity:");
+    // BUG in SMOL? Doesn't stop at index 0 in array, prints value on index 0 for any index less than it, e.g while(j > -100)
+    while (i < half) do
+        Double lat = coordinates.get(half + i);
+        Double long = coordinates.get(i);
+
+        Int index = half - i;
+        MovableEntity smartphone = objects.get(index - 1);
+        smartphone.latitude = lat;
+        smartphone.longitude = long;
+
+        print(smartphone.movableEntityId);
+        print(smartphone.latitude);
+        print(smartphone.longitude);
+        
         i = i + 1;
     end
+
+    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity }");
+    length = smartphones.length();
+
+    print("The smartphone(s) as instance(s) of prog:MovableEntity:");
+    i = 0;
+    while (i < length) do
+        MovableEntity m = smartphones.get(i);
+
+        print(m.movableEntityId);
+        print(m.latitude);
+        print(m.longitude);
+
+        i = i + 1;
+    end
+
     print("---");
     print("Checking location of smartphone(s):");
-
+    print("TODO: Check with SparQL query instead!");
+    
     i = 0;
     // To add positions to asset model, can loop over smartphones from asset model gotten by SPARQL, then create smartphone objects in SMOL and add the positions gotten from InfluxDB
-    while (i < numSmartphones) do
-        //MovableEntity next = objects.get(i);
-        //print(next.movableEntityId);
+    // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
+    while (i < length) do
+        MovableEntity next = objects.get(i);
+        print(next.movableEntityId);
 
         // Test case: 1
         // The smartphone should be inside the non-critical area (room) when it's open during the day
@@ -115,8 +135,8 @@ main
     List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
 
     print("Validating SHACL shapes..");
-    Boolean b = validate("output.ttl");
+    Boolean validation = validate("output.ttl");
 
-    print(b);
+    print(validation);
 
 end
