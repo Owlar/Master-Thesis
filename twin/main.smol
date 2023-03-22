@@ -1,7 +1,7 @@
 class Area(Int areaId, Double latitude1, Double longitude1, Double latitude2, Double longitude2, Boolean isCriticalArea)
-    Boolean hasPosition(MovableEntity movableEntity)
-        Boolean inLatitudeRange = (movableEntity.latitude >= this.latitude1 & movableEntity.latitude <= this.latitude2);
-        Boolean inLongitudeRange = (movableEntity.longitude >= this.longitude1 & movableEntity.longitude <= this.longitude2);
+    Boolean hasPosition(Double lat, Double long)
+        Boolean inLatitudeRange = (lat >= this.latitude1 & lat <= this.latitude2);
+        Boolean inLongitudeRange = (long >= this.longitude1 & long <= this.longitude2);
 
         if (inLatitudeRange & inLongitudeRange) then
             return True;
@@ -14,7 +14,7 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Double latitude, Double longitude) end
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Boolean isInsideCriticalArea) end
 
 class Wall(Door door) end
 
@@ -23,6 +23,7 @@ main
     Door door = new Door();
     Wall wall = new Wall(door);
 
+    // TODO: Add to ontology instead, and access from there
     Double corner1Latitude = 59.9441196;
     Double corner1Longitude = 10.7193836;
     Double corner2Latitude = 59.9442128;
@@ -57,35 +58,35 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    //List<MovableEntity> objects = construct("SELECT * WHERE {?a a domain:MovableEntity . ?a domain:movableEntityId ?movableEntityId . ?a domain:latitude ?latitude . ?a domain:longitude ?longitude}");
-    List<Int> objects = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
-
+    print("---");
+    print("Creating smartphone(s) by looping over MovableEntity individuals from asset model and adding position from InfluxDB, as well as marking it to be safe or not:");
+    List<Int> numSmartphones = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
+    Int lengthSmartphones = numSmartphones.length();
     length = coordinates.length();
     Int half = length / 2;
     i = 0;
-
-    print("---");
-    print("The smartphone(s) as instance(s) of domain:MovableEntity:");
     while (i < half) do
         Double lat = coordinates.get(half + i);
         Double long = coordinates.get(i);
 
-        // TODO: Get reverse order from InfluxDB instead
         Int index = half - i;
-        Int id = objects.get(index - 1);
-        MovableEntity smartphone = new MovableEntity(id, lat, long);
+        Int id = numSmartphones.get(index - 1);
 
-        print(smartphone.movableEntityId);
-        print(smartphone.latitude);
-        print(smartphone.longitude);
+        Boolean isInside = criticalArea.hasPosition(lat, long);
+        MovableEntity smartphone = null;
+        if (isInside) then
+            smartphone = new MovableEntity(id, lat, long, True);
+        else
+            smartphone = new MovableEntity(id, lat, long, False);
+        end
         
         i = i + 1;
     end
 
+    print("---");
+    print("Printing the smartphone(s) as instance(s) of prog:MovableEntity:");
     List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity }");
     length = smartphones.length();
-
-    print("The smartphone(s) as instance(s) of prog:MovableEntity:");
     i = 0;
     while (i < length) do
         MovableEntity m = smartphones.get(i);
@@ -93,22 +94,27 @@ main
         print(m.movableEntityId);
         print(m.latitude);
         print(m.longitude);
+        print(m.isInsideCriticalArea);
 
         i = i + 1;
     end
 
+    //print("---");
+    //print("Can check if smartphone(s) are inside critical area:");
+    //i = 0;
+    //while(i < length) do
+    //    breakpoint; 
+    //    Boolean insideCriticalArea = False;
+    //    if (insideCriticalArea) then
+    //        print("Inside critical area!");
+    //        // TODO: Mark smartphone as being inside critical area
+    //    else
+    //        print("Safe");
+    //    end
+    //end
+
+    
     print("---");
-    print("Checking location of smartphone(s):");
-    print("TODO: Check with SparQL query instead!");
-    
-    i = 0;
-    
-    // TODO: Breakpoint in SMOL and query in terminal to check if a smartphone is in a critial area
-    
-
-    // Accessing all MovableEntity objects (smartphones)
-    List<MovableEntity> movableEntities = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. }");
-
     print("Validating SHACL shapes..");
     Boolean validation = validate("output.ttl");
 
