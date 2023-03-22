@@ -61,7 +61,7 @@ main
     print("---");
     print("Creating smartphone(s) by looping over MovableEntity individuals from asset model and adding position from InfluxDB, as well as marking it to be safe or not:");
     List<Int> numSmartphones = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
-    Int lengthSmartphones = numSmartphones.length();
+    
     length = coordinates.length();
     Int half = length / 2;
     i = 0;
@@ -72,8 +72,8 @@ main
         Int index = half - i;
         Int id = numSmartphones.get(index - 1);
 
-        Boolean isInside = criticalArea.hasPosition(lat, long);
         MovableEntity smartphone = null;
+        Boolean isInside = criticalArea.hasPosition(lat, long);
         if (isInside) then
             smartphone = new MovableEntity(id, lat, long, True);
         else
