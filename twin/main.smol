@@ -59,8 +59,8 @@ main
     INFLUXDB("influx.yml"));
 
     print("---");
-    print("Creating smartphone(s) by looping over MovableEntity individuals from asset model and adding position from InfluxDB, as well as marking it to be safe or not:");
-    List<Int> numSmartphones = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
+    print("Creating smartphone(s) by looping over MovableEntity individuals from asset model and adding position from InfluxDB:");
+    List<Int> numSmartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
     
     length = coordinates.length();
     Int half = length / 2;
@@ -70,14 +70,18 @@ main
         Double long = coordinates.get(i);
 
         Int index = half - i;
-        Int id = numSmartphones.get(index - 1);
+        Int id = numSmartphonesDomain.get(index - 1);
 
         MovableEntity smartphone = null;
         Boolean isInside = criticalArea.hasPosition(lat, long);
         if (isInside) then
             smartphone = new MovableEntity(id, lat, long, True);
+            print(smartphone.movableEntityId);
+            print("Marked to be in a critical area!");
         else
             smartphone = new MovableEntity(id, lat, long, False);
+            print(smartphone.movableEntityId);
+            print("Marked to be safe!");
         end
         
         i = i + 1;
@@ -99,25 +103,31 @@ main
         i = i + 1;
     end
 
-    //print("---");
-    //print("Can check if smartphone(s) are inside critical area:");
-    //i = 0;
-    //while(i < length) do
-    //    breakpoint; 
-    //    Boolean insideCriticalArea = False;
-    //    if (insideCriticalArea) then
-    //        print("Inside critical area!");
-    //        // TODO: Mark smartphone as being inside critical area
-    //    else
-    //        print("Safe");
-    //    end
-    //end
+    print("---");
+    print("Can check if smartphones(s) are inside a critical area by using a SPARQL query:");
+    print("Smartphones available to check are:");
+    i = 0;
+    while (i < length) do
+        Int movableEntityId = numSmartphonesDomain.get(i);
+        print(movableEntityId);
+        i = i + 1;
+    end
+    // SPARQL Queries
+    // 1. Checking if smartphone 1 exists
+            // query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
+    // 2. Checking which smartphone(s) are inside a critical area
+            // query SELECT ?obj WHERE{ ?obj prog:MovableEntity_isInsideCriticalArea True }
+    // 3. TODO: Checking if smartphone 2 is safe, as it should be
+            // TODO:
+    breakpoint;
 
+    print("To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search in 'output.ttl' if it's not done previously!");
+
+    // TODO: Optional to update boolean value 'isInsideCriticalArea' in asset model by inserting data with SPARQL query
     
     print("---");
     print("Validating SHACL shapes..");
     Boolean validation = validate("output.ttl");
-
     print(validation);
 
 end
