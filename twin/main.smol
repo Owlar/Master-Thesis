@@ -14,7 +14,7 @@ class Room(Int roomId, String name, Wall wall, Area area) end
 
 class Door() end
 
-class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Boolean isInsideCriticalArea) end
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Boolean endangered) end
 
 class Wall(Door door) end
 
@@ -77,7 +77,7 @@ main
         if (isInside) then
             smartphone = new MovableEntity(id, lat, long, True);
             print(smartphone.movableEntityId);
-            print("Marked to be in a critical area!");
+            print("Marked to be endangered! Shouldn't be inside a critical area!");
         else
             smartphone = new MovableEntity(id, lat, long, False);
             print(smartphone.movableEntityId);
@@ -98,7 +98,7 @@ main
         print(m.movableEntityId);
         print(m.latitude);
         print(m.longitude);
-        print(m.isInsideCriticalArea);
+        print(m.endangered);
 
         i = i + 1;
     end
@@ -112,16 +112,22 @@ main
         print(movableEntityId);
         i = i + 1;
     end
-    // SPARQL Queries
-    // 1. Checking if smartphone 1 exists
-            // query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
-    // 2. Checking which smartphone(s) are inside a critical area
-            // query SELECT ?obj WHERE{ ?obj prog:MovableEntity_isInsideCriticalArea True }
-    // 3. TODO: Checking if smartphone 2 is safe, as it should be
-            // TODO:
+
+    /*  "Checking if smartphone 1 exists"
+query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
+        "Checking which smartphone(s) are inside a critical area"
+query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered true }
+        "Checking which smartphone(s) are safe"
+query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
+        "Checking if smartphone 2 is inside critical area and displaying endangered"
+query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId "2". ?obj prog:MovableEntity_endangered ?endangered }
+        "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID "
+query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
+?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
+    */
     breakpoint;
 
-    print("To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search in 'output.ttl' if it's not done previously!");
+    print("To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search in 'output.ttl'!");
 
     // TODO: Optional to update boolean value 'isInsideCriticalArea' in asset model by inserting data with SPARQL query
     
