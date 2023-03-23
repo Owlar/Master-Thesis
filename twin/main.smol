@@ -88,6 +88,22 @@ main
     end
 
     print("---");
+    print("Printing the smartphone(s) without a position");
+    // Creating smartphone objects without a position that may have been registered by operator in asset model
+    length = numSmartphonesDomain.length();
+    while (i < length) do
+        Int id2 = numSmartphonesDomain.get(i);
+        MovableEntity newSmartphone = new MovableEntity(id2, null, null, null);
+        print(newSmartphone.movableEntityId);
+        print(newSmartphone.latitude);
+        print(newSmartphone.longitude);
+        print(newSmartphone.endangered);
+
+        i = i + 1;
+    end
+    
+
+    print("---");
     print("Printing the smartphone(s) as instance(s) of prog:MovableEntity:");
     List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity }");
     length = smartphones.length();

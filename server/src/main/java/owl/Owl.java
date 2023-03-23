@@ -49,6 +49,7 @@ public class Owl {
     }
 
     // Removes individuals from ontology
+    // TODO: Need to reset only smartphone(s) with position because smartphone(s) without a position might have been added
     public static void reset() {
         OWLEntityRemover remover = new OWLEntityRemover(singleton(ontology));
         for (OWLNamedIndividual individual : ontology.getIndividualsInSignature())
