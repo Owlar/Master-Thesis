@@ -113,7 +113,9 @@ main
         i = i + 1;
     end
 
-    /*  "Checking if smartphone 1 exists"
+    /*  "Checking which smartphone(s) are in the domain"
+query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
+        "Checking if smartphone 1 exists"
 query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
         "Checking which smartphone(s) are inside a critical area"
 query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered true }
@@ -129,7 +131,7 @@ query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity
 
     print("To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search in 'output.ttl'!");
 
-    // TODO: Optional to update boolean value 'isInsideCriticalArea' in asset model by inserting data with SPARQL query
+    // TODO: Optional to update boolean value 'endangered' in asset model by inserting data with SPARQL query
     
     print("---");
     print("Validating SHACL shapes..");
