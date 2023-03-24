@@ -8,11 +8,11 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
     ````
 2. 
     * Open the server-directory containing the Maven project in an IDE such as IntelliJ, and it should resolve itself.
-    1. To run SMOL REPL with necessary commands:
+    * 1. To run SMOL REPL with necessary commands:
     ````flutter
     > java -jar smol.jar -d http://www.semanticweb.org/oscarlr/ontologies/2023/2/building# -b building.owl
     ````
-    2. To then read and run the SMOL program:
+    * 2. To then read and run the SMOL program:
     ````flutter
     > reada main.smol
     ````
