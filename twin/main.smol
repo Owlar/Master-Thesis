@@ -142,9 +142,11 @@ query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered true }
 query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
         "Checking if smartphone 2 is inside critical area and displaying endangered"
 query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId "2". ?obj prog:MovableEntity_endangered ?endangered }
-        "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID "
+        "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
 query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
 ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
+        "Checking which smartphone(s) in domain don't have a position. Whether it is inside a critical area or not can't be determined"
+query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
     */
     breakpoint;
 
