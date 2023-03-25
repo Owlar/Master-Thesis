@@ -53,7 +53,6 @@ class _MapState extends State<Map> {
   }
 
   Future<void> _sendData(String id) async {
-    final String dateTime = DateTime.now().toUtc().toIso8601String();
     final status = Status(
         id: id,
         position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),

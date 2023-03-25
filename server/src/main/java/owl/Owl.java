@@ -5,7 +5,6 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLEntityRemover;
 
 import java.io.File;
 import java.util.Map;
@@ -25,9 +24,9 @@ public class Owl {
             OWLClass movableEntity = factory.getOWLClass(ontologyIRI + OwlEnum.MOVABLEENTITY.toString());
 
             for (Data data : dataList.values()) {
-                OWLIndividual smartphone = factory.getOWLNamedIndividual(IRI.create(ontologyIRI + "smartphone" + data.id));
+                OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
 
-                OWLDataProperty idProperty = factory.getOWLDataProperty(IRI.create(ontologyIRI + OwlEnum.MOVABLEENTITYID.toString()));
+                OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.MOVABLEENTITYID.toString());
                 OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
                 manager.addAxiom(ontology, idAssertion);
 
