@@ -95,21 +95,13 @@
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area
 :area rdf:type owl:NamedIndividual ,
                :Area ;
-      :areaId 1 ;
-      :latitude1 "59.9441196" ;
-      :latitude2 "59.9442128" ;
-      :longitude1 "10.7193836" ;
-      :longitude2 "10.7194811" .
+      :areaId 1 .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area2
 :area2 rdf:type owl:NamedIndividual ,
                 :Area ;
-       :areaId 2 ;
-       :latitude1 "60.9441196" ;
-       :latitude2 "60.9442128" ;
-       :longitude1 "11.7193836" ;
-       :longitude2 "11.7194811" .
+       :areaId 2 .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1
