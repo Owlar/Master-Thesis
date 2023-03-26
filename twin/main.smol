@@ -24,10 +24,7 @@ main
     Door door = new Door();
     Wall wall = new Wall(door);
     
-
-
-    print("---");
-    print("Area(s) with coordinate(s)");
+    print("1. Area(s) with coordinate(s)");
     
     // TODO: Use this when Double is accepted as Double and not String in SMOL
     /*
@@ -63,11 +60,16 @@ main
 
     Area area = new Area(1, True, 59.9441196, 59.9442128, 10.7193836, 10.7194811);
     Room room = new Room(1, "IFI Study Room - Closed", wall, area);
+    print(area.areaId);
+    print(area.latitude1);
+    print(area.latitude2);
+    print(area.longitude1);
+    print(area.longitude2);
 
 
 
     print("---");
-    print("The room(s):");
+    print("2. The room(s):");
     List<Room> rooms = access("SELECT ?obj WHERE{ ?obj a prog:Room }");
     Int length = rooms.length();
     Int i = 0;
@@ -78,9 +80,11 @@ main
     end
 
 
+
+    List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
+
     // Try get positions from InfluxDB
     List<Double> coordinates = null;
-
     coordinates = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
@@ -92,15 +96,15 @@ main
         |> yield(name: \"mean\")",
     INFLUXDB("influx.yml"));
 
-    // TODO: Move functionality not affected by coordinates being 'null' outside scope
     if (coordinates == null) then
-        print("Could not get positions of any smartphones from InfluxDB!");
+        print("3. Could not get positions of any smartphones from InfluxDB!");
+        i = 0;
     else
         print("---");
-        print("Creating smartphone object(s) from asset model and adding position(s) from InfluxDB:");
-        List<Int> numSmartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
-        List<Area> areaz = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
+        print("3. Creating smartphone object(s) from asset model and adding position(s) from InfluxDB:");
         
+        List<Area> areaz = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
+
         length = coordinates.length();
         Int half = length / 2;
 
@@ -110,25 +114,26 @@ main
             Double long = coordinates.get(i);
 
             Int index = half - i;
-            Int id = numSmartphonesDomain.get(index - 1);
+            Int id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
             
-            Boolean isInsideAnyCriticalAreas = False;
+            // Checking if a smartphone is already marked to be inside a critical area, in which case it shouldn't change
+            Boolean isInsideACriticalArea = False;
 
             Int lengthAreaz = areaz.length();
             Int j = 0;
             // Checks if a smartphone is inside any of the critical areas
             while (j < lengthAreaz) do
                 Area a = areaz.get(j);
-                if (a.isCriticalArea & !isInsideAnyCriticalAreas) then
-                    isInsideAnyCriticalAreas = a.hasPosition(lat, long);
+                if (a.isCriticalArea & !isInsideACriticalArea) then
+                    isInsideACriticalArea = a.hasPosition(lat, long);
                 end
                 j = j + 1;
             end
 
             // Marks smartphone to be inside any of the critical areas
-            if (isInsideAnyCriticalAreas) then
+            if (isInsideACriticalArea) then
                 smartphone = new MovableEntity(id, lat, long, True);
                 print(smartphone.movableEntityId);
                 print("Marked to be endangered! Shouldn't be inside a critical area:");
@@ -139,88 +144,98 @@ main
             end
 
             i = i + 1;
-        end
+        end // End of while loop
+    end // End of else statement
 
 
 
-        // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
-        length = numSmartphonesDomain.length();
-        if (i < length) then
-            print("---");
-            print("Printing the smartphone(s) without a position");
-            while (i < length) do
-                Int id2 = numSmartphonesDomain.get(i);
-                MovableEntity newSmartphone = new MovableEntity(id2, null, null, null);
-                print(newSmartphone.movableEntityId);
-                print(newSmartphone.latitude);
-                print(newSmartphone.longitude);
-                print(newSmartphone.endangered);
+    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
+    length = smartphonesDomain.length();
+    print("---");
+    print("4. Printing the smartphone(s) without a position");
+    while (i < length) do
+        Int id2 = smartphonesDomain.get(i);
+        MovableEntity newSmartphone = new MovableEntity(id2, null, null, null);
+        print(newSmartphone.movableEntityId);
+        print(newSmartphone.latitude);
+        print(newSmartphone.longitude);
+        print(newSmartphone.endangered);
 
-                i = i + 1;
-            end
-        end
-        
-
-
-        print("---");
-        print("Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
-        List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity }");
-        length = smartphones.length();
-        i = 0;
-        while (i < length) do
-            MovableEntity m = smartphones.get(i);
-            print(m.movableEntityId);
-            print(m.latitude);
-            print(m.longitude);
-            print(m.endangered);
-
-            i = i + 1;
-        end
-
-
-
-        print("---");
-        print("Can check if smartphones(s) are inside a critical area by using a SPARQL query:");
-        print("Smartphones available to check are:");
-        i = 0;
-        while (i < length) do
-            Int movableEntityId = numSmartphonesDomain.get(i);
-            print(movableEntityId);
-            i = i + 1;
-        end
-
-        /*          "Checking which smartphone(s) are in the domain"
-        query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
-                    "Checking if smartphone 1 exists"
-        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId 1 }
-                    "Checking which smartphone(s) are inside a critical area"
-        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered true }
-                    "Checking which smartphone(s) are safe"
-        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
-                    "Checking if smartphone 2 is endangered"
-        query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId 2. ?obj prog:MovableEntity_endangered ?endangered }
-                    "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
-        query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
-        ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
-                    "Checking which smartphone(s) in domain we don't know are endangered or not"
-        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
-                    "TODO: Make it possible to manually check if a smartphone is inside a critical area"
-        */
-        breakpoint;
-
-
-
-        print("To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search in 'output.ttl'!");
-
-
-
-        // TODO: Optional to update boolean value 'endangered' in asset model by inserting data with SPARQL query
-    
-
-
-        print("---");
-        print("Validating SHACL shapes..");
-        Boolean validation = validate("output.ttl");
-        print(validation);
+        i = i + 1;
     end
+
+
+
+    print("---");
+    print("5. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
+    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
+    
+    length = smartphones.length();
+    i = 0;
+    while (i < length) do
+        MovableEntity m = smartphones.get(i);
+        print(m.movableEntityId);
+        print(m.latitude);
+        print(m.longitude);
+        print(m.endangered);
+
+        i = i + 1;
+    end
+
+
+
+    Boolean canCheck = False;
+    i = 0;
+    while (i < length) do
+        MovableEntity movableEntity = smartphones.get(i);
+        if (movableEntity.latitude != null & movableEntity.longitude != null) then
+            canCheck = True;
+        end
+        i = i + 1;
+    end
+
+    if (canCheck) then
+        print("---");
+        print("6. Smartphone(s) with known position(s) that can be checked:");
+        i = 0;
+        while (i < length) do
+            MovableEntity movableEntity2 = smartphones.get(i);
+            if (movableEntity2.latitude != null & movableEntity2.longitude != null) then
+                print(movableEntity2.movableEntityId);
+            end
+            i = i + 1;
+        end
+        print("query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_endangered true. ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }");
+    else
+        print("---");
+        print("6. Can query manually with SPARQL:");
+    end
+
+    /*          "Checking which smartphone(s) are in the domain"
+    query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
+                "Checking if smartphone 1 exists"
+    query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId 1 }
+                "Checking which smartphone(s) are inside a critical area and displaying information about them"
+    query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_endangered true. ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }
+                "Checking which smartphone(s) are safe"
+    query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
+                "Checking if smartphone 2 is endangered"
+    query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId 2. ?obj prog:MovableEntity_endangered ?endangered }
+                "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
+    query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
+    ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
+                "Checking which smartphone(s) in domain we don't know are endangered or not"
+    query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
+                "TODO: Make it possible to manually check if a smartphone is inside a critical area"
+    */
+    breakpoint;
+
+
+
+    print("7. To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search for object(s) in 'output.ttl'!");
+
+    print("---");
+    print("8. Validating SHACL shapes..");
+    Boolean validation = validate("output.ttl");
+    print(validation);
 end
