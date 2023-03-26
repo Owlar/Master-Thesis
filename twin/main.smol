@@ -95,7 +95,9 @@ main
     else
         print("---");
         print("Creating smartphone object(s) from asset model and adding position(s) from InfluxDB:");
+        
         List<Int> numSmartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
+        List<Area> areaz = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
         
         length = coordinates.length();
         Int half = length / 2;
@@ -109,11 +111,11 @@ main
             id = numSmartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
-            List<Area> areaz = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
+            
             Boolean isInsideAnyCriticalAreas = False;
+
             Int lengthAreaz = areaz.length();
             Int j = 0;
-            
             // Checks if a smartphone is inside any of the critical areas
             while (j < lengthAreaz) do
                 Area a = areaz.get(j);
@@ -166,7 +168,6 @@ main
         i = 0;
         while (i < length) do
             MovableEntity m = smartphones.get(i);
-
             print(m.movableEntityId);
             print(m.latitude);
             print(m.longitude);
@@ -190,13 +191,13 @@ main
         /*          "Checking which smartphone(s) are in the domain"
         query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
                     "Checking if smartphone 1 exists"
-        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
+        query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId 1 }
                     "Checking which smartphone(s) are inside a critical area"
         query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered true }
                     "Checking which smartphone(s) are safe"
         query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
                     "Checking if smartphone 2 is endangered"
-        query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId "2". ?obj prog:MovableEntity_endangered ?endangered }
+        query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId 2. ?obj prog:MovableEntity_endangered ?endangered }
                     "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
         query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
         ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
