@@ -26,6 +26,7 @@ class _MapState extends State<Map> {
   late Socket _socket;
 
   Set<Status> _messages = {};
+  bool _warned = false;
 
   late GoogleMapController _googleMapController;
 
@@ -57,6 +58,7 @@ class _MapState extends State<Map> {
       }
       else {
         _sendData(received);
+        _warned = false;
       }
     });
   }
@@ -76,37 +78,45 @@ class _MapState extends State<Map> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          body: GoogleMap(
-            onTap: (LatLng pos) {
-              print(pos.toString());
-            },
-            onMapCreated: (GoogleMapController googleMapController) {
-              _controller.complete(googleMapController);
-              _googleMapController = googleMapController;
-            },
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            compassEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: false,
-            initialCameraPosition: CameraPosition(
-                target: const LatLng(59.94416434370449, 10.719385296106339),
-                zoom: _zoomLevel
-            ),
-          ),
-          floatingActionButton: _messages.isEmpty ? FloatingActionButton.large (
-              onPressed: () => _start(),
-              child: const Icon(Icons.location_on_outlined, size: 60),
-          ) : FloatingActionButton.large (
-              onPressed: () => _stop(),
-              backgroundColor: Colors.redAccent,
-              child: const Icon(Icons.location_off_outlined, size: 60)
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: _warned ? Colors.redAccent : Colors.greenAccent,
+          width: 7.0
         )
-      ]
+      ),
+      child: Stack(
+          children: [
+            Scaffold(
+              body: GoogleMap(
+                onTap: (LatLng pos) {
+                  print(pos.toString());
+                },
+                onMapCreated: (GoogleMapController googleMapController) {
+                  _controller.complete(googleMapController);
+                  _googleMapController = googleMapController;
+                },
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                compassEnabled: true,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                initialCameraPosition: CameraPosition(
+                    target: const LatLng(59.94416434370449, 10.719385296106339),
+                    zoom: _zoomLevel
+                ),
+              ),
+              floatingActionButton: _messages.isEmpty ? FloatingActionButton.large (
+                  onPressed: () => _start(),
+                  child: const Icon(Icons.location_on_outlined, size: 60),
+              ) : FloatingActionButton.large (
+                  onPressed: () => _stop(),
+                  backgroundColor: Colors.redAccent,
+                  child: const Icon(Icons.location_off_outlined, size: 60)
+              ),
+            )
+          ]
+        )
     );
   }
 
@@ -162,9 +172,12 @@ class _MapState extends State<Map> {
   void _warn() {
     _showSnackBar("You are currently inside a critical area!");
     _googleMapController.moveCamera(CameraUpdate.zoomIn());
-    // Safe zones are set to medical, such as hospitals
+    // Safe zones are set to medical areas, such as hospitals
     rootBundle.loadString("assets/safe_zones.txt").then((str) {
       _googleMapController.setMapStyle(str);
+    });
+    setState(() {
+      _warned = true;
     });
   }
 
