@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Map;
 
 public class Owl {
@@ -27,7 +28,7 @@ public class Owl {
                 OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
 
                 OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.MOVABLEENTITYID.toString());
-                OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
+                OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, Integer.parseInt(data.id));
                 manager.addAxiom(ontology, idAssertion);
 
                 OWLClassAssertionAxiom assertion = factory.getOWLClassAssertionAxiom(movableEntity, smartphone);
@@ -40,4 +41,9 @@ public class Owl {
         }
     }
 
+    public static ArrayList<Integer> getEndangeredSmartphones() {
+        ArrayList<Integer> res = new ArrayList<>();
+
+        return res;
+    }
 }

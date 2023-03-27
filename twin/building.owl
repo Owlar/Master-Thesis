@@ -121,6 +121,7 @@
                       :MovableEntity ;
              :movableEntityId 3 .
 
+
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone4
 :smartphone4 rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
