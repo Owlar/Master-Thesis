@@ -164,9 +164,7 @@ class _MapState extends State<Map> {
     _googleMapController.moveCamera(CameraUpdate.zoomIn());
     // Safe zones are set to medical, such as hospitals
     rootBundle.loadString("assets/safe_zones.txt").then((str) {
-      setState(() {
-        _googleMapController.setMapStyle(str);
-      });
+      _googleMapController.setMapStyle(str);
     });
   }
 
