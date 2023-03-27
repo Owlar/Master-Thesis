@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart';
 
 import 'status.dart';
 
@@ -19,12 +20,14 @@ class Map extends StatefulWidget {
 
 class _MapState extends State<Map> {
   final Completer<GoogleMapController> _controller = Completer();
-  final double _zoomLevel = 15.0;
+  final double _zoomLevel = 14.0;
 
   late LatLng _smartphonePosition;
   late Socket _socket;
 
   Set<Status> _messages = {};
+
+  late GoogleMapController _googleMapController;
 
   @override
   void initState() {
@@ -50,7 +53,7 @@ class _MapState extends State<Map> {
     _socket.listen((event) {
       String received = utf8.decode(event).trim();
       if (received == "-1") {
-        print("Warn!");
+        _warn();
       }
       else {
         _sendData(received);
@@ -80,8 +83,10 @@ class _MapState extends State<Map> {
             onTap: (LatLng pos) {
               print(pos.toString());
             },
+            mapType: MapType.terrain,
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
+              _googleMapController = googleMapController;
             },
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
@@ -153,6 +158,17 @@ class _MapState extends State<Map> {
             content: Text(text)
         )
     );
+  }
+
+  void _warn() {
+    _showSnackBar("You are currently inside a critical area!");
+    _googleMapController.moveCamera(CameraUpdate.zoomIn());
+    // Safe zones are set to medical, such as hospitals
+    rootBundle.loadString("assets/safe_zones.txt").then((str) {
+      setState(() {
+        _googleMapController.setMapStyle(str);
+      });
+    });
   }
 
   Future<void> _streamLatestPosition() async {
