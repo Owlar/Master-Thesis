@@ -48,7 +48,13 @@ class _MapState extends State<Map> {
 
     _socket = await Socket.connect(ip, 8080);
     _socket.listen((event) {
-      _sendData(utf8.decode(event));
+      String received = utf8.decode(event).trim();
+      if (received == "-1") {
+        print("Warn!");
+      }
+      else {
+        _sendData(received);
+      }
     });
   }
 

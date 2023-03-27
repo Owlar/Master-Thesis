@@ -58,7 +58,7 @@ main
     end
     */
 
-    Area area = new Area(1, True, 59.9441196, 59.9442128, 10.7193836, 10.7194811);
+    Area area = new Area(1, True, 59.94403, 59.94419, 10.71871, 10.71949);
     Room room = new Room(1, "IFI Study Room - Closed", wall, area);
     print(area.areaId);
     print(area.latitude1);

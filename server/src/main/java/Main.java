@@ -105,6 +105,7 @@ public class Main {
                         influxDB.insertDataPoint(data);
 
                         ArrayList<Integer> res = Owl.getEndangeredSmartphonesInKnowledgeGraph();
+
                         if (res.isEmpty()) System.out.println("No endangered smartphones!");
                         else {
                             for (Integer integer : res) {
