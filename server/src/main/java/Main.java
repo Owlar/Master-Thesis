@@ -104,13 +104,14 @@ public class Main {
                         Owl.addIndividuals(dataList);
                         influxDB.insertDataPoint(data);
 
-                        ArrayList<Integer> res = Owl.getEndangeredSmartphones();
+                        ArrayList<Integer> res = Owl.getEndangeredSmartphonesInKnowledgeGraph();
                         if (res.isEmpty()) System.out.println("No endangered smartphones!");
                         else {
                             for (Integer integer : res) {
-                                if (id == integer)
+                                if (id == integer) {
                                     System.out.println("Warning client: " + id);
-                                writer.print(-1);
+                                    writer.println(-1);
+                                }
                             }
                         }
 

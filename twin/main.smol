@@ -155,7 +155,8 @@ main
     print("4. Printing the smartphone(s) without a position");
     while (i < length) do
         Int id2 = smartphonesDomain.get(i);
-        MovableEntity newSmartphone = new MovableEntity(id2, null, null, null);
+        // Endangered set to False because it can't be determined and therefore not True
+        MovableEntity newSmartphone = new MovableEntity(id2, null, null, False);
         print(newSmartphone.movableEntityId);
         print(newSmartphone.latitude);
         print(newSmartphone.longitude);

@@ -1,14 +1,19 @@
 package owl;
 
 import model.Data;
+import org.apache.jena.query.Query;
+import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.RDFParser;
+import org.apache.jena.sparql.core.Prologue;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.formats.RDFaDocumentFormat;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
+import org.semanticweb.owlapi.formats.TurtleDocumentFormatFactory;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 public class Owl {
 
@@ -41,9 +46,26 @@ public class Owl {
         }
     }
 
-    public static ArrayList<Integer> getEndangeredSmartphones() {
+    public static ArrayList<Integer> getEndangeredSmartphonesInKnowledgeGraph() {
         ArrayList<Integer> res = new ArrayList<>();
 
+        Model model = ModelFactory.createDefaultModel();
+        model.read("../twin/output.ttl");
+
+        Property endangered = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_endangered");
+        Property id = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_movableEntityId");
+        ResIterator iterator = model.listSubjectsWithProperty(endangered);
+        if (iterator.hasNext()) {
+            System.out.println("Knowledge graph contains endangered object(s):");
+            while (iterator.hasNext()) {
+                Resource current = iterator.nextResource();
+                boolean isEndangered = Boolean.parseBoolean(current.getProperty(endangered).getString());
+                if (isEndangered) {
+                    System.out.println(current.getProperty(id).getInt() + ": " + current + " - " + isEndangered);
+                    res.add(current.getProperty(id).getInt());
+                }
+            }
+        }
         return res;
     }
 }
