@@ -83,7 +83,6 @@ class _MapState extends State<Map> {
             onTap: (LatLng pos) {
               print(pos.toString());
             },
-            mapType: MapType.terrain,
             onMapCreated: (GoogleMapController googleMapController) {
               _controller.complete(googleMapController);
               _googleMapController = googleMapController;
