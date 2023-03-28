@@ -1,19 +1,15 @@
 package owl;
 
 import model.Data;
-import org.apache.jena.query.Query;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.RDFParser;
-import org.apache.jena.sparql.core.Prologue;
 import org.semanticweb.owlapi.apibinding.OWLManager;
-import org.semanticweb.owlapi.formats.RDFaDocumentFormat;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
-import org.semanticweb.owlapi.formats.TurtleDocumentFormatFactory;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class Owl {
 
