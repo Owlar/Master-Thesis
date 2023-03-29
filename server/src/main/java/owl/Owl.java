@@ -64,4 +64,7 @@ public class Owl {
         }
         return res;
     }
+
+    // TODO: Get critical areas
+    
 }

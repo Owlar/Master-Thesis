@@ -215,13 +215,13 @@ main
     /*          "Checking which smartphone(s) are in the domain"
     query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
                 "Checking if smartphone 1 exists"
-    query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId 1 }
+    query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
                 "Checking which smartphone(s) are inside a critical area and displaying information about them"
     query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_endangered true. ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }
                 "Checking which smartphone(s) are safe"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
                 "Checking if smartphone 2 is endangered"
-    query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId 2. ?obj prog:MovableEntity_endangered ?endangered }
+    query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId "2". ?obj prog:MovableEntity_endangered ?endangered }
                 "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
     query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
     ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
