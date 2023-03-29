@@ -126,6 +126,7 @@ class _MapState extends State<Map> {
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
     });
+    // TODO: Give message if server is down
     await _createSocket();
 
     final GoogleMapController controller = await _controller.future;
