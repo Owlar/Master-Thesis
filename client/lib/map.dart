@@ -59,6 +59,7 @@ class _MapState extends State<Map> {
       else {
         _sendData(received);
         _warned = false;
+        _googleMapController.setMapStyle(null);
       }
     });
   }
