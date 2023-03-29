@@ -93,7 +93,7 @@ main
         |> sort(columns: [\"_time\"], desc: true)
         |> unique(column: \"id\")
         |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"mean\")",
+        |> yield(name: \"first\")",
     INFLUXDB("influx.yml"));
 
     if (coordinates == null) then
