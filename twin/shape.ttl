@@ -1,7 +1,7 @@
 @prefix smol: <https://github.com/Edkamb/SemanticObjects#> .
            @prefix prog: <https://github.com/Edkamb/SemanticObjects/Program#>.
            @prefix domain: <http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#>.
-           @prefix run: <https://github.com/Edkamb/SemanticObjects/Run1680190417458#> .
+           @prefix run: <https://github.com/Edkamb/SemanticObjects/Run1680195327040#> .
 
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
