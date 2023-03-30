@@ -118,12 +118,6 @@
        :longitude2 "10.71713" .
 
 
-###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#iPhoneUnboxed
-:iPhoneUnboxed rdf:type owl:NamedIndividual ,
-                        :MovableEntity ;
-               :movableEntityId "3" .
-
-
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1
 :smartphone1 rdf:type owl:NamedIndividual ,
                       :MovableEntity ;

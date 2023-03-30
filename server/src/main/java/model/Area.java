@@ -9,7 +9,7 @@ import java.time.Instant;
 public class Area {
 
     @Column(tag = true)
-    public int areaId;
+    public String areaId;
 
     @Column(tag = true)
     public Boolean isCriticalArea;

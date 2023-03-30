@@ -73,7 +73,7 @@ public class Owl {
                 OWLDataPropertyExpression longitude2 = factory.getOWLDataProperty(ontologyIRI + "longitude2");
 
                 Area area = new Area();
-                area.areaId = Integer.parseInt(EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral());
+                area.areaId = EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral();
                 area.isCriticalArea = Boolean.parseBoolean(EntitySearcher.getDataPropertyValues(individual, isCriticalArea, ontology).iterator().next().getLiteral());
                 area.latitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude1, ontology).iterator().next().getLiteral());
                 area.latitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude2, ontology).iterator().next().getLiteral());
