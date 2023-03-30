@@ -116,6 +116,8 @@ public class Main {
                             }
                         }
 
+                        Owl.insertCriticalAreas();
+
                         workers.remove(this);
                     }
 

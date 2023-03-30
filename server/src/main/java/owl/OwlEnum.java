@@ -7,6 +7,7 @@ public enum OwlEnum {
     ONTOLOGY("http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#"),
     MOVABLEENTITY("MovableEntity"),
     MOVABLEENTITYID("movableEntityId"),
+    AREA("Area"),
     LATITUDE("latitude"),
     LONGITUDE("longitude");
 

@@ -32,6 +32,10 @@
 :areaId rdf:type owl:DatatypeProperty .
 
 
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#isCriticalArea
+:isCriticalArea rdf:type owl:DatatypeProperty .
+
+
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#latitude1
 :latitude1 rdf:type owl:DatatypeProperty .
 
@@ -95,19 +99,29 @@
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area
 :area rdf:type owl:NamedIndividual ,
                :Area ;
-      :areaId "1" .
+      :areaId "1" ;
+      :isCriticalArea "true" ;
+      :latitude1 "59.94403" ;
+      :latitude2 "59.94419" ;
+      :longitude1 "10.71871" ;
+      :longitude2 "10.71949" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area2
 :area2 rdf:type owl:NamedIndividual ,
                 :Area ;
-       :areaId "2" .
+       :areaId "2" ;
+       :isCriticalArea "false" ;
+       :latitude1 "59.94403" ;
+       :latitude2 "59.94296" ;
+       :longitude1 "10.71871" ;
+       :longitude2 "10.71713" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#iPhoneUnboxed
 :iPhoneUnboxed rdf:type owl:NamedIndividual ,
                         :MovableEntity ;
-               :movableEntityId "2" .
+               :movableEntityId "3" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1
