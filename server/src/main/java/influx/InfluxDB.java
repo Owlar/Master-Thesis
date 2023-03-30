@@ -4,16 +4,6 @@ import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
-import model.CriticalArea;
-import model.Data;
-import org.apache.jena.ontology.OntModel;
-import org.apache.jena.ontology.OntModelSpec;
-import org.apache.jena.rdf.model.*;
-
-import java.io.FileInputStream;
-import java.util.ArrayList;
-
-import static org.apache.commons.codec.CharEncoding.UTF_8;
 
 public class InfluxDB {
 
@@ -31,9 +21,9 @@ public class InfluxDB {
     }
 
     //TODO: Make Object instead of "Data" ?
-    public void insertDataPoint(Data data) {
+    public void insertDataPoint(Object object) {
         WriteApiBlocking writeApi = db.getWriteApiBlocking();
-        writeApi.writeMeasurement(bucket, org, WritePrecision.MS, data);
+        writeApi.writeMeasurement(bucket, org, WritePrecision.MS, object);
     }
 
     public void closeInfluxClient() {

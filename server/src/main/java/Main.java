@@ -1,6 +1,7 @@
 import com.google.common.base.Charsets;
 import influx.InfluxDB;
 import influx.InfluxEnum;
+import model.Area;
 import model.Data;
 import org.apache.commons.io.IOUtils;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
@@ -104,11 +105,11 @@ public class Main {
                         Owl.addIndividuals(dataList);
                         influxDB.insertDataPoint(data);
 
-                        ArrayList<Integer> res = Owl.getEndangeredSmartphonesInKnowledgeGraph();
+                        ArrayList<Integer> resSmartphones = Owl.getEndangeredSmartphonesInKnowledgeGraph();
 
-                        if (res.isEmpty()) System.out.println("No endangered smartphones!");
+                        if (resSmartphones.isEmpty()) System.out.println("No endangered smartphones!");
                         else {
-                            for (Integer integer : res) {
+                            for (Integer integer : resSmartphones) {
                                 if (id == integer) {
                                     System.out.println("Warning client: " + id);
                                     writer.println(-1);
@@ -116,7 +117,12 @@ public class Main {
                             }
                         }
 
-                        Owl.insertCriticalAreas();
+                        ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
+                        if (resAreas.isEmpty()) System.out.println("No areas in asset model!");
+                        else {
+                            for (Area area : resAreas)
+                                influxDB.insertDataPoint(area);
+                        }
 
                         workers.remove(this);
                     }

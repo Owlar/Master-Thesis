@@ -3,16 +3,17 @@ package model;
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 
-@Measurement(name = "criticalArea")
-public class CriticalArea {
+import java.time.Instant;
+
+@Measurement(name = "area")
+public class Area {
 
     @Column(tag = true)
     public int areaId;
 
-    @Column(name = "isCriticalArea")
+    @Column(tag = true)
     public Boolean isCriticalArea;
 
-    // To make it easy to access in SMOL from InfluDB
     @Column(name = "latitude1")
     public double latitude1;
 
@@ -24,4 +25,7 @@ public class CriticalArea {
 
     @Column(name = "longitude2")
     public double longitude2;
+
+    @Column(timestamp = true)
+    public Instant instant;
 }

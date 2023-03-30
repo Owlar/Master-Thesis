@@ -1,11 +1,8 @@
 package owl;
 
-import model.CriticalArea;
+import model.Area;
 import model.Data;
-import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.reasoner.Reasoner;
-import org.apache.jena.reasoner.ReasonerFactory;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
@@ -17,10 +14,9 @@ import org.semanticweb.owlapi.reasoner.structural.StructuralReasonerFactory;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Stream;
 
 public class Owl {
 
@@ -53,15 +49,8 @@ public class Owl {
         }
     }
 
-    public static void insertCriticalAreas() {
-        ArrayList<CriticalArea> res = getCriticalAreasFromAssetModel();
-        for (CriticalArea criticalArea : res)
-            System.out.println(criticalArea.areaId + ": " + criticalArea.isCriticalArea);
-
-    }
-
-    private static ArrayList<CriticalArea> getCriticalAreasFromAssetModel() {
-        ArrayList<CriticalArea> res = new ArrayList<>();
+    public static ArrayList<Area> getAreasFromAssetModel() {
+        ArrayList<Area> res = new ArrayList<>();
 
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         File file = new File(OwlEnum.FILEPATH.toString());
@@ -83,15 +72,16 @@ public class Owl {
                 OWLDataPropertyExpression longitude1 = factory.getOWLDataProperty(ontologyIRI + "longitude1");
                 OWLDataPropertyExpression longitude2 = factory.getOWLDataProperty(ontologyIRI + "longitude2");
 
-                CriticalArea criticalArea = new CriticalArea();
-                criticalArea.areaId = Integer.parseInt(EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral());
-                criticalArea.isCriticalArea = Boolean.parseBoolean(EntitySearcher.getDataPropertyValues(individual, isCriticalArea, ontology).iterator().next().getLiteral());
-                criticalArea.latitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude1, ontology).iterator().next().getLiteral());
-                criticalArea.latitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude2, ontology).iterator().next().getLiteral());
-                criticalArea.longitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, longitude1, ontology).iterator().next().getLiteral());
-                criticalArea.longitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, longitude2, ontology).iterator().next().getLiteral());
+                Area area = new Area();
+                area.areaId = Integer.parseInt(EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral());
+                area.isCriticalArea = Boolean.parseBoolean(EntitySearcher.getDataPropertyValues(individual, isCriticalArea, ontology).iterator().next().getLiteral());
+                area.latitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude1, ontology).iterator().next().getLiteral());
+                area.latitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude2, ontology).iterator().next().getLiteral());
+                area.longitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, longitude1, ontology).iterator().next().getLiteral());
+                area.longitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, longitude2, ontology).iterator().next().getLiteral());
+                area.instant = Instant.now();
 
-                res.add(criticalArea);
+                res.add(area);
             }
 
 
