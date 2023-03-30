@@ -22,7 +22,7 @@ main
     Door door = new Door();
     Wall wall = new Wall(door);
     
-    // There are two queries because we can't filter on more than two fields at a time in SMOL
+    // There are two queries for latitude and longitude ranges because we can't filter on more than two fields at a time in SMOL
     List<Double> areaLatitudes = null;
     List<Double> areaLongitudes = null;
 
@@ -36,7 +36,7 @@ main
         |> sort(columns: [\"_time\"], desc: true)
         |> unique(column: \"areaId\")
         |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"mean\")",
+        |> yield(name: \"first\")",
     INFLUXDB("influx.yml"));
 
     // Get the longitude ranges of critical areas
@@ -49,27 +49,27 @@ main
         |> sort(columns: [\"_time\"], desc: true)
         |> unique(column: \"areaId\")
         |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"mean\")",
+        |> yield(name: \"first\")",
     INFLUXDB("influx.yml"));
+
     
     if (areaLatitudes == null | areaLongitudes == null) then
-        print("1. Could not get area(s) from InfluxDB!");
+        print("1. Could not get any critical area(s) from InfluxDB!");
     else
-        print("1. Area(s) with coordinate(s)");
+        print("1. Critical area(s) with coordinate(s)");
         Int length = areaLatitudes.length();
         Int half = length / 2;
         Int i = 0;
         while (i < half) do
+            Int areaId = half - i;
+
             Double lat1 = areaLatitudes.get(half + i);
             Double lat2 = areaLatitudes.get(i);
             Double long1 = areaLongitudes.get(half + i);
             Double long2 = areaLongitudes.get(i);
 
-            Int areaId = i + 1;
-
-            // Area.isCriticalArea is set to True because we have previously filtered on critical areas
-            // Area.areaId is set to index + 1 because we have previously sorted on ID's
-                // This way we don't access InfluxDB too much
+            // Area.isCriticalArea is set to True because we have previously filtered on critical areas, 
+            // and what is a critical area is determined elsewhere by an operator.
             Area area = new Area(areaId, True, lat1, lat2, long1, long2);
 
             print(area.areaId);
