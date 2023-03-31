@@ -140,11 +140,11 @@
 :area4 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "4" ;
-       :isCriticalArea "False" ;
-       :latitude1 "59.94544" ;
-       :latitude2 "59.94009" ;
-       :longitude1 "10.72898" ;
-       :longitude2 "10.70538" ;
+       :isCriticalArea "True" ;
+       :latitude1 "59.94009" ;
+       :latitude2 "59.94544" ;
+       :longitude1 "10.70538" ;
+       :longitude2 "10.72898" ;
        :name "Big Critical Area" .
 
 
