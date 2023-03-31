@@ -104,36 +104,48 @@
 :area1 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "1" ;
-       :isCriticalArea "false" ;
-       :latitude1 "59.94403" ;
-       :latitude2 "59.94296" ;
-       :longitude1 "10.71871" ;
-       :longitude2 "10.71713" ;
-       :name "ifi" .
+       :isCriticalArea "False" ;
+       :latitude1 "59.9442" ;
+       :latitude2 "59.9430" ;
+       :longitude1 "10.7195" ;
+       :longitude2 "10.7172" ;
+       :name "IFI" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area2
 :area2 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "2" ;
-       :isCriticalArea "true" ;
-       :latitude1 "59.94304" ;
-       :latitude2 "59.94296" ;
-       :longitude1 "10.71820" ;
-       :longitude2 "10.71713" ;
-       :name "canteenIfi" .
+       :isCriticalArea "True" ;
+       :latitude1 "59.9430" ;
+       :latitude2 "59.9430" ;
+       :longitude1 "10.7177" ;
+       :longitude2 "10.7172" ;
+       :name "Canteen at IFI" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area3
 :area3 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "3" ;
-       :isCriticalArea "true" ;
-       :latitude1 "59.94403" ;
-       :latitude2 "59.94419" ;
-       :longitude1 "10.71871" ;
-       :longitude2 "10.71949" ;
-       :name "studyRoomIfi" .
+       :isCriticalArea "True" ;
+       :latitude1 "59.9442" ;
+       :latitude2 "59.9442" ;
+       :longitude1 "10.7195" ;
+       :longitude2 "10.7193" ;
+       :name "Study Room at IFI" .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area4
+:area4 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "4" ;
+       :isCriticalArea "True" ;
+       :latitude1 "59.94544" ;
+       :latitude2 "59.94009" ;
+       :longitude1 "10.72898" ;
+       :longitude2 "10.70538" ;
+       :name "Big Critical Area" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1

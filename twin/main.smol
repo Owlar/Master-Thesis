@@ -1,9 +1,12 @@
-class Area(Int areaId, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
+class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
     Boolean hasPosition(Double lat, Double long)
-        Boolean inLatitudeRange = (lat >= this.latitude1) & (lat <= this.latitude2);
-        Boolean inLongitudeRange = (long >= this.longitude1 & long <= this.longitude2);
+        Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
+        Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
 
-        if (inLatitudeRange & inLongitudeRange) then
+        print(inAnyLatitudeRange);
+        print(inAnyLongitudeRange);
+
+        if (inAnyLatitudeRange & inAnyLongitudeRange) then
             return True;
         end
         
@@ -25,43 +28,46 @@ main
     // There are two queries for latitude and longitude ranges because we can't filter on more than two fields at a time in SMOL
     List<Double> areaLatitudes = null;
     List<Double> areaLongitudes = null;
+    List<Int> areas = null;
 
-    // Get the latitude ranges of critical areas
+    // Get the latitude and longitude ranges of critical areas, other attributes of areas are acessed from asset model in order to reduce API calls
     areaLatitudes = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
         |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
-        |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
         |> sort(columns: [\"_time\"], desc: true)
         |> unique(column: \"areaId\")
         |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
         |> yield(name: \"first\")",
     INFLUXDB("influx.yml"));
-
-    // Get the longitude ranges of critical areas
     areaLongitudes = access(
     "from(bucket: \"Data\")
         |> range(start: 0)
         |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
         |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
-        |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
         |> sort(columns: [\"_time\"], desc: true)
         |> unique(column: \"areaId\")
         |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
         |> yield(name: \"first\")",
     INFLUXDB("influx.yml"));
-
     
     if (areaLatitudes == null | areaLongitudes == null) then
         print("1. Could not get any critical area(s) from InfluxDB!");
     else
+        List<Int> areasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:areaId ?obj }");
+        List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea ?obj }");
+        List<String> namesAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:name ?obj }");
         print("1. Critical area(s) with coordinate(s)");
         Int length = areaLatitudes.length();
         Int half = length / 2;
         Int i = 0;
         while (i < half) do
-            Int id = i + 1;
+            Int index = half - i;
+
+            Int id = areasDomain.get(index - 1);
+            Boolean isCriticalArea = isCriticalAreasDomain.get(index - 1);
+            String name = namesAreasDomain.get(index - 1);
 
             Double lat1 = areaLatitudes.get(half + i);
             Double lat2 = areaLatitudes.get(i);
@@ -70,9 +76,10 @@ main
 
             // Area.isCriticalArea is set to True because we have previously filtered on critical areas, 
             // and what is a critical area is determined elsewhere by an operator.
-            Area area = new Area(id, True, lat1, lat2, long1, long2);
+            Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2);
 
             print(area.areaId);
+            print(area.name);
             print(area.isCriticalArea);
             print(area.latitude1);
             print(area.latitude2);
@@ -116,8 +123,8 @@ main
             Double lat = coordinates.get(half + i);
             Double long = coordinates.get(i);
 
-            Int index = half - i;
-            // TODO: ID from Influx instead?
+            index = half - i;
+            // We get ID from asset model and not InfluxDB because operator might have added smartphones without a position yet in asset model
             id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
@@ -130,7 +137,10 @@ main
             // Checks if a smartphone is inside any of the critical areas
             while (j < lengthAreaz) do
                 Area a = areaz.get(j);
-                if (a.isCriticalArea & !isInsideACriticalArea) then
+                // Can't use a.isCriticalArea because it's a Boolean with double quotation marks around it.
+                // Can't currently get Booleans as Booleans and not Strings in SMOL when using access(). 
+                // Can't make isCriticalArea a String value either, because that would be weirder
+                if (a.isCriticalArea == "True" & !isInsideACriticalArea) then
                     isInsideACriticalArea = a.hasPosition(lat, long);
                 end
                 j = j + 1;

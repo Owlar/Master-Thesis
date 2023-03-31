@@ -59,7 +59,9 @@ class _MapState extends State<Map> {
       else {
         _sendData(received);
         _warned = false;
-        _googleMapController.setMapStyle(null);
+        setState(() {
+          _googleMapController.setMapStyle(null);
+        });
       }
     });
   }
@@ -173,6 +175,7 @@ class _MapState extends State<Map> {
 
   void _warn() {
     _showSnackBar("You are currently inside a critical area!");
+    print("If position was recently changed by a lot, this may not be accurate! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
     _googleMapController.moveCamera(CameraUpdate.zoomIn());
     // Safe zones are set to medical areas, such as hospitals
     rootBundle.loadString("assets/safe_zones.txt").then((str) {
