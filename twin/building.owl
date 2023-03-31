@@ -56,6 +56,10 @@
 :movableEntityId rdf:type owl:DatatypeProperty .
 
 
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#name
+:name rdf:type owl:DatatypeProperty .
+
+
 #################################################################
 #    Classes
 #################################################################
@@ -96,26 +100,28 @@
 #    Individuals
 #################################################################
 
-###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area
-:area rdf:type owl:NamedIndividual ,
-               :Area ;
-      :areaId "1" ;
-      :isCriticalArea "true" ;
-      :latitude1 "59.94403" ;
-      :latitude2 "59.94419" ;
-      :longitude1 "10.71871" ;
-      :longitude2 "10.71949" .
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area1
+:area1 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "1" ;
+       :isCriticalArea "false" ;
+       :latitude1 "59.94403" ;
+       :latitude2 "59.94296" ;
+       :longitude1 "10.71871" ;
+       :longitude2 "10.71713" ;
+       :name "ifi" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area2
 :area2 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "2" ;
-       :isCriticalArea "false" ;
-       :latitude1 "59.94403" ;
+       :isCriticalArea "true" ;
+       :latitude1 "59.94304" ;
        :latitude2 "59.94296" ;
-       :longitude1 "10.71871" ;
-       :longitude2 "10.71713" .
+       :longitude1 "10.71820" ;
+       :longitude2 "10.71713" ;
+       :name "canteenIfi" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area3
@@ -123,10 +129,11 @@
                 :Area ;
        :areaId "3" ;
        :isCriticalArea "true" ;
-       :latitude1 "58.94403" ;
-       :latitude2 "58.94296" ;
-       :longitude1 "11.71871" ;
-       :longitude2 "11.71713" .
+       :latitude1 "59.94403" ;
+       :latitude2 "59.94419" ;
+       :longitude1 "10.71871" ;
+       :longitude2 "10.71949" ;
+       :name "studyRoomIfi" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1

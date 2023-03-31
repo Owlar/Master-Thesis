@@ -66,6 +66,7 @@ public class Owl {
             NodeSet<OWLNamedIndividual> instances = reasoner.getInstances(owlClass, false);
             for (OWLNamedIndividual individual : instances.getFlattened()) {
                 OWLDataPropertyExpression areaId = factory.getOWLDataProperty(ontologyIRI + "areaId");
+                OWLDataPropertyExpression name = factory.getOWLDataProperty(ontologyIRI + "name");
                 OWLDataPropertyExpression isCriticalArea = factory.getOWLDataProperty(ontologyIRI + "isCriticalArea");
                 OWLDataPropertyExpression latitude1 = factory.getOWLDataProperty(ontologyIRI + "latitude1");
                 OWLDataPropertyExpression latitude2 = factory.getOWLDataProperty(ontologyIRI + "latitude2");
@@ -74,6 +75,7 @@ public class Owl {
 
                 Area area = new Area();
                 area.areaId = EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral();
+                area.name = EntitySearcher.getDataPropertyValues(individual, name, ontology).iterator().next().getLiteral();
                 area.isCriticalArea = Boolean.parseBoolean(EntitySearcher.getDataPropertyValues(individual, isCriticalArea, ontology).iterator().next().getLiteral());
                 area.latitude1 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude1, ontology).iterator().next().getLiteral());
                 area.latitude2 = Double.parseDouble(EntitySearcher.getDataPropertyValues(individual, latitude2, ontology).iterator().next().getLiteral());

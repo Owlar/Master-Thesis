@@ -11,6 +11,9 @@ public class Area {
     @Column(tag = true)
     public String areaId;
 
+    @Column(name = "name")
+    public String name;
+
     @Column(tag = true)
     public Boolean isCriticalArea;
 

@@ -61,7 +61,7 @@ main
         Int half = length / 2;
         Int i = 0;
         while (i < half) do
-            Int areaId = half - i;
+            Int id = i + 1;
 
             Double lat1 = areaLatitudes.get(half + i);
             Double lat2 = areaLatitudes.get(i);
@@ -70,7 +70,7 @@ main
 
             // Area.isCriticalArea is set to True because we have previously filtered on critical areas, 
             // and what is a critical area is determined elsewhere by an operator.
-            Area area = new Area(areaId, True, lat1, lat2, long1, long2);
+            Area area = new Area(id, True, lat1, lat2, long1, long2);
 
             print(area.areaId);
             print(area.isCriticalArea);
@@ -118,7 +118,7 @@ main
 
             Int index = half - i;
             // TODO: ID from Influx instead?
-            Int id = smartphonesDomain.get(index - 1);
+            id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
             
