@@ -1,10 +1,8 @@
 class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
+    // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a rectangular area
     Boolean hasPosition(Double lat, Double long)
         Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
         Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
-
-        print(inAnyLatitudeRange);
-        print(inAnyLongitudeRange);
 
         if (inAnyLatitudeRange & inAnyLongitudeRange) then
             return True;
@@ -140,8 +138,11 @@ main
                 // Can't use a.isCriticalArea because it's a Boolean with double quotation marks around it.
                 // Can't currently get Booleans as Booleans and not Strings in SMOL when using access(). 
                 // Can't make isCriticalArea a String value either, because that would be weirder
-                if (a.isCriticalArea == "True" & !isInsideACriticalArea) then
-                    isInsideACriticalArea = a.hasPosition(lat, long);
+                // There is a single error associated with this, but any other ways have yielded more errors
+                if (a.isCriticalArea == "True") then
+                    if (!isInsideACriticalArea) then
+                        isInsideACriticalArea = a.hasPosition(lat, long);
+                    end
                 end
                 j = j + 1;
             end
