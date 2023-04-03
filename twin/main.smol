@@ -31,7 +31,7 @@ main
     // Get the latitude and longitude ranges of critical areas, other attributes of areas are acessed from asset model in order to reduce API calls
     areaLatitudes = access(
     "from(bucket: \"Data\")
-        |> range(start: 0)
+        |> range(start: -10m)
         |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
         |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
         |> sort(columns: [\"_time\"], desc: true)
@@ -41,7 +41,7 @@ main
     INFLUXDB("influx.yml"));
     areaLongitudes = access(
     "from(bucket: \"Data\")
-        |> range(start: 0)
+        |> range(start: -10m)
         |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
         |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
         |> sort(columns: [\"_time\"], desc: true)
