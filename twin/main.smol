@@ -167,18 +167,23 @@ main
     // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
     length = smartphonesDomain.length();
     print("---");
-    print("3. Printing the smartphone(s) without a position");
-    while (i < length) do
-        Int id2 = smartphonesDomain.get(i);
-        // Endangered set to False because it can't be determined and therefore not True
-        MovableEntity newSmartphone = new MovableEntity(id2, null, null, False);
-        print(newSmartphone.movableEntityId);
-        print(newSmartphone.latitude);
-        print(newSmartphone.longitude);
-        print(newSmartphone.endangered);
+    if (i < length) then
+        print("3. Printing the smartphone(s) without a position");
+        while (i < length) do
+            Int id2 = smartphonesDomain.get(i);
+            // Endangered set to False because it can't be determined and therefore not True
+            MovableEntity newSmartphone = new MovableEntity(id2, null, null, False);
+            print(newSmartphone.movableEntityId);
+            print(newSmartphone.latitude);
+            print(newSmartphone.longitude);
+            print(newSmartphone.endangered);
 
-        i = i + 1;
+            i = i + 1;
+        end
+    else
+        print("3. All smartphone(s) in domain have a position");
     end
+    
 
 
 
