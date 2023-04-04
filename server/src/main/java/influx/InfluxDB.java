@@ -20,7 +20,6 @@ public class InfluxDB {
         );
     }
 
-    //TODO: Make Object instead of "Data" ?
     public void insertDataPoint(Object object) {
         WriteApiBlocking writeApi = db.getWriteApiBlocking();
         writeApi.writeMeasurement(bucket, org, WritePrecision.MS, object);

@@ -1,6 +1,7 @@
 import com.google.common.base.Charsets;
+import constants.Constants;
 import influx.InfluxDB;
-import influx.InfluxEnum;
+import jena.Jena;
 import model.Area;
 import model.Data;
 import org.apache.commons.io.IOUtils;
@@ -55,34 +56,74 @@ public class Main {
 
 
 
-    /* Thread class to handle multiple clients connecting to the server */
+    /* Thread class to keep track of multiple clients */
     class Worker extends Thread {
 
         private Socket socket;
         private InfluxDB influxDB;
+        private PrintWriter writer = null;
 
         public Worker(Socket socket) {
             this.socket = socket;
             this.influxDB = new InfluxDB(
-                    InfluxEnum.TOKEN.toString(),
-                    InfluxEnum.BUCKET.toString(),
-                    InfluxEnum.ORG.toString(),
-                    InfluxEnum.URL.toString()
+                    Constants.TOKEN.toString(),
+                    Constants.BUCKET.toString(),
+                    Constants.ORG.toString(),
+                    Constants.URL.toString()
             );
             workers.add(this);
+        }
+
+        private int assignClient() {
+            int id = workers.size();
+            writer.println(id);
+            System.out.println("Client ID is " + id);
+            return id;
+        }
+
+        private Data getData(String[] parts) {
+            Data data = new Data();
+            data.id = parts[0].trim();
+            data.latitude = Double.parseDouble(parts[1].split(",")[0]);
+            data.longitude = Double.parseDouble(parts[1].split(",")[1]);
+            data.instant = Instant.now();
+
+            System.out.println("Client " + data.id + " stopped sending position!");
+
+            return data;
+        }
+
+        private void warnEndangeredSmartphone(int id) {
+            ArrayList<Integer> resSmartphones = Jena.getEndangeredSmartphones();
+            if (!resSmartphones.isEmpty()) {
+                for (Integer integer : resSmartphones) {
+                    if (id == integer) {
+                        System.out.println("Warning client: " + id);
+                        writer.println(-1);
+                    }
+                }
+                return;
+            }
+            System.out.println("Not aware of any endangered smartphones! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
+        }
+
+        private void getAreas() {
+            ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
+            if (!resAreas.isEmpty()) {
+                for (Area area : resAreas)
+                    influxDB.insertDataPoint(area);
+                return;
+            }
+            System.out.println("No areas in asset model! Add some areas to: " + Constants.ONTOLOGYFILEPATH);
         }
 
         @Override
         public void run() {
             try {
-                // Server assigns ID to client and informs the client its position can be sent to server
-                PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
-                int id = workers.size();
-                writer.println(id);
+                writer = new PrintWriter(socket.getOutputStream(), true);
+                int id = assignClient();
 
-                System.out.println("The client's ID is " + id + ".");
-
-                // The message received from the client
+                // The status message received from a client
                 String message = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
 
                 // Is true when a client sends its latest position
@@ -91,38 +132,16 @@ public class Main {
 
                     // Identify client
                     if (String.valueOf(id).equals(parts[0].trim())) {
-                        Data data = new Data();
-                        data.id = parts[0].trim();
-                        data.latitude = Double.parseDouble(parts[1].split(",")[0]);
-                        data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-                        data.instant = Instant.now();
-
-                        System.out.println("Client " + data.id + " stopped sending position!");
-
+                        Data data = getData(parts);
                         dataList.put(id, data);
                         printDataList();
 
                         Owl.addIndividuals(dataList);
                         influxDB.insertDataPoint(data);
 
-                        ArrayList<Integer> resSmartphones = Owl.getEndangeredSmartphonesInKnowledgeGraph();
+                        warnEndangeredSmartphone(id);
 
-                        if (resSmartphones.isEmpty()) System.out.println("Not aware of any endangered smartphones! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
-                        else {
-                            for (Integer integer : resSmartphones) {
-                                if (id == integer) {
-                                    System.out.println("Warning client: " + id);
-                                    writer.println(-1);
-                                }
-                            }
-                        }
-
-                        ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
-                        if (resAreas.isEmpty()) System.out.println("No areas in asset model!");
-                        else {
-                            for (Area area : resAreas)
-                                influxDB.insertDataPoint(area);
-                        }
+                        getAreas();
 
                         workers.remove(this);
                     }

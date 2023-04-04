@@ -1,8 +1,8 @@
 package owl;
 
+import constants.Constants;
 import model.Area;
 import model.Data;
-import org.apache.jena.rdf.model.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.formats.TurtleDocumentFormat;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
@@ -22,20 +22,20 @@ public class Owl {
 
     public static void addIndividuals(Map<Integer, Data> dataList) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        File file = new File(OwlEnum.FILEPATH.toString());
-        IRI ontologyIRI = IRI.create(OwlEnum.ONTOLOGY.toString());
+        File file = new File(Constants.ONTOLOGYFILEPATH.toString());
+        IRI ontologyIRI = IRI.create(Constants.ONTOLOGY.toString());
         try {
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(file);
 
             IRI docIRI = manager.getOntologyDocumentIRI(ontology);
 
             OWLDataFactory factory = manager.getOWLDataFactory();
-            OWLClass movableEntity = factory.getOWLClass(ontologyIRI + OwlEnum.MOVABLEENTITY.toString());
+            OWLClass movableEntity = factory.getOWLClass(ontologyIRI + Constants.MOVABLEENTITY.toString());
 
             for (Data data : dataList.values()) {
                 OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
 
-                OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + OwlEnum.MOVABLEENTITYID.toString());
+                OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + Constants.MOVABLEENTITYID.toString());
                 OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
                 manager.addAxiom(ontology, idAssertion);
 
@@ -53,25 +53,25 @@ public class Owl {
         ArrayList<Area> res = new ArrayList<>();
 
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        File file = new File(OwlEnum.FILEPATH.toString());
-        IRI ontologyIRI = IRI.create(OwlEnum.ONTOLOGY.toString());
+        File file = new File(Constants.ONTOLOGYFILEPATH.toString());
+        IRI ontologyIRI = IRI.create(Constants.ONTOLOGY.toString());
         try {
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(file);
             OWLReasonerFactory reasonerFactory = new StructuralReasonerFactory();
             OWLReasoner reasoner = reasonerFactory.createNonBufferingReasoner(ontology);
 
             OWLDataFactory factory = manager.getOWLDataFactory();
-            OWLClass owlClass = factory.getOWLClass(ontologyIRI + OwlEnum.AREA.toString());
+            OWLClass owlClass = factory.getOWLClass(ontologyIRI + Constants.AREA.toString());
 
             NodeSet<OWLNamedIndividual> instances = reasoner.getInstances(owlClass, false);
             for (OWLNamedIndividual individual : instances.getFlattened()) {
-                OWLDataPropertyExpression areaId = factory.getOWLDataProperty(ontologyIRI + "areaId");
-                OWLDataPropertyExpression name = factory.getOWLDataProperty(ontologyIRI + "name");
-                OWLDataPropertyExpression isCriticalArea = factory.getOWLDataProperty(ontologyIRI + "isCriticalArea");
-                OWLDataPropertyExpression latitude1 = factory.getOWLDataProperty(ontologyIRI + "latitude1");
-                OWLDataPropertyExpression latitude2 = factory.getOWLDataProperty(ontologyIRI + "latitude2");
-                OWLDataPropertyExpression longitude1 = factory.getOWLDataProperty(ontologyIRI + "longitude1");
-                OWLDataPropertyExpression longitude2 = factory.getOWLDataProperty(ontologyIRI + "longitude2");
+                OWLDataPropertyExpression areaId = factory.getOWLDataProperty(ontologyIRI + Constants.AREAID.toString());
+                OWLDataPropertyExpression name = factory.getOWLDataProperty(ontologyIRI + Constants.NAME.toString());
+                OWLDataPropertyExpression isCriticalArea = factory.getOWLDataProperty(ontologyIRI + Constants.ISCRITICALAREA.toString());
+                OWLDataPropertyExpression latitude1 = factory.getOWLDataProperty(ontologyIRI + Constants.LATITUDE.toString() + 1);
+                OWLDataPropertyExpression latitude2 = factory.getOWLDataProperty(ontologyIRI + Constants.LATITUDE.toString() + 2);
+                OWLDataPropertyExpression longitude1 = factory.getOWLDataProperty(ontologyIRI + Constants.LONGITUDE.toString() + 1);
+                OWLDataPropertyExpression longitude2 = factory.getOWLDataProperty(ontologyIRI + Constants.LONGITUDE.toString() + 2);
 
                 Area area = new Area();
                 area.areaId = EntitySearcher.getDataPropertyValues(individual, areaId, ontology).iterator().next().getLiteral();
@@ -91,29 +91,6 @@ public class Owl {
             e.printStackTrace();
         }
 
-        return res;
-    }
-
-    public static ArrayList<Integer> getEndangeredSmartphonesInKnowledgeGraph() {
-        ArrayList<Integer> res = new ArrayList<>();
-
-        Model model = ModelFactory.createDefaultModel();
-        model.read("../twin/output.ttl");
-
-        Property endangered = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_endangered");
-        Property id = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_movableEntityId");
-        ResIterator iterator = model.listSubjectsWithProperty(endangered);
-        if (iterator.hasNext()) {
-            System.out.println("Knowledge graph contains endangered object(s):");
-            while (iterator.hasNext()) {
-                Resource current = iterator.nextResource();
-                boolean isEndangered = Boolean.parseBoolean(current.getProperty(endangered).getString());
-                if (isEndangered) {
-                    System.out.println(current.getProperty(id).getInt() + ": " + current + " - " + isEndangered);
-                    res.add(current.getProperty(id).getInt());
-                }
-            }
-        }
         return res;
     }
 

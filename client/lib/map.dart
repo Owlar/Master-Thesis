@@ -51,6 +51,10 @@ class _MapState extends State<Map> {
     }
 
     _socket = await Socket.connect(ip, 8080);
+    _listenOnSocket();
+  }
+
+  Future<void> _listenOnSocket() async {
     _socket.listen((event) {
       String received = utf8.decode(event).trim();
       if (received == "-1") {
