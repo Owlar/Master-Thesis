@@ -1517,3 +1517,24 @@ run:obj21
       prog:List_content "3" ;
       prog:List_next run:obj20 .
 
+_:b6  a       owl:Thing , rdfs:Resource , domain:Area ;
+      owl:sameAs _:b6 .
+
+_:b7  a       owl:Thing , rdfs:Resource , domain:Area ;
+      owl:sameAs _:b7 .
+
+_:b8  a       owl:Thing , rdfs:Resource , domain:Door ;
+      owl:sameAs _:b8 .
+
+_:b9  a       owl:Thing , _:b3 , rdfs:Resource , domain:Wall ;
+      domain:hasDoor _:b4 ;
+      owl:sameAs _:b9 .
+
+_:b10
+      a       owl:Thing , _:b3 , rdfs:Resource , domain:Wall ;
+      domain:hasDoor _:b5 ;
+      owl:sameAs _:b10 .
+
+_:b11
+      a       owl:Thing , rdfs:Resource , domain:Door ;
+      owl:sameAs _:b11 .
