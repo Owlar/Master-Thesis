@@ -22,6 +22,7 @@ public class Main {
 
     private Map<Integer,Data> dataList = new HashMap<>();
     private List<Worker> workers = new ArrayList<>();
+    private InfluxDB influxDB = null;
 
     private void printDataList() {
         System.out.println("Number of records: " + dataList.size());
@@ -30,6 +31,16 @@ public class Main {
             System.out.println("   Record " + i + ": Client " + d.id + " has data [(" + d.latitude + ", " + d.longitude + "), " + d.instant + "]");
             i++;
         }
+    }
+
+    private void getAreas() {
+        ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
+        if (!resAreas.isEmpty()) {
+            for (Area area : resAreas)
+                influxDB.insertDataPoint(area);
+            return;
+        }
+        System.out.println("No areas in asset model! Add some areas to: " + Constants.ONTOLOGYFILEPATH);
     }
 
     public static void main(String[] args) {
@@ -42,6 +53,14 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("Server has started! Now waiting for clients.");
+            influxDB = new InfluxDB(
+                    Constants.TOKEN.toString(),
+                    Constants.BUCKET.toString(),
+                    Constants.ORG.toString(),
+                    Constants.URL.toString()
+            );
+            getAreas();
+
             while (true) {
                 // Let clients connect to server
                 socket = serverSocket.accept();
@@ -60,17 +79,10 @@ public class Main {
     class Worker extends Thread {
 
         private Socket socket;
-        private InfluxDB influxDB;
         private PrintWriter writer = null;
 
         public Worker(Socket socket) {
             this.socket = socket;
-            this.influxDB = new InfluxDB(
-                    Constants.TOKEN.toString(),
-                    Constants.BUCKET.toString(),
-                    Constants.ORG.toString(),
-                    Constants.URL.toString()
-            );
             workers.add(this);
         }
 
@@ -107,16 +119,6 @@ public class Main {
             System.out.println("Not aware of any endangered smartphones! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
         }
 
-        private void getAreas() {
-            ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
-            if (!resAreas.isEmpty()) {
-                for (Area area : resAreas)
-                    influxDB.insertDataPoint(area);
-                return;
-            }
-            System.out.println("No areas in asset model! Add some areas to: " + Constants.ONTOLOGYFILEPATH);
-        }
-
         @Override
         public void run() {
             try {
@@ -140,8 +142,6 @@ public class Main {
                         influxDB.insertDataPoint(data);
 
                         warnEndangeredSmartphone(id);
-
-                        getAreas();
 
                         workers.remove(this);
                     }

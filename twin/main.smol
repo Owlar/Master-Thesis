@@ -1,5 +1,5 @@
 class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
-    // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a rectangular area
+    // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a square area where the coordinates align
     Boolean hasPosition(Double lat, Double long)
         Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
         Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
@@ -18,54 +18,92 @@ class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Bool
 
 class Wall(Door door) end
 
+// Class for accessing InfluxDB in SMOL
+class Influx()
+    // Get latitude ranges of areas
+    List<Double> getLatitudes()
+        List<Double> areaLatitudes = null;
+        areaLatitudes = access(
+            "from(bucket: \"Data\")
+                |> range(start: -10m)
+                |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
+                |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
+                |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
+                |> sort(columns: [\"_time\"], desc: true)
+                |> unique(column: \"areaId\")
+                |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
+                |> yield(name: \"first\")",
+            INFLUXDB("influx.yml")
+        );
+        return areaLatitudes;
+    end
+    
+    // Get longitude ranges of areas
+    List<Double> getLongitudes()
+        List<Double> areaLongitudes = null;
+        areaLongitudes = access(
+            "from(bucket: \"Data\")
+                |> range(start: -10m)
+                |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
+                |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
+                |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
+                |> sort(columns: [\"_time\"], desc: true)
+                |> unique(column: \"areaId\")
+                |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
+                |> yield(name: \"first\")",
+            INFLUXDB("influx.yml")
+        );
+        return areaLongitudes;
+    end
+
+    List<Double> getSmartphoneCoordinates()
+        List<Double> coordinates = null;
+        coordinates = access(
+            "from(bucket: \"Data\")
+                |> range(start: -10m)
+                |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
+                |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
+                |> sort(columns: [\"_time\"], desc: true)
+                |> unique(column: \"id\")
+                |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
+                |> yield(name: \"first\")",
+            INFLUXDB("influx.yml")
+        );
+        return coordinates;
+    end
+
+end
+
 
 main
+    Influx influx = new Influx();
+    
+    List<Double> areaLatitudes = influx.getLatitudes();
+    List<Double> areaLongitudes = influx.getLongitudes();
+    
+    List<Int> areas = null;
+
     Door door = new Door();
     Wall wall = new Wall(door);
     
-    // There are two queries for latitude and longitude ranges because we can't filter on more than two fields at a time in SMOL
-    List<Double> areaLatitudes = null;
-    List<Double> areaLongitudes = null;
-    List<Int> areas = null;
-
-    // Get the latitude and longitude ranges of critical areas, other attributes of areas are acessed from asset model in order to reduce API calls
-    areaLatitudes = access(
-    "from(bucket: \"Data\")
-        |> range(start: -10m)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
-        |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
-        |> sort(columns: [\"_time\"], desc: true)
-        |> unique(column: \"areaId\")
-        |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"first\")",
-    INFLUXDB("influx.yml"));
-    areaLongitudes = access(
-    "from(bucket: \"Data\")
-        |> range(start: -10m)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
-        |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
-        |> sort(columns: [\"_time\"], desc: true)
-        |> unique(column: \"areaId\")
-        |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"first\")",
-    INFLUXDB("influx.yml"));
     
     if (areaLatitudes == null | areaLongitudes == null) then
-        print("1. Could not get any critical area(s) from InfluxDB!");
+        print("1. Could not get any critical area(s) from InfluxDB! Try adding areas to asset model and restart server.");
     else
-        List<Int> areasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:areaId ?obj }");
-        List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea ?obj }");
-        List<String> namesAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:name ?obj }");
+        List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
+        List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
+        List<String> namesAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
         print("1. Critical area(s) with coordinate(s)");
         Int length = areaLatitudes.length();
         Int half = length / 2;
         Int i = 0;
         while (i < half) do
-            Int index = half - i;
+            Int temp = half - i;
+            Int index = temp - 1;
 
-            Int id = areasDomain.get(index - 1);
-            Boolean isCriticalArea = isCriticalAreasDomain.get(index - 1);
-            String name = namesAreasDomain.get(index - 1);
+            Int id = criticalAreasDomain.get(index);
+            Boolean isCriticalArea = isCriticalAreasDomain.get(index);
+            String name = namesAreasDomain.get(index);
 
             Double lat1 = areaLatitudes.get(half + i);
             Double lat2 = areaLatitudes.get(i);
@@ -92,17 +130,7 @@ main
     List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
 
     // Try get positions from InfluxDB
-    List<Double> coordinates = null;
-    coordinates = access(
-    "from(bucket: \"Data\")
-        |> range(start: 0)
-        |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
-        |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
-        |> sort(columns: [\"_time\"], desc: true)
-        |> unique(column: \"id\")
-        |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-        |> yield(name: \"first\")",
-    INFLUXDB("influx.yml"));
+    List<Double> coordinates = influx.getSmartphoneCoordinates();
 
     if (coordinates == null) then
         print("2. Could not get positions of any smartphones from InfluxDB!");
@@ -139,11 +167,10 @@ main
                 // Can't currently get Booleans as Booleans and not Strings in SMOL when using access(). 
                 // Can't make isCriticalArea a String value either, because that would be weirder
                 // There is a single error associated with this, but any other ways have yielded more errors
-                if (a.isCriticalArea == "True") then
-                    if (!isInsideACriticalArea) then
-                        isInsideACriticalArea = a.hasPosition(lat, long);
-                    end
+                if (!isInsideACriticalArea) then
+                    isInsideACriticalArea = a.hasPosition(lat, long);
                 end
+                
                 j = j + 1;
             end
 
@@ -151,7 +178,7 @@ main
             if (isInsideACriticalArea) then
                 smartphone = new MovableEntity(id, lat, long, True);
                 print(smartphone.movableEntityId);
-                print("Marked to be endangered! Shouldn't be inside a critical area:");
+                print("Marked to be endangered! Shouldn't be inside a critical area!");
             else
                 smartphone = new MovableEntity(id, lat, long, False);
                 print(smartphone.movableEntityId);
