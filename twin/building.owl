@@ -104,7 +104,7 @@
 :area1 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "1" ;
-       :isCriticalArea "False" ;
+       :isCriticalArea "True" ;
        :latitude1 "59.9442" ;
        :latitude2 "59.9430" ;
        :longitude1 "10.7195" ;
@@ -116,7 +116,7 @@
 :area2 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "2" ;
-       :isCriticalArea "True" ;
+       :isCriticalArea "False" ;
        :latitude1 "59.9430" ;
        :latitude2 "59.9430" ;
        :longitude1 "10.7177" ;
@@ -140,7 +140,7 @@
 :area4 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "4" ;
-       :isCriticalArea "True" ;
+       :isCriticalArea "False" ;
        :latitude1 "59.94009" ;
        :latitude2 "59.94544" ;
        :longitude1 "10.70538" ;

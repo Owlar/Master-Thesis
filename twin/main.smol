@@ -80,19 +80,16 @@ main
     
     List<Double> areaLatitudes = influx.getLatitudes();
     List<Double> areaLongitudes = influx.getLongitudes();
-    
-    List<Int> areas = null;
 
     Door door = new Door();
     Wall wall = new Wall(door);
-    
     
     if (areaLatitudes == null | areaLongitudes == null) then
         print("1. Could not get any critical area(s) from InfluxDB! Try adding areas to asset model and restart server.");
     else
         List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
         List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
-        List<String> namesAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
+        List<String> namesCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
         print("1. Critical area(s) with coordinate(s)");
         Int length = areaLatitudes.length();
         Int half = length / 2;
@@ -103,7 +100,7 @@ main
 
             Int id = criticalAreasDomain.get(index);
             Boolean isCriticalArea = isCriticalAreasDomain.get(index);
-            String name = namesAreasDomain.get(index);
+            String name = namesCriticalAreasDomain.get(index);
 
             Double lat1 = areaLatitudes.get(half + i);
             Double lat2 = areaLatitudes.get(i);
