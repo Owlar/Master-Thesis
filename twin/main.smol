@@ -5,7 +5,7 @@ class DigitalShadow()
         List<Double> areaLatitudes = null;
         areaLatitudes = access(
             "from(bucket: \"Data\")
-                |> range(start: -10m)
+                |> range(start: -20m)
                 |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
                 |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
                 |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
@@ -23,7 +23,7 @@ class DigitalShadow()
         List<Double> areaLongitudes = null;
         areaLongitudes = access(
             "from(bucket: \"Data\")
-                |> range(start: -10m)
+                |> range(start: -20m)
                 |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
                 |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
                 |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
@@ -41,7 +41,7 @@ class DigitalShadow()
         List<Double> coordinates = null;
         coordinates = access(
             "from(bucket: \"Data\")
-                |> range(start: -10m)
+                |> range(start: -20m)
                 |> filter(fn: (r) => r[\"_measurement\"] == \"data\")
                 |> filter(fn: (r) => r[\"_field\"] == \"latitude\" or r[\"_field\"] == \"longitude\")
                 |> sort(columns: [\"_time\"], desc: true)
@@ -78,15 +78,8 @@ class DigitalTwin()
             Double long1 = areaLongitudes.get(half + i);
             Double long2 = areaLongitudes.get(i);
 
-            Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2);
-
+            Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2, null);
             print(area.areaId);
-            print(area.name);
-            print(area.isCriticalArea);
-            print(area.latitude1);
-            print(area.latitude2);
-            print(area.longitude1);
-            print(area.longitude2);
 
             i = i + 1;
         end
@@ -109,29 +102,31 @@ class DigitalTwin()
             Int id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
-            
-            // Checking if a smartphone is already marked to be inside a critical area, in which case it shouldn't change
+            Area a = null;
             Boolean isInsideACriticalArea = False;
 
             Int lengthAreas = areas.length();
             Int j = 0;
             // Checks if a smartphone is inside any of the critical areas
             while (j < lengthAreas) do
-                Area a = areas.get(j);
                 if (!isInsideACriticalArea) then
+                    a = areas.get(j);
                     isInsideACriticalArea = a.hasPosition(lat, long);
                 end
                 
                 j = j + 1;
             end
 
-            // Marks smartphone to be inside any of the critical areas
             if (isInsideACriticalArea) then
                 smartphone = new MovableEntity(id, lat, long, True);
+                a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
+                print("Smartphone:");
                 print(smartphone.movableEntityId);
-                print("Marked to be endangered! Shouldn't be inside a critical area!");
+                print("Marked to be endangered! Shouldn't be inside the critical area:");
+                print(a.areaId);
             else
                 smartphone = new MovableEntity(id, lat, long, False);
+                print("Smartphone:");
                 print(smartphone.movableEntityId);
                 print("Marked to be safe!");
             end
@@ -143,6 +138,39 @@ class DigitalTwin()
     end // End of function
 
 
+
+    Unit printCriticalAreas()
+        List<Area> areas = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
+        Int length = areas.length();
+        Int i = 0;
+        while (i < length) do
+            print("Area:");
+            Area a = areas.get(i);
+            print(a.areaId);
+            print(a.name);
+            print(a.isCriticalArea);
+            print(a.latitude1);
+            print(a.latitude2);
+            print(a.longitude1);
+            print(a.longitude2);
+
+            if (a.smartphones != null) then
+                Int length2 = a.smartphones.length();
+                print(length2);
+                Int j = 0;
+                print("Has smartphone(s):");
+                while (j < length2) do
+                    MovableEntity next = a.smartphones.get(j);
+                    print(next.movableEntityId);
+                    
+                    j = j + 1;
+                end
+            end
+            print("---");
+
+            i = i + 1;
+        end
+    end
 
     Unit createMovableEntitiesWithNoPosition(Int i, Int length, List<Int> smartphonesDomain)
         while (i < length) do
@@ -185,20 +213,19 @@ class DigitalTwin()
 
         if (canCheck) then
             print("---");
-            print("5. Smartphone(s) with known position(s) that can be checked:");
+            print("6. Smartphone(s) with known position(s) that can be checked:");
             i = 0;
             while (i < length) do
                 MovableEntity movableEntity2 = smartphones.get(i);
                 if (movableEntity2.latitude != null & movableEntity2.longitude != null) then
                     print(movableEntity2.movableEntityId);
-                    print(movableEntity2.endangered);
                 end
                 i = i + 1;
             end
             print("query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }");
         else
             print("---");
-            print("5. Can query manually with SPARQL:");
+            print("6. Can query manually with SPARQL:");
         end
     end
 
@@ -206,7 +233,7 @@ class DigitalTwin()
 
 end
 
-class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
+class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2, List<MovableEntity> smartphones)
     // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a square area where the coordinates align
     Boolean hasPosition(Double lat, Double long)
         Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
@@ -244,10 +271,11 @@ main
 
 
     // 1. CREATE CRITICAL AREAS
+    print("---");
     if (areaLatitudes == null | areaLongitudes == null) then
         print("1. Could not get any critical area(s) from InfluxDB! Check if there are any area(s) in asset model (building.owl), and then restart the server!");
     else
-        print("1. Critical area(s) with coordinate(s):");
+        print("1. Creating critical area(s):");
         twin.createCriticalAreas(areaLatitudes, areaLongitudes);
     end
 
@@ -273,15 +301,22 @@ main
 
 
 
-    // 3. CREATE ONLY REGISTERED SMARTPHONES THAT HAVE NO POSITION
+
+    // 3. PRINT CRITICAL AREAS AND ANY ENDANGERED SMARTPHONES INSIDE IT
     print("---");
-    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
+    print("3. Printing critical area(s) and any endangered smartphone(s) inside it:");
+    twin.printCriticalAreas();
+
+
+
+    // 4. CREATE ONLY REGISTERED SMARTPHONES THAT HAVE NO POSITION
     Int length = smartphonesDomain.length();
+    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position.
     if (i < length) then
-        print("3. Printing the smartphone(s) without a position");
+        print("4. Printing the smartphone(s) without a position");
         twin.createMovableEntitiesWithNoPosition(i, length, smartphonesDomain);
     else
-        print("3. All smartphone(s) in domain have a position");
+        print("4. All smartphone(s) in domain have a position");
     end
 
 
@@ -290,17 +325,16 @@ main
 
 
 
-    // 4. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
+    // 5. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
     print("---");
-    print("4. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
+    print("5. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
     twin.printAllMovableEntities(smartphones);
 
 
 
-    // 5. INFORMATION ABOUT SMARTPHONES WITH KNOWN POSITIONS THAT CAN BE VERIFIABLY CHECKED AND HOW
+    // 6. INFORMATION ABOUT SMARTPHONES WITH KNOWN POSITIONS THAT CAN BE VERIFIABLY CHECKED AND HOW
     twin.printVerifiableCheck(i, length, smartphones);
 
-    // SPARQL Queries
     /*          "Checking which smartphone(s) are in the domain"
     query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
                 "Checking if smartphone 1 exists"
@@ -318,11 +352,12 @@ main
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
                 "TODO: Make it possible to manually check if a smartphone is inside a critical area"
     */
+
     breakpoint;
 
 
     print("---");
-    print("6. Validating SHACL shapes..");
+    print("7. Validating SHACL shapes..");
     Boolean validation = validate("output.ttl");
     print(validation);
 end
