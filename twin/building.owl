@@ -140,12 +140,24 @@
 :area4 rdf:type owl:NamedIndividual ,
                 :Area ;
        :areaId "4" ;
-       :isCriticalArea "False" ;
-       :latitude1 "59.94009" ;
-       :latitude2 "59.94544" ;
-       :longitude1 "10.70538" ;
-       :longitude2 "10.72898" ;
+       :isCriticalArea "True" ;
+       :latitude1 "57.94009" ;
+       :latitude2 "69.94544" ;
+       :longitude1 "9.70538" ;
+       :longitude2 "13.72898" ;
        :name "Big Critical Area" .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area5
+:area5 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "5" ;
+       :isCriticalArea "True" ;
+       :latitude1 "57.94009" ;
+       :latitude2 "69.94544" ;
+       :longitude1 "9.70538" ;
+       :longitude2 "13.72898" ;
+       :name "Big Critical Area 2" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1

@@ -101,34 +101,24 @@ class DigitalTwin()
             // We get ID from asset model and not InfluxDB because operator might have added smartphones without a position yet in asset model
             Int id = smartphonesDomain.get(index - 1);
 
-            MovableEntity smartphone = null;
+            MovableEntity smartphone = new MovableEntity(id, lat, long, null);
             Area a = null;
             Boolean isInsideACriticalArea = False;
 
             Int lengthAreas = areas.length();
             Int j = 0;
-            // Checks if a smartphone is inside any of the critical areas
+            // Check if a smartphone is inside any of the critical areas which keep track of which smartphones are inside it
             while (j < lengthAreas) do
-                if (!isInsideACriticalArea) then
-                    a = areas.get(j);
-                    isInsideACriticalArea = a.hasPosition(lat, long);
+                a = areas.get(j);
+                isInsideACriticalArea = a.hasPosition(lat, long);
+                if (isInsideACriticalArea) then
+                    smartphone.endangered = True;
+                    a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
+                else
+                    smartphone.endangered = False;
                 end
                 
                 j = j + 1;
-            end
-
-            if (isInsideACriticalArea) then
-                smartphone = new MovableEntity(id, lat, long, True);
-                a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
-                print("Smartphone:");
-                print(smartphone.movableEntityId);
-                print("Marked to be endangered! Shouldn't be inside the critical area:");
-                print(a.areaId);
-            else
-                smartphone = new MovableEntity(id, lat, long, False);
-                print("Smartphone:");
-                print(smartphone.movableEntityId);
-                print("Marked to be safe!");
             end
 
             i = i + 1;
@@ -156,13 +146,12 @@ class DigitalTwin()
 
             if (a.smartphones != null) then
                 Int length2 = a.smartphones.length();
-                print(length2);
                 Int j = 0;
                 print("Has smartphone(s):");
                 while (j < length2) do
                     MovableEntity next = a.smartphones.get(j);
                     print(next.movableEntityId);
-                    
+
                     j = j + 1;
                 end
             end
@@ -175,7 +164,7 @@ class DigitalTwin()
     Unit createMovableEntitiesWithNoPosition(Int i, Int length, List<Int> smartphonesDomain)
         while (i < length) do
             Int id2 = smartphonesDomain.get(i);
-            // Endangered set to False because it can't be determined and therefore not True
+            // Endangered set to False because it can't be determined, hence not True
             MovableEntity newSmartphone = new MovableEntity(id2, null, null, False);
             print(newSmartphone.movableEntityId);
             print(newSmartphone.latitude);
