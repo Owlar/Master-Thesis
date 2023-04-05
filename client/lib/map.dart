@@ -30,10 +30,12 @@ class _MapState extends State<Map> {
 
   late GoogleMapController _googleMapController;
 
+
   @override
   void initState() {
     super.initState();
   }
+
 
   Future<void> _createSocket() async {
     // This is currently the public IP of the machine running the server, and it
@@ -49,10 +51,10 @@ class _MapState extends State<Map> {
     if (androidInfo.isPhysicalDevice || iOSInfo.isPhysicalDevice) {
       ip = serverPublicIp;
     }
-
     _socket = await Socket.connect(ip, 8080);
     _listenOnSocket();
   }
+
 
   Future<void> _listenOnSocket() async {
     _socket.listen((event) {
@@ -70,6 +72,7 @@ class _MapState extends State<Map> {
     });
   }
 
+
   Future<void> _sendData(String id) async {
     final status = Status(
         id: id,
@@ -82,6 +85,7 @@ class _MapState extends State<Map> {
 
     _socket.add(utf8.encode(status.toString()));
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +131,7 @@ class _MapState extends State<Map> {
     );
   }
 
+
   Future<void> _start() async {
     final position = await _getPosition();
     setState(() {
@@ -146,8 +151,9 @@ class _MapState extends State<Map> {
     _streamLatestPosition();
   }
 
+
+  // Source: https://pub.dev/packages/geolocator (26.01.2023)
   Future<Position> _getPosition() async {
-    // Source: https://pub.dev/packages/geolocator (26.01.2023)
     bool isServiceEnabled;
     LocationPermission permission;
 
@@ -169,6 +175,7 @@ class _MapState extends State<Map> {
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
   }
 
+
   void _showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -177,9 +184,9 @@ class _MapState extends State<Map> {
     );
   }
 
+
   void _warn() {
     _showSnackBar("You are currently inside a critical area!");
-    print("If position was recently changed by a lot, this may not be accurate! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
     _googleMapController.moveCamera(CameraUpdate.zoomIn());
     // Safe zones are set to medical areas, such as hospitals
     rootBundle.loadString("assets/safe_zones.txt").then((str) {
@@ -190,6 +197,7 @@ class _MapState extends State<Map> {
     });
   }
 
+
   Future<void> _streamLatestPosition() async {
     const locationSettings = LocationSettings(
         accuracy: LocationAccuracy.best,
@@ -199,6 +207,7 @@ class _MapState extends State<Map> {
       _smartphonePosition = LatLng(pos.latitude, pos.longitude);
     });
   }
+
 
   Future<void> _stop() async {
     _socket.close();
