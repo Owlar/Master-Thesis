@@ -1,26 +1,6 @@
-class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
-    // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a square area where the coordinates align
-    Boolean hasPosition(Double lat, Double long)
-        Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
-        Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
-
-        if (inAnyLatitudeRange & inAnyLongitudeRange) then
-            return True;
-        end
-        
-        return False;
-    end
-end
-
-class Door() end
-
-class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Boolean endangered) end
-
-class Wall(Door door) end
-
-// Class for accessing InfluxDB in SMOL
-class Influx()
-    // Get latitude ranges of areas
+// Shadow for accessing InfluxDB data in SMOL
+class DigitalShadow()
+    // Get latitude ranges of areas from InfluxDB
     List<Double> getLatitudes()
         List<Double> areaLatitudes = null;
         areaLatitudes = access(
@@ -38,7 +18,7 @@ class Influx()
         return areaLatitudes;
     end
     
-    // Get longitude ranges of areas
+    // Get longitude ranges of areas from InfluxDB
     List<Double> getLongitudes()
         List<Double> areaLongitudes = null;
         areaLongitudes = access(
@@ -56,6 +36,7 @@ class Influx()
         return areaLongitudes;
     end
 
+    // Get newest smartphone coordinates from InfluxDB
     List<Double> getSmartphoneCoordinates()
         List<Double> coordinates = null;
         coordinates = access(
@@ -74,23 +55,13 @@ class Influx()
 
 end
 
+class DigitalTwin()
 
-main
-    Influx influx = new Influx();
-    
-    List<Double> areaLatitudes = influx.getLatitudes();
-    List<Double> areaLongitudes = influx.getLongitudes();
-
-    Door door = new Door();
-    Wall wall = new Wall(door);
-    
-    if (areaLatitudes == null | areaLongitudes == null) then
-        print("1. Could not get any critical area(s) from InfluxDB! Try adding areas to asset model and restart server.");
-    else
+    Unit createCriticalAreas(List<Double> areaLatitudes, List<Double> areaLongitudes)
         List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
         List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
         List<String> namesCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
-        print("1. Critical area(s) with coordinate(s)");
+        
         Int length = areaLatitudes.length();
         Int half = length / 2;
         Int i = 0;
@@ -107,8 +78,6 @@ main
             Double long1 = areaLongitudes.get(half + i);
             Double long2 = areaLongitudes.get(i);
 
-            // Area.isCriticalArea is set to True because we have previously filtered on critical areas, 
-            // and what is a critical area is determined elsewhere by an operator.
             Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2);
 
             print(area.areaId);
@@ -124,46 +93,31 @@ main
     end
 
 
-    List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
 
-    // Try get positions from InfluxDB
-    List<Double> coordinates = influx.getSmartphoneCoordinates();
+    Int createMovableEntities(List<Int> smartphonesDomain, List<Double> coordinates)
+        List<Area> areas = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
 
-    if (coordinates == null) then
-        print("2. Could not get positions of any smartphones from InfluxDB!");
-        i = 0;
-    else
-        print("---");
-        print("2. Creating smartphone object(s) from asset model and adding position(s) from InfluxDB:");
-        
-        List<Area> areaz = access("SELECT ?obj WHERE{ ?obj a prog:Area }");
-
-        length = coordinates.length();
-        half = length / 2;
-
-        i = 0;
+        Int length = coordinates.length();
+        Int half = length / 2;
+        Int i = 0;
         while (i < half) do
             Double lat = coordinates.get(half + i);
             Double long = coordinates.get(i);
 
-            index = half - i;
+            Int index = half - i;
             // We get ID from asset model and not InfluxDB because operator might have added smartphones without a position yet in asset model
-            id = smartphonesDomain.get(index - 1);
+            Int id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = null;
             
             // Checking if a smartphone is already marked to be inside a critical area, in which case it shouldn't change
             Boolean isInsideACriticalArea = False;
 
-            Int lengthAreaz = areaz.length();
+            Int lengthAreas = areas.length();
             Int j = 0;
             // Checks if a smartphone is inside any of the critical areas
-            while (j < lengthAreaz) do
-                Area a = areaz.get(j);
-                // Can't use a.isCriticalArea because it's a Boolean with double quotation marks around it.
-                // Can't currently get Booleans as Booleans and not Strings in SMOL when using access(). 
-                // Can't make isCriticalArea a String value either, because that would be weirder
-                // There is a single error associated with this, but any other ways have yielded more errors
+            while (j < lengthAreas) do
+                Area a = areas.get(j);
                 if (!isInsideACriticalArea) then
                     isInsideACriticalArea = a.hasPosition(lat, long);
                 end
@@ -184,15 +138,13 @@ main
 
             i = i + 1;
         end // End of while loop
-    end // End of else statement
+
+        return i;
+    end // End of function
 
 
 
-    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
-    length = smartphonesDomain.length();
-    print("---");
-    if (i < length) then
-        print("3. Printing the smartphone(s) without a position");
+    Unit createMovableEntitiesWithNoPosition(Int i, Int length, List<Int> smartphonesDomain)
         while (i < length) do
             Int id2 = smartphonesDomain.get(i);
             // Endangered set to False because it can't be determined and therefore not True
@@ -204,58 +156,151 @@ main
 
             i = i + 1;
         end
-    else
-        print("3. All smartphone(s) in domain have a position");
-    end
-    
+    end 
 
+    Unit printAllMovableEntities(List<MovableEntity> smartphones)
+        Int length = smartphones.length();
+        Int i = 0;
+        while (i < length) do
+            MovableEntity m = smartphones.get(i);
+            print(m.movableEntityId);
+            print(m.latitude);
+            print(m.longitude);
+            print(m.endangered);
 
-
-    print("---");
-    print("4. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
-    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
-    
-    length = smartphones.length();
-    i = 0;
-    while (i < length) do
-        MovableEntity m = smartphones.get(i);
-        print(m.movableEntityId);
-        print(m.latitude);
-        print(m.longitude);
-        print(m.endangered);
-
-        i = i + 1;
-    end
-
-
-
-    Boolean canCheck = False;
-    i = 0;
-    while (i < length) do
-        MovableEntity movableEntity = smartphones.get(i);
-        if (movableEntity.latitude != null & movableEntity.longitude != null) then
-            canCheck = True;
+            i = i + 1;
         end
-        i = i + 1;
     end
 
-    if (canCheck) then
-        print("---");
-        print("5. Smartphone(s) with known position(s) that can be checked:");
+    Unit printVerifiableCheck(Int i, Int length, List<MovableEntity> smartphones)
+        Boolean canCheck = False;
         i = 0;
         while (i < length) do
-            MovableEntity movableEntity2 = smartphones.get(i);
-            if (movableEntity2.latitude != null & movableEntity2.longitude != null) then
-                print(movableEntity2.movableEntityId);
+            MovableEntity movableEntity = smartphones.get(i);
+            if (movableEntity.latitude != null & movableEntity.longitude != null) then
+                canCheck = True;
             end
             i = i + 1;
         end
-        print("query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_endangered true. ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }");
-    else
-        print("---");
-        print("5. Can query manually with SPARQL:");
+
+        if (canCheck) then
+            print("---");
+            print("5. Smartphone(s) with known position(s) that can be checked:");
+            i = 0;
+            while (i < length) do
+                MovableEntity movableEntity2 = smartphones.get(i);
+                if (movableEntity2.latitude != null & movableEntity2.longitude != null) then
+                    print(movableEntity2.movableEntityId);
+                    print(movableEntity2.endangered);
+                end
+                i = i + 1;
+            end
+            print("query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }");
+        else
+            print("---");
+            print("5. Can query manually with SPARQL:");
+        end
     end
 
+    //TODO: Add smartphone to list of smartphones of the critical area it is inside
+
+end
+
+class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2)
+    // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a square area where the coordinates align
+    Boolean hasPosition(Double lat, Double long)
+        Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
+        Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
+
+        if (inAnyLatitudeRange & inAnyLongitudeRange) then
+            return True;
+        end
+        
+        return False;
+    end
+end
+
+class Door() end
+
+class MovableEntity(Int movableEntityId, Double latitude, Double longitude, Boolean endangered) end
+
+class Wall(Door door) end
+
+
+main
+    DigitalShadow shadow = new DigitalShadow();
+    
+    List<Double> areaLatitudes = shadow.getLatitudes();
+    List<Double> areaLongitudes = shadow.getLongitudes();
+    List<Double> coordinates = shadow.getSmartphoneCoordinates();
+
+    DigitalTwin twin = new DigitalTwin();
+
+    Door door = new Door();
+    Wall wall = new Wall(door);
+
+    Int i = 0;
+    
+
+
+    // 1. CREATE CRITICAL AREAS
+    if (areaLatitudes == null | areaLongitudes == null) then
+        print("1. Could not get any critical area(s) from InfluxDB! Check if there are any area(s) in asset model (building.owl), and then restart the server!");
+    else
+        print("1. Critical area(s) with coordinate(s):");
+        twin.createCriticalAreas(areaLatitudes, areaLongitudes);
+    end
+
+
+
+    List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
+    
+
+
+    // 2. CREATE SMARTPHONES
+    print("---");
+    if (coordinates == null) then
+        print("2. Could not get positions of any smartphones from InfluxDB!");
+    else
+        if (smartphonesDomain == null) then
+            print("2. No smartphone(s) in asset model!");
+        else
+            print("2. Smartphone(s) with position(s) from InfluxDB:");
+            // Variable 'i' to keep track of which smartphone(s) don't have a position
+            i = twin.createMovableEntities(smartphonesDomain, coordinates);
+        end
+    end
+
+
+
+    // 3. CREATE ONLY REGISTERED SMARTPHONES THAT HAVE NO POSITION
+    print("---");
+    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position. 
+    Int length = smartphonesDomain.length();
+    if (i < length) then
+        print("3. Printing the smartphone(s) without a position");
+        twin.createMovableEntitiesWithNoPosition(i, length, smartphonesDomain);
+    else
+        print("3. All smartphone(s) in domain have a position");
+    end
+
+
+
+    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
+
+
+
+    // 4. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
+    print("---");
+    print("4. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
+    twin.printAllMovableEntities(smartphones);
+
+
+
+    // 5. INFORMATION ABOUT SMARTPHONES WITH KNOWN POSITIONS THAT CAN BE VERIFIABLY CHECKED AND HOW
+    twin.printVerifiableCheck(i, length, smartphones);
+
+    // SPARQL Queries
     /*          "Checking which smartphone(s) are in the domain"
     query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
                 "Checking if smartphone 1 exists"
@@ -276,11 +321,8 @@ main
     breakpoint;
 
 
-
-    print("6. To manually check if the resulting object(s) correspond(s) with the background knowledge graph, type 'dump' and search for object(s) in 'output.ttl'!");
-
     print("---");
-    print("7. Validating SHACL shapes..");
+    print("6. Validating SHACL shapes..");
     Boolean validation = validate("output.ttl");
     print(validation);
 end

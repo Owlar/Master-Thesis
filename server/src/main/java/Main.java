@@ -116,7 +116,7 @@ public class Main {
                 }
                 return;
             }
-            System.out.println("Not aware of any endangered smartphones! Run the DT and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
+            System.out.println("Run the Digital Twin again and make sure to use 'dump' to update knowledge graph, then recheck position in client!");
         }
 
         @Override
