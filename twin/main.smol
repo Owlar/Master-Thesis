@@ -120,6 +120,12 @@ class DigitalTwin()
                 
                 j = j + 1;
             end
+            if (isInsideACriticalArea) then
+                print("Smartphone:");
+                print(smartphone.movableEntityId);
+                print("Endangered:");
+                print(smartphone.endangered);
+            end
 
             i = i + 1;
         end // End of while loop
