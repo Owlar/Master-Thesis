@@ -94,15 +94,6 @@ class DigitalTwin()
         return i;
     end
 
-    Unit 
-
-    Unit smartphoneSimplePrint(MovableEntity smartphone)
-        print("Smartphone:");
-        print(smartphone.movableEntityId);
-        print("Endangered:");
-        print(smartphone.endangered);
-    end
-
 
 
     Unit printCriticalAreas()
