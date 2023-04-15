@@ -2,7 +2,6 @@ import com.google.common.base.Charsets;
 import constants.Constants;
 import influx.InfluxDB;
 import jena.Jena;
-import model.Area;
 import model.Data;
 import org.apache.commons.io.IOUtils;
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
@@ -42,7 +41,6 @@ public class Main {
                     Constants.ORG.toString(),
                     Constants.URL.toString()
             );
-            getAreas();
 
             while (true) {
                 // Let clients connect to server
@@ -64,17 +62,6 @@ public class Main {
             System.out.println("   Record " + i + ": Client " + d.id + " has data [(" + d.latitude + ", " + d.longitude + "), " + d.instant + "]");
             i++;
         }
-    }
-
-
-    private void getAreas() {
-        ArrayList<Area> resAreas = Owl.getAreasFromAssetModel();
-        if (!resAreas.isEmpty()) {
-            for (Area area : resAreas)
-                influxDB.insertDataPoint(area);
-            return;
-        }
-        System.out.println("No areas in asset model! Add some areas to: " + Constants.ONTOLOGYFILEPATH);
     }
 
 

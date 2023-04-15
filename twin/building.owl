@@ -105,10 +105,10 @@
                 :Area ;
        :areaId "1" ;
        :isCriticalArea "True" ;
-       :latitude1 "59.9442" ;
-       :latitude2 "59.9430" ;
-       :longitude1 "10.7195" ;
-       :longitude2 "10.7172" ;
+       :latitude1 "59.9442"^^xsd:double ;
+       :latitude2 "59.943"^^xsd:double ;
+       :longitude1 "10.7195"^^xsd:double ;
+       :longitude2 "10.7172"^^xsd:double ;
        :name "IFI" .
 
 
@@ -117,10 +117,10 @@
                 :Area ;
        :areaId "2" ;
        :isCriticalArea "False" ;
-       :latitude1 "59.9430" ;
-       :latitude2 "59.9430" ;
-       :longitude1 "10.7177" ;
-       :longitude2 "10.7172" ;
+       :latitude1 "59.943"^^xsd:double ;
+       :latitude2 "59.943"^^xsd:double ;
+       :longitude1 "10.7177"^^xsd:double ;
+       :longitude2 "10.7172"^^xsd:double ;
        :name "Canteen at IFI" .
 
 
@@ -129,10 +129,10 @@
                 :Area ;
        :areaId "3" ;
        :isCriticalArea "True" ;
-       :latitude1 "59.9442" ;
-       :latitude2 "59.9442" ;
-       :longitude1 "10.7195" ;
-       :longitude2 "10.7193" ;
+       :latitude1 "59.9442"^^xsd:double ;
+       :latitude2 "59.9442"^^xsd:double ;
+       :longitude1 "10.7195"^^xsd:double ;
+       :longitude2 "10.7193"^^xsd:double ;
        :name "Study Room at IFI" .
 
 
@@ -141,23 +141,11 @@
                 :Area ;
        :areaId "4" ;
        :isCriticalArea "True" ;
-       :latitude1 "57.94009" ;
-       :latitude2 "69.94544" ;
-       :longitude1 "9.70538" ;
-       :longitude2 "13.72898" ;
+       :latitude1 "57.94009"^^xsd:double ;
+       :latitude2 "69.94544"^^xsd:double ;
+       :longitude1 "9.70538"^^xsd:double ;
+       :longitude2 "13.72898"^^xsd:double ;
        :name "Big Critical Area" .
-
-
-###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area5
-:area5 rdf:type owl:NamedIndividual ,
-                :Area ;
-       :areaId "5" ;
-       :isCriticalArea "True" ;
-       :latitude1 "57.94009" ;
-       :latitude2 "69.94544" ;
-       :longitude1 "9.70538" ;
-       :longitude2 "13.72898" ;
-       :name "Big Critical Area 2" .
 
 
 ###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone1

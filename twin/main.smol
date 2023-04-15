@@ -1,41 +1,5 @@
 // Shadow for accessing InfluxDB data in SMOL
 class DigitalShadow()
-    // Get latitude ranges of areas from InfluxDB
-    List<Double> getLatitudes()
-        List<Double> areaLatitudes = null;
-        areaLatitudes = access(
-            "from(bucket: \"Data\")
-                |> range(start: -20m)
-                |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
-                |> filter(fn: (r) => r[\"_field\"] == \"latitude1\" or r[\"_field\"] == \"latitude2\")
-                |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
-                |> sort(columns: [\"_time\"], desc: true)
-                |> unique(column: \"areaId\")
-                |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-                |> yield(name: \"first\")",
-            INFLUXDB("influx.yml")
-        );
-        return areaLatitudes;
-    end
-    
-    // Get longitude ranges of areas from InfluxDB
-    List<Double> getLongitudes()
-        List<Double> areaLongitudes = null;
-        areaLongitudes = access(
-            "from(bucket: \"Data\")
-                |> range(start: -20m)
-                |> filter(fn: (r) => r[\"_measurement\"] == \"area\")
-                |> filter(fn: (r) => r[\"_field\"] == \"longitude1\" or r[\"_field\"] == \"longitude2\")
-                |> filter(fn: (r) => r[\"isCriticalArea\"] == \"true\")
-                |> sort(columns: [\"_time\"], desc: true)
-                |> unique(column: \"areaId\")
-                |> aggregateWindow(every: 5m, fn: first, createEmpty: false)
-                |> yield(name: \"first\")",
-            INFLUXDB("influx.yml")
-        );
-        return areaLongitudes;
-    end
-
     // Get newest smartphone coordinates from InfluxDB
     List<Double> getSmartphoneCoordinates()
         List<Double> coordinates = null;
@@ -52,36 +16,41 @@ class DigitalShadow()
         );
         return coordinates;
     end
-
 end
 
 class DigitalTwin()
 
-    Unit createCriticalAreas(List<Double> areaLatitudes, List<Double> areaLongitudes)
+    Unit createCriticalAreas()
         List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
-        List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
-        List<String> namesCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
-        
-        Int length = areaLatitudes.length();
-        Int half = length / 2;
-        Int i = 0;
-        while (i < half) do
-            Int temp = half - i;
-            Int index = temp - 1;
+        if (criticalAreasDomain == null ) then
+            print("1. Could not get any critical area(s) from asset model! Add critical area(s) to the asset model (building.owl)!");
+        else
+            print("1. Creating critical area(s):");
+            List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
+            List<String> namesCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
+            
+            List<Double> latitude1CriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:latitude1 ?obj }");
+            List<Double> latitude2CriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:latitude2 ?obj }");
+            List<Double> longitude1CriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:longitude1 ?obj }");
+            List<Double> longitude2CriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:longitude2 ?obj }");
 
-            Int id = criticalAreasDomain.get(index);
-            Boolean isCriticalArea = isCriticalAreasDomain.get(index);
-            String name = namesCriticalAreasDomain.get(index);
+            Int length = criticalAreasDomain.length();
+            Int i = 0;
+            while (i < length) do
+                Int id = criticalAreasDomain.get(i);
+                Boolean isCriticalArea = isCriticalAreasDomain.get(i);
+                String name = namesCriticalAreasDomain.get(i);
 
-            Double lat1 = areaLatitudes.get(half + i);
-            Double lat2 = areaLatitudes.get(i);
-            Double long1 = areaLongitudes.get(half + i);
-            Double long2 = areaLongitudes.get(i);
+                Double lat1 = latitude1CriticalAreasDomain.get(i);
+                Double lat2 = latitude2CriticalAreasDomain.get(i);
+                Double long1 = longitude1CriticalAreasDomain.get(i);
+                Double long2 = longitude2CriticalAreasDomain.get(i);
 
-            Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2, null);
-            print(area.areaId);
+                Area area = new Area(id, name, isCriticalArea, lat1, lat2, long1, long2, null);
+                print(area.areaId);
 
-            i = i + 1;
+                i = i + 1;
+            end
         end
     end
 
@@ -101,7 +70,7 @@ class DigitalTwin()
             // We get ID from asset model and not InfluxDB because operator might have added smartphones without a position yet in asset model
             Int id = smartphonesDomain.get(index - 1);
 
-            MovableEntity smartphone = new MovableEntity(id, lat, long, null);
+            MovableEntity smartphone = new MovableEntity(id, lat, long, False);
             Area a = null;
             Boolean isInsideACriticalArea = False;
 
@@ -114,24 +83,25 @@ class DigitalTwin()
                 if (isInsideACriticalArea) then
                     smartphone.endangered = True;
                     a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
-                else
-                    smartphone.endangered = False;
                 end
-                
+
                 j = j + 1;
-            end
-            if (isInsideACriticalArea) then
-                print("Smartphone:");
-                print(smartphone.movableEntityId);
-                print("Endangered:");
-                print(smartphone.endangered);
             end
 
             i = i + 1;
-        end // End of while loop
+        end
 
         return i;
-    end // End of function
+    end
+
+    Unit 
+
+    Unit smartphoneSimplePrint(MovableEntity smartphone)
+        print("Smartphone:");
+        print(smartphone.movableEntityId);
+        print("Endangered:");
+        print(smartphone.endangered);
+    end
 
 
 
@@ -250,8 +220,6 @@ class Wall(Door door) end
 main
     DigitalShadow shadow = new DigitalShadow();
     
-    List<Double> areaLatitudes = shadow.getLatitudes();
-    List<Double> areaLongitudes = shadow.getLongitudes();
     List<Double> coordinates = shadow.getSmartphoneCoordinates();
 
     DigitalTwin twin = new DigitalTwin();
@@ -261,25 +229,15 @@ main
 
     Int i = 0;
     
-
-
     // 1. CREATE CRITICAL AREAS
     print("---");
-    if (areaLatitudes == null | areaLongitudes == null) then
-        print("1. Could not get any critical area(s) from InfluxDB! Check if there are any area(s) in asset model (building.owl), and then restart the server!");
-    else
-        print("1. Creating critical area(s):");
-        twin.createCriticalAreas(areaLatitudes, areaLongitudes);
-    end
+    twin.createCriticalAreas();
 
-
-
-    List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
-    
 
 
     // 2. CREATE SMARTPHONES
     print("---");
+    List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
     if (coordinates == null) then
         print("2. Could not get positions of any smartphones from InfluxDB!");
     else
@@ -291,7 +249,6 @@ main
             i = twin.createMovableEntities(smartphonesDomain, coordinates);
         end
     end
-
 
 
 
@@ -314,13 +271,10 @@ main
 
 
 
-    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
-
-
-
     // 5. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
     print("---");
     print("5. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
+    List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
     twin.printAllMovableEntities(smartphones);
 
 
@@ -349,6 +303,8 @@ main
     breakpoint;
 
 
+
+    // 7. VALIDATING SHACL SHAPES
     print("---");
     print("7. Validating SHACL shapes..");
     Boolean validation = validate("output.ttl");
