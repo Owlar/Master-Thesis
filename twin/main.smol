@@ -224,8 +224,6 @@ class DigitalTwin()
         end
     end
 
-    //TODO: Add smartphone to list of smartphones of the critical area it is inside
-
 end
 
 class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2, List<MovableEntity> smartphones)
