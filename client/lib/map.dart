@@ -52,7 +52,6 @@ class _MapState extends State<Map> {
       ip = serverPublicIp;
     }
     _socket = await Socket.connect(ip, 8080);
-    _listenOnSocket();
   }
 
 
@@ -70,6 +69,16 @@ class _MapState extends State<Map> {
         });
       }
     });
+  }
+
+  Future<void> _animateCamera() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: _smartphonePosition,
+            zoom: _zoomLevel
+        )
+    ));
   }
 
 
@@ -138,17 +147,12 @@ class _MapState extends State<Map> {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
     });
     // TODO: Give message if server is down
-    await _createSocket();
-
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(
-      CameraPosition(
-          target: _smartphonePosition,
-          zoom: _zoomLevel
-      )
-    ));
-    _showSnackBar(_smartphonePosition.toString());
-    _streamLatestPosition();
+    await _createSocket().then((value) {
+      _listenOnSocket();
+      _animateCamera();
+      _showSnackBar(_smartphonePosition.toString());
+      _streamLatestPosition();
+    });
   }
 
 
@@ -156,10 +160,8 @@ class _MapState extends State<Map> {
   Future<Position> _getPosition() async {
     bool isServiceEnabled;
     LocationPermission permission;
-
     isServiceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!isServiceEnabled) return Future.error("Location is not enabled!");
-
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -167,11 +169,9 @@ class _MapState extends State<Map> {
         return Future.error("Location permissions were denied!");
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       return Future.error("Location permissions are denied forever, check settings!");
     }
-
     return await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best);
   }
 
