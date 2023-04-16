@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:client/service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,7 @@ class Map extends StatefulWidget {
 }
 
 class _MapState extends State<Map> {
+  final Service _service = Service();
   final Completer<GoogleMapController> _controller = Completer();
   final double _zoomLevel = 14.0;
 
@@ -153,6 +155,7 @@ class _MapState extends State<Map> {
       }
       else {
         _sendData(received);
+        // Test with realtime database
         _warned = false;
         setState(() {
           _googleMapController.setMapStyle(null);
@@ -191,6 +194,8 @@ class _MapState extends State<Map> {
     setState(() {
       _messages.add(status);
     });
+    // Testing with realtime database
+    _service.addStatus(status);
     _socket.add(utf8.encode(status.toString()));
   }
 

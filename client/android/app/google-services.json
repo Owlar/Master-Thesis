@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "412147547079",
+    "firebase_url": "https://masterthesis-77b98-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "masterthesis-77b98",
     "storage_bucket": "masterthesis-77b98.appspot.com"
   },
@@ -29,6 +30,13 @@
             {
               "client_id": "412147547079-goqlq4t0jm1umgh324d3qopmc1bnkgnn.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "412147547079-5v7gsli71j9rpsttgjsqn7otfrovvjl4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.client"
+              }
             }
           ]
         }

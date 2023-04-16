@@ -30,5 +30,7 @@
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:412147547079:ios:18a5c7d5df65fcdbeb37e2</string>
+	<key>DATABASE_URL</key>
+	<string>https://masterthesis-77b98-default-rtdb.europe-west1.firebasedatabase.app</string>
 </dict>
 </plist>
