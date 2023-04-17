@@ -21,4 +21,8 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
     > flutter upgrade
     > flutter pub get
     ````
+    If there are any undefined code, e.g. due to Firebase, simply run the following:
+    ````flutter
+    > flutter pub get
+    ````
  
