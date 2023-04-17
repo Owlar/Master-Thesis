@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "masterthesis-77b98",
+  "private_key_id": "3204b1fba8b47c11cb1e10fa1632ce3f5bf5965f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDUvbtPk4UtJWHz\n0wwLIwe7tw/xOPxQ2+k49Se9YYIQF6K0jJp9tEhxEk3iQSSYdDsZ6qj7nzIJHgxA\noghTgPL6JHqh2zlM8bfssmm8d6UNedxQNiswk2yWwwYQ7qcI3uZ0lUSqR2tV/9n3\nQbaxDa/i00ztKAYGaMkV9BRCSVbVyGKGq11MAoCxq7BkUu6GrKbKmd4ptczf4lAs\nbk7inx62BFtrI9OEzDElQPi3jlaADVMuVHcx0lNRoEvu0nm6JmQSLkzLYvV/ZQRU\nMzNcCTJ6VIksyS46pasihV8rqCqdMy6a+D1JTcBKfnw0d/kr6MM1z1Y9e33s5PMw\nJArmGpYxAgMBAAECggEAD/VwqvJFzAJxI+WJ0n8M+jWsFjwgX19z0iA/3CrHozXm\nsHUYtMPUqFjHa2jYGjCj61iJVyDU087DfAi7p6n1cDLS2Tf1BzLdyX2DxY3THZzt\n3D2IBWOVwoR8PMJuWNHBx26YIU7svB2OiAgPsJ32ewU/UM4PD6WGKiWubF+MikpU\nELfkWRLjVyH7n6+QeRFiV9k7aiUYdve30QXFRaq/c+YQOiYeHYpwxhRhe8CQSjfS\nLjqJduushTmuQZ3F7j/9WNotpukXTpKqRs5O7N6TEw55rSRH7l8gFwMZXCOjrVKN\nccTdZSXhvEVzXPoYX81VHWpm8hvcqfgnrGDLQDxC0QKBgQD6+jWeWucAcXcD3yLj\nV00UMp0RY3NZwgmijpAiIVta4xCAzLeqq6fi/hnxC7vn7Z6WI9PZ6iMVbIAIyY3l\nDHMS17Uwa2F5cGD3g1AXIgGvGwDLiE1828ZyIZtLJGISw+Z5xdbTTZ+4vmgv2ajl\njrhpx+zU35ljPm6vvH+w7UekiQKBgQDY/6IETcVJcZepr8KKY/yZ29IWRIwS9kMS\nrSItxgqSBbjc1XiNUDO3Hc96876Jw9s5IGMu+vLs+uUOoNjDSC1D7qRAoCwRf1Ly\nggufmHmvNdlYkHNbhYha7zncCdNL6PYfV698BoW+o13gpao0SBrptVpeqPflL6Ly\ncExNu8TKaQKBgQDchGH+PGLBqfBnj3RJCljoSTxmndopYGs00ExmIKbzKZVDhhxO\nsjp2IMvMVoII22i/BMXMr4OZ/FZW4jlxqkmlobBK1d60ZABfGZqSaMfQAkrlimKD\nNVucxlh7YoFleYkVL7Z8vLR9D5fdi0JySL9R+l7l/3z3jVCVymrrmuCa+QKBgQDJ\njWcnKDU+6ks8SQwhDo3pOsv/8ttIIYRbLIS6j1/yEW6Lb5vxZbUjOIUmZo9r1ocg\noHx/fod0pfVriOrNN5UTq+zUOfG0rtaUeUXijvU3UIT4RfNf5r+n9tt/DYE82L0C\nj6dnQ4emcocXycg1l2On/9JYagkWzxBCrxuwd99pQQKBgC9My3hUyryBrERwp7UK\nqdC2RYxpzGCdoWTM30NbW60TMWeeviTm2Gs2mY0RDf6KVfG0PLLXwWfodoVVjQz2\nlIb4yNruYtj8XJsrkSivdkjCxfjrl0gNs9HJr3SNcE/JFBCbXRFIfCHesmkN2EEL\nSR/BEvFVOI3DMGtzDWI2aRC2\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-9w0ts@masterthesis-77b98.iam.gserviceaccount.com",
+  "client_id": "111584967577555864947",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-9w0ts%40masterthesis-77b98.iam.gserviceaccount.com"
+}

@@ -1,5 +1,6 @@
 import com.google.common.base.Charsets;
 import constants.Constants;
+import firebase.FirebaseDB;
 import influx.InfluxDB;
 import jena.Jena;
 import model.Data;
@@ -22,6 +23,7 @@ public class Main {
     private Map<Integer,Data> dataList = new HashMap<>();
     private List<Worker> workers = new ArrayList<>();
     private InfluxDB influxDB = null;
+    private FirebaseDB firebaseDB = null;
 
 
     public static void main(String[] args) {
@@ -35,6 +37,8 @@ public class Main {
         try {
             ServerSocket serverSocket = new ServerSocket(8080);
             System.out.println("Server has started! Now waiting for clients.");
+            firebaseDB = new FirebaseDB();
+            ArrayList<Data> res = firebaseDB.getData();
             influxDB = new InfluxDB(
                     Constants.TOKEN.toString(),
                     Constants.BUCKET.toString(),

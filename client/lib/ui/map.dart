@@ -2,14 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:client/service.dart';
+import 'package:client/service/service.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'status.dart';
+import '../model/status.dart';
 
 
 class Map extends StatefulWidget {

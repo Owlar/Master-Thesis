@@ -1,4 +1,4 @@
-import 'package:client/status.dart';
+import 'package:client/model/status.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 class Service {
