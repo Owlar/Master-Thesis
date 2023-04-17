@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
 
 import 'package:client/service/service.dart';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -26,24 +23,16 @@ class _MapState extends State<Map> {
 
   late GoogleMapController _googleMapController;
   late LatLng _smartphonePosition;
-  late Socket _socket;
+  late Status _currentStatus;
 
   Set<Status> _messages = {};
   bool _warned = false;
-
 
   @override
   void initState() {
     super.initState();
   }
 
-
-  Future<void> _stop() async {
-    _socket.close();
-    setState(() {
-      _messages = {};
-    });
-  }
 
 
   @override
@@ -91,18 +80,53 @@ class _MapState extends State<Map> {
   }
 
 
+
+  Future<void> _stop() async {
+    _showDecision(_currentStatus.id);
+    setState(() {
+      _messages = {};
+    });
+  }
+
+
+
   Future<void> _start() async {
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
     });
-    await _createSocket().then((value) {
-      _listenOnSocket();
-      _animateCamera();
-      _showSnackBar(_smartphonePosition.toString());
-      _updateLatestPosition();
-    }, onError: (e) => _showSnackBar("Could not connect to server!"));
+    _createStatus().then((value) async => {
+      await _service.addStatus(_currentStatus).then((value) {
+        _resetState();
+        _animateCamera();
+        _showSnackBar(_smartphonePosition.toString());
+        _updateLatestPosition();
+        }, onError: (e) => _showSnackBar("Could not send updated status!"))
+    }, onError: (e) => _showSnackBar("Could not create a status!"));
   }
+
+
+
+  Future<void> _createStatus() async {
+    int id = await _service.getId();
+    _currentStatus = Status(
+        id: id,
+        latitude: _smartphonePosition.latitude.toString(),
+        longitude: _smartphonePosition.longitude.toString(),
+        endangered: false
+    );
+  }
+
+
+
+  void _resetState() {
+    setState(() {
+      _messages.add(_currentStatus);
+      _googleMapController.setMapStyle(null);
+    });
+    _warned = false;
+  }
+
 
 
   // Source: https://pub.dev/packages/geolocator (26.01.2023)
@@ -119,7 +143,6 @@ class _MapState extends State<Map> {
         return Future.error("Location permissions were denied!");
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       return Future.error("Location permissions are denied forever, check settings!");
     }
@@ -127,46 +150,20 @@ class _MapState extends State<Map> {
   }
 
 
-  Future<void> _createSocket() async {
-    // This is currently the public IP of the machine running the server, and it
-    // is used to establish a connection from a physical device (smartphone) to it.
-    String serverPublicIp = "172.20.36.207";
 
-    String ip = "10.0.2.2";
-
-    final deviceInfo = DeviceInfoPlugin();
-    final androidInfo = await deviceInfo.androidInfo;
-    final iOSInfo = await deviceInfo.iosInfo;
-
-    if (androidInfo.isPhysicalDevice || iOSInfo.isPhysicalDevice) {
-      ip = serverPublicIp;
+  Future<void> _showDecision(int id) async {
+    bool isEndangered = await _service.isEndangered(id);
+    if (isEndangered) {
+      _showSnackBar("You are currently inside a critical area! Medical zones are shown in green.");
+      _warn();
+    } else {
+      _showSnackBar("You are safe!");
     }
-    _socket = await Socket.connect(ip, 8080)
-        .timeout(const Duration(seconds: 2));
   }
 
-
-
-  Future<void> _listenOnSocket() async {
-    _socket.listen((event) {
-      String received = utf8.decode(event).trim();
-      if (received == "-1") {
-        _warn();
-      }
-      else {
-        _sendData(received);
-        // Test with realtime database
-        _warned = false;
-        setState(() {
-          _googleMapController.setMapStyle(null);
-        });
-      }
-    });
-  }
 
 
   void _warn() {
-    _showSnackBar("You are currently inside a critical area!");
     _googleMapController.moveCamera(CameraUpdate.zoomIn());
     // Safe zones are set to medical areas, such as hospitals
     rootBundle.loadString("assets/safe_zones.txt").then((str) {
@@ -178,25 +175,11 @@ class _MapState extends State<Map> {
   }
 
 
+
   void _showSnackBar(String text) {
     ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(text))
     );
-  }
-
-
-  Future<void> _sendData(String id) async {
-    final status = Status(
-      id: id,
-      position: _smartphonePosition.latitude.toString() + "," + _smartphonePosition.longitude.toString(),
-    );
-    // To keep track of position recording toggle
-    setState(() {
-      _messages.add(status);
-    });
-    // Testing with realtime database
-    _service.addStatus(status);
-    _socket.add(utf8.encode(status.toString()));
   }
 
 
@@ -210,6 +193,7 @@ class _MapState extends State<Map> {
         )
     ));
   }
+
 
 
   Future<void> _updateLatestPosition() async {

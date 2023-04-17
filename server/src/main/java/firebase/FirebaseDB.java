@@ -28,16 +28,16 @@ public class FirebaseDB {
     public ArrayList<Data> getData() {
         ArrayList<Data> res = new ArrayList<>();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("mobiles");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                System.out.println(dataSnapshot.getChildrenCount());
+                System.out.println("Number of clients with known position: " + dataSnapshot.getChildrenCount());
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("Could not retrieve data from Firebase realtime database.");
+                System.out.println("Could not retrieve data from realtime database.");
             }
         });
         return res;
