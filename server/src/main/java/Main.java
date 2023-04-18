@@ -12,12 +12,17 @@ import owl.Owl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 public class Main {
 
     private DatabaseReference reference = null;
     private InfluxDB influxDB = null;
+    private boolean warned = false;
+    private boolean gottenSensorData = false;
 
 
     public static void main(String[] args) {
@@ -35,9 +40,25 @@ public class Main {
 
         System.out.println("Running..");
 
-        while (true) {
+        while (!gottenSensorData && !warned) {
             new Worker().start();
+            Map<String, Object> res = Jena.getEndangeredSmartphones();
+            if (!res.isEmpty()) {
+                warnEndangeredClients(res);
+            }
         }
+        System.out.println("Warning clients(s)!");
+    }
+
+    private void warnEndangeredClients(Map<String, Object> results) {
+        reference = FirebaseDatabase.getInstance().getReference("endangered");
+        DatabaseReference.CompletionListener completionListener = new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                warned = true;
+            }
+        };
+        reference.push().setValue(results, completionListener);
     }
 
     class Worker extends Thread {
@@ -45,10 +66,7 @@ public class Main {
         @Override
         public void run() {
             prepareData();
-            ArrayList<Integer> res = Jena.getEndangeredSmartphones();
-            // TODO: Update Firebase with endangered smartphones
         }
-
     }
 
 
@@ -95,6 +113,7 @@ public class Main {
                         e.printStackTrace();
                     }
                 }
+                gottenSensorData = true;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
