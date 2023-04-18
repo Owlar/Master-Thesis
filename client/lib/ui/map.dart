@@ -111,7 +111,7 @@ class _MapState extends State<Map> {
   Future<void> _createStatus() async {
     int id = await _service.getId();
     _currentStatus = Status(
-        id: id,
+        id: id.toString(),
         latitude: _smartphonePosition.latitude.toString(),
         longitude: _smartphonePosition.longitude.toString(),
         endangered: false
@@ -152,7 +152,7 @@ class _MapState extends State<Map> {
 
 
 
-  Future<void> _showDecision(int id) async {
+  Future<void> _showDecision(String id) async {
     bool isEndangered = await _service.isEndangered(id);
     if (isEndangered) {
       _showSnackBar("You are currently inside a critical area! Medical zones are shown in green.");

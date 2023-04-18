@@ -20,12 +20,15 @@ class Service {
   }
 
 
-  Future<bool> isEndangered(int id) async {
-    DatabaseReference reference = FirebaseDatabase.instance.ref("mobiles");
+  Future<bool> isEndangered(String id) async {
+    DatabaseReference reference = FirebaseDatabase.instance.ref("endangered");
     DataSnapshot snapshot = await reference.get();
-    Iterable<DataSnapshot> children = snapshot.children.where((item) => item.child("id").value == id);
-    Object? child = children.first.child("endangered").value;
+    Iterable<DataSnapshot> children = snapshot.children.where((item) => item.child(id).value == id);
+    if (children.isEmpty) return false;
+
+    Object? child = children.first.child(id).value;
     if (child == null) return false;
-    return child as bool;
+
+    return true;
   }
 }
