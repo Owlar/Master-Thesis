@@ -15,8 +15,7 @@ class Service {
     await reference.push().set({
       "id": status.id,
       "latitude": status.latitude,
-      "longitude": status.longitude,
-      "endangered": status.endangered
+      "longitude": status.longitude
     }).onError((error, stackTrace) => null);
   }
 
@@ -25,6 +24,8 @@ class Service {
     DatabaseReference reference = FirebaseDatabase.instance.ref("mobiles");
     DataSnapshot snapshot = await reference.get();
     Iterable<DataSnapshot> children = snapshot.children.where((item) => item.child("id").value == id);
-    return children.first.child("endangered").value as bool;
+    Object? child = children.first.child("endangered").value;
+    if (child == null) return false;
+    return child as bool;
   }
 }

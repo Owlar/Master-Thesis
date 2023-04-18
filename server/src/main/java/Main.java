@@ -1,18 +1,8 @@
-import com.google.common.base.Charsets;
-import constants.Constants;
 import firebase.FirebaseDB;
 import influx.InfluxDB;
 import jena.Jena;
 import model.Data;
-import org.apache.commons.io.IOUtils;
-import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
-import owl.Owl;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,8 +12,8 @@ public class Main {
 
     private Map<Integer,Data> dataList = new HashMap<>();
     private List<Worker> workers = new ArrayList<>();
-    private InfluxDB influxDB = null;
     private FirebaseDB firebaseDB = null;
+    private InfluxDB influxDB = null;
 
 
     public static void main(String[] args) {
@@ -33,28 +23,11 @@ public class Main {
 
 
     public void initialize() {
-        Socket socket;
-        try {
-            ServerSocket serverSocket = new ServerSocket(8080);
-            System.out.println("Server has started! Now waiting for clients.");
-            firebaseDB = new FirebaseDB();
-            ArrayList<Data> res = firebaseDB.getData();
-            influxDB = new InfluxDB(
-                    Constants.TOKEN.toString(),
-                    Constants.BUCKET.toString(),
-                    Constants.ORG.toString(),
-                    Constants.URL.toString()
-            );
+        System.out.println("Server has started! Now waiting for clients from realtime database.");
 
-            while (true) {
-                // Let clients connect to server
-                socket = serverSocket.accept();
-                System.out.println("A client has been accepted!");
-                new Worker(socket).start();
-            }
-
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
+        firebaseDB = new FirebaseDB();
+        while (true) {
+            new Worker().start();
         }
     }
 
@@ -63,43 +36,16 @@ public class Main {
         System.out.println("Number of records: " + dataList.size());
         int i = 1;
         for (Data d : dataList.values()) {
-            System.out.println("   Record " + i + ": Client " + d.id + " has data [(" + d.latitude + ", " + d.longitude + "), " + d.instant + "]");
+            System.out.println("   Record " + i + ": Client " + d.id + " has data [(" + d.latitude + ", " + d.longitude + ")");
             i++;
         }
     }
 
 
-    /* Thread class to keep track of multiple clients */
     class Worker extends Thread {
 
-        private Socket socket;
-        private PrintWriter writer = null;
-
-
-        public Worker(Socket socket) {
-            this.socket = socket;
+        public Worker() {
             workers.add(this);
-        }
-
-
-        private int assignClient() {
-            int id = workers.size();
-            writer.println(id);
-            System.out.println("Client ID is " + id);
-            return id;
-        }
-
-
-        private Data getData(String[] parts) {
-            Data data = new Data();
-            data.id = parts[0].trim();
-            data.latitude = Double.parseDouble(parts[1].split(",")[0]);
-            data.longitude = Double.parseDouble(parts[1].split(",")[1]);
-            data.instant = Instant.now();
-
-            System.out.println("Client " + data.id + " stopped sending position!");
-
-            return data;
         }
 
 
@@ -109,7 +55,7 @@ public class Main {
                 for (Integer integer : resSmartphones) {
                     if (id == integer) {
                         System.out.println("Warning client: " + id);
-                        writer.println(-1);
+                        //writer.println(-1);
                     }
                 }
                 return;
@@ -120,12 +66,20 @@ public class Main {
 
         @Override
         public void run() {
-            try {
-                writer = new PrintWriter(socket.getOutputStream(), true);
-                int id = assignClient();
+            firebaseDB.getData();
 
-                // The status message received from a client
-                String message = IOUtils.toString(socket.getInputStream(), Charsets.UTF_8);
+
+
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            workers.remove(this);
+
+
+            /*
+            try {
 
                 // Is true when a client sends its latest position
                 if (!message.isEmpty()) {
@@ -147,11 +101,10 @@ public class Main {
 
                 } else {
                     influxDB.closeInfluxClient();
-                    socket.close();
                 }
             } catch (IOException | OWLOntologyCreationIOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
 
     }
