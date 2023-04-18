@@ -25,9 +25,5 @@ public class InfluxDB {
         writeApi.writeMeasurement(bucket, org, WritePrecision.MS, object);
     }
 
-    public void closeInfluxClient() {
-        db.close();
-    }
-
 
 }

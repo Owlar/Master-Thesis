@@ -16,12 +16,10 @@ public class Jena {
         Property id = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_movableEntityId");
         ResIterator iterator = model.listSubjectsWithProperty(endangered);
         if (iterator.hasNext()) {
-            System.out.println("Knowledge graph contains endangered object(s):");
             while (iterator.hasNext()) {
                 Resource current = iterator.nextResource();
                 boolean isEndangered = Boolean.parseBoolean(current.getProperty(endangered).getString());
                 if (isEndangered) {
-                    System.out.println(current.getProperty(id).getInt() + ": " + current + " - " + true);
                     res.add(current.getProperty(id).getInt());
                 }
             }

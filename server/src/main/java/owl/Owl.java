@@ -8,11 +8,10 @@ import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
-import java.util.Map;
 
 public class Owl {
 
-    public static void addIndividuals(Map<Integer, Data> dataList) throws OWLOntologyCreationIOException {
+    public static void addIndividual(Data data) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
         File file = new File(Constants.ONTOLOGYFILEPATH.toString());
         IRI ontologyIRI = IRI.create(Constants.ONTOLOGY.toString());
@@ -24,16 +23,14 @@ public class Owl {
             OWLDataFactory factory = manager.getOWLDataFactory();
             OWLClass movableEntity = factory.getOWLClass(ontologyIRI + Constants.MOVABLEENTITY.toString());
 
-            for (Data data : dataList.values()) {
-                OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
+            OWLIndividual smartphone = factory.getOWLNamedIndividual(ontologyIRI + "smartphone" + data.id);
 
-                OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + Constants.MOVABLEENTITYID.toString());
-                OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
-                manager.addAxiom(ontology, idAssertion);
+            OWLDataProperty idProperty = factory.getOWLDataProperty(ontologyIRI + Constants.MOVABLEENTITYID.toString());
+            OWLDataPropertyAssertionAxiom idAssertion = factory.getOWLDataPropertyAssertionAxiom(idProperty, smartphone, data.id);
+            manager.addAxiom(ontology, idAssertion);
 
-                OWLClassAssertionAxiom assertion = factory.getOWLClassAssertionAxiom(movableEntity, smartphone);
-                manager.addAxiom(ontology, assertion);
-            }
+            OWLClassAssertionAxiom assertion = factory.getOWLClassAssertionAxiom(movableEntity, smartphone);
+            manager.addAxiom(ontology, assertion);
 
             manager.saveOntology(ontology, new TurtleDocumentFormat(), docIRI);
         } catch (OWLOntologyCreationException | OWLOntologyStorageException e) {
