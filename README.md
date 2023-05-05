@@ -16,6 +16,8 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
     ````flutter
     > reada main.smol
     ````
+    Download the file release.apk (path: client/apk/release.apk) on your smartphone, or do what follows:
+    
     Open the client-directory in an IDE that supports running an emulator, such as Android Studio. Flutter SDK should be installed and set to PATH. In case version solving fails, try running:
     ````flutter
     > flutter upgrade
