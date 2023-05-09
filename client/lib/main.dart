@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
+  // TODO: Add colors for informed decision
   final ThemeData _theme = ThemeData(
     colorScheme: ColorScheme.fromSwatch().copyWith(
         secondary: Colors.green,

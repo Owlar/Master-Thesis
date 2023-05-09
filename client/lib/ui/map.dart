@@ -100,7 +100,6 @@ class _MapState extends State<Map> {
         _resetState();
         _animateCamera();
         _showSnackBar(_smartphonePosition.toString());
-        // TODO: Fix position not shown on physical device
         _updateLatestPosition();
         }, onError: (e) => _showSnackBar("Could not send updated status!"))
     }, onError: (e) => _showSnackBar("Could not create a status!"));
