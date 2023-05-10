@@ -7,6 +7,7 @@
 \usepackage{fancyvrb}
 \usepackage{xcolor}
 \usepackage{fvextra}
+\usepackage{soul}
 \graphicspath{ {./graphics/} }
 \usepackage[backend=biber,natbib,style=numeric]{biblatex}
 \usepackage{hyperref}
@@ -43,7 +44,7 @@
 
 \section{Introduction}\label{sec:Introduction}
 \subsection{Context}
-A digital twin (DT) is a digital representation of some physical system, referred to as a physical twin (PT), that is twinned in near real-time by the DT in order to understand or control the PT. The twinning aims to be bidirectional meaning that the DT both observes the PT and communicates informed decisions back to it \cite{kamburjan_digital_2022, fuller_digital_2020}. The DT must continually adapt to correctly reflect its physical twin \cite{kamburjan_twinning-by-construction_2022}. This may pose a challenge if the PT contains mobile assets, such as smartphones. The number of smartphone users worldwide is at an all-time high \cite{petroc_taylor_number_2023}. They are important resources for a company and can change at any time \cite{marcheta_development_2022}.
+A digital twin (DT) is a digital representation of some physical system, referred to as a physical twin (PT), that is twinned in near real-time by the DT in order to understand or control the PT \cite{grieves_digital_2017, kamburjan_digital_2022}. The twinning aims to be bidirectional meaning that the DT both observes the PT and communicates informed decisions back to it \cite{kamburjan_digital_2022, fuller_digital_2020}. The DT must continually adapt to correctly reflect its physical twin \cite{kamburjan_twinning-by-construction_2022}. This may pose a challenge if the PT contains mobile assets, such as smartphones. The number of smartphone users worldwide is at an all-time high \cite{petroc_taylor_number_2023}. They are important resources for a company and can change at any time \cite{marcheta_development_2022}.
 
 There exist challenges in handling mobile assets. Some systems mainly focus on tracking mobile assets and the accuracy of their physical location \cite{marcheta_development_2022,akram_design_2021}. If we keep the company's assets in mind, such a system could be improved upon by better understanding and controlling asset behavior. 
 
@@ -57,9 +58,9 @@ Handling mobile assets in a DT based on a dynamic asset model (i.e. a file that 
 
 
 \subsection{Motivation}
-Given the gap that exists in connecting tracking systems, asset models, and digital twins, there is still room for improvement. In an attempt to formalise heterogeneous data and make it understood by computers, semantic web technologies should be used. More specifically, we aim to semantically enrich a model of a building to increase interoperability, as well as keep it inexpensive and easy to maintain.
+Given the gap that exists in connecting tracking systems, asset models, and digital twins, there is still room for improvement. The problem is that there exist no systems, that have a digital twin (DT) based on a dynamic asset model, which can track an unlimited number of heterogeneous smartphones. In an attempt to formalize heterogeneous data and make it understood by computers, semantic web technologies should be used. More specifically, we aim to semantically enrich a model of a building to increase interoperability, as well as keep it inexpensive and easy to maintain.
 
-We envision a \emph{semantic} digital twin (i.e. a digital twin that processes heterogeneous data from different sources in the domain into generally understandable information \cite{birgit_boss_digital_nodate}) based on a dynamic asset model in which static data (existing building infrastructure) and dynamic data (smartphone's physical location) is separated. The DT will be able to track an unlimited number of mobile assets simultaneously. The DT will be formalised using semantic web technologies. In the knowledge graph, static data will be noted to be different than dynamic data as it is generated from a combination of the program state and the asset model. 
+We envision a \emph{semantic} digital twin (i.e. a digital twin that processes heterogeneous data from different sources in the domain into generally understandable information \cite{birgit_boss_digital_nodate}) based on a dynamic asset model in which static data (existing building infrastructure) and dynamic data (smartphone's physical location) is separated. The DT will be able to track an unlimited number of mobile assets simultaneously. The DT will be formalized using semantic web technologies. In the knowledge graph, static data will be noted to be different than dynamic data as it is generated from a combination of the program state and the asset model. 
 
 The asset model will be automatically reloaded by the system itself, or manually updated by an operator either offline (online version updated from local changes), or directly online in an ontology editor. This way the mobile assets are not only tracked, but the physical system containing them is twinned in near-real time as well. The DT will get positional sensor data from the PT, and then send informed decisions back to the PT.
 
@@ -113,7 +114,7 @@ The remainder of this thesis is organized as follows:
     \item \hyperref[sec:Background]{\textbf{Background}} describes the theoretical background of this thesis.
     \item \hyperref[sec:Analysis]{\textbf{Problem analysis and design}} investigates the problem statement and research questions. We also look at what a dynamic asset model means, as well as the separation of static and dynamic data.
     \item \hyperref[sec:Implementation]{\textbf{Implementation}} dives into the implementation of the proposed solution and how the different architectural components shown in Figure \ref{fig:components} interact. More specifically, how do we "close the loop" by sending informed decisions back to the PT. 
-    \item \hyperref[sec:Evaluation]{\textbf{Evaluation}} evaluates the proposed solution according to the design requirements that were set earlier.
+    \item \hyperref[sec:Evaluation]{\textbf{Evaluation}} evaluates the proposed solution according to the structural requirements that were set.
     \item \hyperref[sec:Discussion]{\textbf{Discussion}} discusses the discoveries of this thesis and compares them to other existing results and theories. This section also explores the originality of the discoveries.
     \item \hyperref[sec:Conclusion]{\textbf{Conclusion and further work}} concludes this thesis. Mainly we look at the improvements that can be made to the proposed solution in the future.  
 \end{itemize}
@@ -122,7 +123,7 @@ The remainder of this thesis is organized as follows:
 
 \newpage
 \section{Background}\label{sec:Background}
-This section describes the background information of this thesis. Starting off we give an in-depth description of digital twins (DTs). Then we give a description of the vision of a Semantic Web, as well as the technologies that help us build it. Later on we describe semantic reasoning and tools for it.  Then we look at frameworks for building cross-platform applications from a single codebase. Near the end of the section we describe real time and time-series databases.
+This section describes the background information of this thesis. Starting off we give an in-depth description of digital twins (DTs). Then we give a description of the vision of a Semantic Web, as well as the technologies that help us build it. Later on we describe semantic reasoning and tools for it.  Then we look at frameworks for building cross-platform applications from a single codebase. Near the end of the section, we describe real-time and time-series databases.
 
 \subsection{Digital Twin}\label{subsec:DigitalTwins}
 
@@ -342,8 +343,6 @@ There also exist other technologies that provide reasoner tools. Some notable me
 
 
 
-
-
 \subsection{App Development}\label{subsec:AppDevelopment}
 Compared to previously covered topics, such as digital twins (DTs) and the Semantic web, app development is not a well-researched topic, as it is mainly used in industry. We will therefore take an industrial approach in describing the topic of app development.
 
@@ -399,41 +398,41 @@ Firebase Realtime Database has multi-platform support for clients, such as suppo
 
 \newpage
 \section{Problem analysis and design}\label{sec:Analysis}
-This chapter examines the problem statement (H) and its three guiding research questions (RQ1, RQ2, RQ3), as explained in \ref{sec:Introduction}(Introduction), based on the theoretical background information and general code examples in \ref{sec:Background}(Background). We will analyze different technologies in the aforementioned chapter, such as those in \ref{subsec:AppDevelopment}(App Development), \ref{subsec:Databases}(Databases), and \ref{subsec:DigitalTwins}(Digital Twins). These technologies can be used to realize the proposed high-level architecture in Figure \ref{fig:initial_components}. Choices of architectural components will be justified based on the analysis of the problem space. From all of this, we present the resulting design requirements as the basis for our proof-of-concept implementation.
+This chapter examines the problem statement (H) and its three guiding research questions (RQ1, RQ2, RQ3) in \ref{sec:Introduction}(Introduction), based on the theoretical background information and general code examples in \ref{sec:Background}(Background). We create a building domain based on the analysis of the research questions. Then we examine what a dynamic asset model entails, and how static data can be separated from dynamic data in it. Different technologies described in \ref{sec:Background}, such as databases, frameworks for creating applications (apps), and semantic digital twins are considered. Lastly, we present the resulting structural requirements as the basis for our proof-of-concept implementation.
 
 \subsection{Research questions}
-To better understand what we should analyze, we should take an extra look at the hypothesis (H), as well as the three research questions (RQ1, RQ2, RQ3). Later on we look at how they adhere to the problem statement.
+To better understand what we should analyze, we should take an extra look at the hypothesis (H), as well as the three research questions (RQ1, RQ2, RQ3). We also look at how they adhere to the problem statement.
 
 \begin{itemize}
     \item[\textbf{H:}] We can handle mobile assets in a semantic digital twin with the use of a dynamic asset model of a simple building, in which dynamic data (smartphone's physical location) is automatically updated by a server and separated from static data (existing building infrastructure), and informed decisions are sent back to the physical twin.
-    \item[RQ1:]
+    \item[\textbf{RQ1:}]
     Can we create a dynamic asset model of a simple building that is also extensible?
-    \item [RQ2:] 
+    \item [\textbf{RQ2:}] 
     Can we enable bidirectional data flow between the PT and DT, such that the digital twin gets updated sensor data from mobile devices and sends informed decisions back?
-    \item [RQ3:]
+    \item [\textbf{RQ3:}]
     Can we clearly separate dynamic data (smartphone's position) from static data (building infrastructure) in the asset model and in the DT?
 \end{itemize} 
 
 \subsubsection{First research question (RQ1)}
-RQ1 asks if we can "create a dynamic asset model of a simple building that is also extensible". An asset model (ontology) for our use case is simply an OWL document (file) that is exported from creating an ontology in an ontology editor, such as Protégé. Although other ontology editors can be used, we should use Protégé due to its user-friendliness and the extensive documentation provided in the user guide \cite{horridge_practical_2011}. This OWL file is provided to the digital twin which uses it. The section below in \ref{subsubsec:DynamicAssetModel}(Dynamic Asset Model) examines what a \emph{dynamic} asset model entails. 
+RQ1 asks if we can "create a dynamic asset model of a simple building that is also extensible". An asset model (ontology) is simply an OWL document (file) that is exported from creating an ontology in an ontology editor, such as Protégé. Although other ontology editors can be used, we should use Protégé due to its user-friendliness and the extensive documentation provided in the user guide \cite{horridge_practical_2011}. This exported file is provided to and used by the digital twin (DT) by using the SMOL interpreter. The section below in \ref{subsubsec:DynamicAssetModel}(Dynamic Asset Model) examines what a \emph{dynamic} asset model entails. 
 
-The 1st research question also asks if we can create an asset model that is \emph{extensible}. To add to this, being extensible means that an operator should be able to manually add new smartphones that have no registered physical location yet to the ontology, or add existing building infrastructure to it. It should be possible to manually edit the static parts of the asset model if the building domain changes (e.g. door is added to a wall) as well. 
+The 1st research question also focuses on creating an asset model of a simple building that is \emph{extensible}. To add to this, being extensible means that an operator should be able to manually add new smartphones that have no registered physical location yet or add existing building infrastructure to the ontology. It should be possible to manually edit the static parts of the asset model if the building domain changes (e.g. a door is added to a wall) as well. 
 
-A digital twin (DT) based on a dynamic asset model should be able to recognise the following, according to the generated knowledge graph:
+A digital twin (DT) based on a \emph{dynamic} asset model should be able to recognize the following, according to the generated knowledge graph:
 \begin{itemize}
     \item Manual changes of static data by an operator
     \item Automatic updates of dynamic positional data from the server
 \end{itemize}
 
-\subsubsection{Second research question (RQ1)}
-RQ2 asks whether we can "enable bidirectional data flow between the PT and DT, such that the digital twin gets updated sensor data from mobile devices and sends informed decisions back". Bidirectional data flow is data that is exchanged both ways, and not just in one direction between the physical twin (PT) and digital twin (DT), or vice versa. The DT observes the PT in near real-time and gets updated sensor data from its physical counterpart. The DT should then send informed decisions back to it. A lot of value is derived from the DT making an informed decision on behalf of a mobile asset in the PT, and it is crucial that the appropriate user is notified.
+\subsubsection{Second research question (RQ2)}
+RQ2 asks whether we can "enable bidirectional data flow between the PT and DT, such that the digital twin gets updated sensor data from the mobile devices in the PT and sends informed decisions back". Bidirectional data flow is data that is exchanged both ways, and not just in one direction between the physical twin (PT) and digital twin (DT), or vice versa. The DT observes the PT in near real-time and gets updated sensor data from its physical counterpart. The DT should then send informed decisions back to it. A lot of value is derived from the DT making an informed decision on behalf of a mobile asset in the PT, and it is crucial that the appropriate smartphone user is notified.
 
 
 \subsubsection{Third research question (RQ3)}
-RQ3 is concerned with if we can "clearly separate dynamic data (smartphone's position) from static data (building infrastructure) in the asset model and in the DT". The hypothesis (H) states that the asset model should be of a simple building, which means some data don't have to change as existing building infrastructure can be expressed with \emph{static data} based on coordinates of the room border corners as shown in Figure \ref{fig:simple_building}. The room(s) with square area(s) constitute a simple building. In contrast to static data, the mobile assets can change at any time, and their physical location also changes constantly hence their positional data is \emph{dynamic}.
+RQ3 is concerned with if we can "clearly separate dynamic data (smartphone's position) from static data (building infrastructure) in the asset model and in the DT". The hypothesis (H) states that the asset model should be of a simple building, which means some data don't have to change as existing building infrastructure can be expressed with \emph{static data} based on coordinates of the room border corners as shown in Figure \ref{fig:simple_building}. The room(s) as square area(s) constitute a simple building. In contrast to static data, the mobile assets can change at any time, and their physical location also changes constantly hence their positional data is \emph{dynamic}.
 
-\subsubsection{Building domain}
-From considering the three research questions, we have created a possible domain including a built environment based on static data, as well as movable entities with their physical location as dynamic data, as shown in Figure \ref{fig:static_built_environment}. \textbf{Physical 2D space} is provided for context of outside, and is in two dimensions as described in \ref{subsec:Scope}(Thesis scope and outline). This means that altitude is not taken into account. Note that the relationships between some entities use \emph{composition} (i.e. indicates a very strong relationship between the entities, which means that if the owing entity (e.g. \textbf{Physical 2D space}) is destroyed, so is the entity linked to it (e.g. \textbf{Building} \cite{pilone_uml_2005}) (In this case the composition can be thought of as a black hole..)
+\subsection{Building domain}
+From considering the three research questions, we have created a possible domain including a built environment based on static data, as well as movable entities with their physical location as dynamic data, as shown in Figure \ref{fig:static_built_environment}. \textbf{Physical 2D space} is provided for context of outside and is in two dimensions as described in \ref{subsec:Scope}(Thesis scope and outline). This means that altitude is not taken into account. Note that the relationships between some entities use \emph{composition} (i.e. indicates a very strong relationship between the entities, which means that if the owing entity (e.g. \textbf{Physical 2D space}) is destroyed, so is the entity linked to it (e.g. \textbf{Building} \cite{pilone_uml_2005}) (In this case the composition can be thought of as a black hole..)
 
 \begin{figure}[H]
     \centering
@@ -444,69 +443,173 @@ From considering the three research questions, we have created a possible domain
 
 
 \subsection{Dynamic asset model}\label{subsubsec:DynamicAssetModel}
-Section \ref{subsec:AssetModel}(Asset Model) describes concerns with BIM (Building Information Modeling), and how ontologies (asset models) created with semantic technologies deal with these concerns. Another issue with BIM worth mentioning is that it does not handle dynamic behavior very well \cite{kamburjan_digital_2022}.
+Section \ref{subsec:AssetModel}(Asset Model) describes concerns with BIM (Building Information Modeling), and how ontologies (asset models) created with semantic technologies deal with these concerns. Another concern with BIM worth mentioning is that it does not handle dynamic behavior very well \cite{kamburjan_digital_2022}.
 
-A \emph{dynamic} asset model is an ontology in which some data changes through time. If we were to export the ontology created in Protégé, we would get an OWL document (file) that would describe the domain in terms of classes, properties, and individuals. Changing the ontology in any way (e.g. adding another movable entity) would produce a new RDF (Resource Description Framework) graph.
+Simply put, a \emph{dynamic} asset model is an ontology in which some data changes through time. If we were to export the ontology created in Protégé, we would get an OWL document (file) that would describe the domain in terms of classes, properties, and individuals. Changing the ontology in any way (e.g. adding another movable entity) would represent a new RDF (Resource Description Framework) graph.
 
-Figure \ref{fig:building_ontology} shows an exported ontology of a building in Turtle Syntax. The ontology editor lets us specify the format of the ontology to be exported. From creating this ontology as a basis for our future implementation, we discovered that it would be necessary to create a common class for \emph{atleast} the movable entities (individuals) due to the sheer number of them in the GUI (Graphical User Interface) in Protégé, as well as to formalise different smartphones to commonly be movable entities.
+Figure \ref{fig:building_ontology} shows an exported ontology of a building in Turtle Syntax. The ontology editor lets us specify the format of the ontology to be exported. From creating this ontology as a basis for our future ontology implementation, we discovered that it would be necessary to create a common class for \emph{atleast} the movable entities (individuals) due to the sheer number of them in the GUI (Graphical User Interface) in Protégé, as well as to formalize the knowledge of heterogeneous smartphones.
 
 \subsection{Data separation}
-In this section, we are further analysing the separation of static and dynamic data and give some examples of this. First we are describing and illustrating how they can be separated in the asset model and in SMOL. Then we are examining how we can separate the static analysis of what a critical area \emph{is} from the dynamic snapshots of smartphones at a certain point in time.
+In this section, we are further analyzing the separation of static and dynamic data and giving some practical examples with text color to support this. First, we describe and illustrate how they can be separated in the asset model and in SMOL. Then we examine how we can separate the static analysis of what a critical area \emph{is} from the dynamic snapshots of smartphones at a certain point in time.
 
 \subsubsection{Static and dynamic data}
-Figure \ref{fig:static_dynamic_asset_model} shows the separation of static and dynamic data. The \textbf{Asset Model} \emph{doesn't} have \textcolor{red}{dynamic} positional data, but the smartphone individuals and their IDs as static data. The SMOL program accesses the smartphones by their IDs and adds the positional data from InfluxDB according to the ID. \textbf{Place} consist of area(s) with predefined border corner coordinates and hence have \textcolor{blue}{static} data. We take notice that a server could update the time series database with the physical locations of the mobile devices, as well as adding the smartphone individuals including their ID.
+Figure \ref{fig:static_dynamic_asset_model} shows the separation of static and dynamic data. The \textbf{Asset Model} \emph{doesn't} have dynamic positional data, but the smartphone individuals and their IDs as static data. The SMOL program accesses the smartphones by their IDs with \verb|access|, and adds the positional data from InfluxDB according to the ID. \textbf{Place} consist of area(s) with predefined border corner coordinates and is static data. We take notice that a server could continuously update the time series database with the physical locations of the mobile devices, as well as add the smartphone individuals to the asset model.
 
-The figure also shows the direction of data flow between the \textbf{Asset Model} and \textbf{SMOL}, and \textbf{InfluxDB} and \textbf{SMOL}. The SMOL program accesses the static data (\textbf{Place} and instances of \textbf{Smartphone}) in the asset model, and gets the updated positional data of the smartphones from InfluxDB. The SMOL program then creates \textbf{Smartphone} objects the combined data. The knowledgde graph can then be generated and will reflect the separation of static and dynamic data.
+The aforementioned figure also shows the direction of data flow between the \textbf{Asset Model} and \textbf{SMOL}, and \textbf{InfluxDB} and \textbf{SMOL}. The SMOL program accesses the static data (\textbf{Place} and instances of \textbf{Smartphone}) in the asset model and gets the updated positional data of the smartphones from InfluxDB. The SMOL program then creates \textbf{Smartphone} objects from the data. The knowledge graph can then be generated and will reflect the separation of static and dynamic data from a combination of the program state and the knowledge base.
 
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.24]{graphics/static_dynamic_asset_model.png}
-    \caption{The separation of \textcolor{blue}{static} and \textcolor{red}{duynamic} dynamic data.}
+    \caption{The separation of static and dynamic data. Static data is illustrated in blue, whilst dynamic data is illustrated in red.}
     \label{fig:static_dynamic_asset_model}
 \end{figure}
 
-Research question 1 (RQ1) is concerned with an asset model that is \emph{extensible}. Since the smartphone individuals are added to the asset model without positional data, they can also serve as a template for registering new smartphones in the domain. To do this, one can simply add the following to the OWL document (file), where only what is outlined in \textcolor{red}{red} needs to be changed:
+Research question 1 (RQ1) is concerned with an asset model that is \emph{extensible}. Since the smartphone individuals are added to the asset model without positional data, they can also serve as a template for registering new smartphones in the domain. To do this, one can simply add the following to the OWL document (file), where only the numbers highlighted in yellow need to be changed:
 
 \begin{Verbatim}[commandchars=\\\{\}, breakanywhere=true]
-### http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone\textcolor{red}{5}
-:smartphone\textcolor{red}{5} rdf:type owl:NamedIndividual ,
+### http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone\hl{5}
+:smartphone\hl{5} rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
-             :movableEntityId "\textcolor{red}{5}" .
+             :movableEntityId "\hl{5}" .
 \end{Verbatim}
 
 \subsubsection{Further data separation}
-If we were to illustrate querying an asset model with a SPARQL query (SPARQL Query Language for RDF), the consensus is to use \textbf{\textcolor{red}{red}} color for core parts of SPARQL syntax or language, whilst the color \textbf{\textcolor{blue}{blue}} is used for examples of query-specific values or text that goes into SPARQL queries \cite{noauthor_sparql_nodate}. Keeping this in mind, we have still used \textcolor{blue} text color for static data and \textcolor{red}{red} text color for dynamic data in this thesis. 
+If we were to illustrate querying an asset model with a SPARQL query (SPARQL Query Language for RDF), the consensus is to use red color for core parts of SPARQL syntax or language, whilst the color blue is used for examples of query-specific values or text that goes into SPARQL queries \cite{noauthor_sparql_nodate}. Keeping this in mind, we still use blue text color for static data and red text color for dynamic data in this thesis because they are, respectively, calming or disruptive. 
 
-We are concerned with bidirectional flow of data between the physical twin (PT) and digital twin (DT). The DT gets updated sensor data from the PT, and sends informed decisions back, as the Hypothesis (H) and RQ2 state. The updated sensor data from the PT is the newest physical location from the mobile assets in the PT. This physical location is expressed as exact coordinates (latitude, longitude). We should also think about what an informed decision means. An informed decision is a decision, made by the DT, on behalf of the PT. An example of this is warning the mobile assets that are currently inside a dangerous area. The analysis of what a critical area is is not taken into account, as stated in \ref{subsec:Scope}(Thesis scope and outline). Therefore, the DT should not deal with this, and we should leave it to an operator who defines the areas in the asset model. To sum up, we are separating the static analysis of what a critical area is from the dynamic snapshots of smartphones at a certain point in time. Some background information on a digital shadow (DS) was given in \ref{subsec:DigitalTwins}(Digital Twins). A DS should be created to handle one-way data flow and further separate data, as well as adding modularity to our implementation.
+It is important to look at the differences between the sensor data and the informed decisions in terms of what the data can be used for. The DT gets updated sensor data from the PT, and sends informed decisions back, as RQ2 states. The updated sensor data from the PT is the newest physical location from the mobile assets in the PT. It is crucial that the PT can use this data \emph{as is}, and therefore the data should be exact coordinates (latitude, longitude), and identifiable. We should also think about what an informed decision means. An informed decision is a conclusion made by the DT when there is sufficient information to determine something on behalf of the PT to control it. An example of this is the DT sending a warning back to the PT when it is determined that smartphones are inside a critical area. The analysis of what a critical area \emph{is} however, is not taken into account, as stated in \ref{subsec:Scope}(Thesis scope and outline). Therefore, the DT should not decide that an area is dangerous. This could be a job for an operator responsible for defining the areas in the asset model.
+
+Lastly, we should separate the static analysis of what a critical area is from the dynamic snapshots of smartphones at a certain point in time. This way the dynamic behavior doesn't affect the static behavior. Some background information on a digital shadow (DS) was given in \ref{subsec:DigitalTwins}(Digital Twins). A DS could be created to handle one-way data flow and to further separate data, as well as give modularity to our implementation.
 
 \subsection{Analysis of technologies}
-This section analyses databases further to see if they are fit for our implementation. Mainly we look at time series databases and real-time databases, and frameworks for creating cross-platform applications for smartphones and tablets.
+In this section, we analyze different technologies, such as \ref{subsec:AppDevelopment}(App Development), \ref{subsec:Databases}(Databases), and \ref{subsec:DigitalTwins}(Digital Twins) from the descriptions of them in \ref{sec:Background}. These technologies can be used to realize the proposed high-level architecture in Figure \ref{fig:initial_components}. Choices of architectural components are justified based on the analysis of the problem space. We look at time series databases and real-time databases, frameworks for creating cross-platform apps, and semantic digital twins.
 
-\subsubsection{App Development}
-From the background information on application development provided in \ref{subsec:AppDevelopment}, we chose to focus on Flutter as a framework for creating cross-platform applications (apps). We considered other frameworks for creating apps for iOS and Android from a single codebase, such as Ionic and React Native. However, we had no prior experience with either, and Flutter has great documentation provided by Google, and is praised by developers at Stack Overflow (an online community for developers) \cite{noauthor_why_nodate}.
+\subsubsection{App Development}\label{subsubsection:AppDevelopment}
+From the background information on application development provided in \ref{subsec:AppDevelopment}(App Development), we chose to focus on Flutter as a framework for creating cross-platform applications (apps) due to a number of reasons. We considered other frameworks for creating apps for iOS and Android from a single codebase as well, such as Ionic and React Native. However, we had no prior experience with either, and Flutter has great documentation provided by Google, and is praised by developers at Stack Overflow (an online community for developers) \cite{noauthor_why_nodate}.
 
-The programming languages were also an important consideration. The programming language in Flutter applications is Dart, which is also developed by Google. It's a statically typed language language with C-syntax. React Native and Ionic apps are both written in JavaScript. Ionic apps can be written using a single code-base in the libraries React, Angular or Vue \cite{noauthor_ionic_nodate}.
+The programming languages were seen as tools that came with the choice of frameworks and were thus not focused on that much. However, the programming language used in Flutter applications is Dart, which is also developed by Google. React Native and Ionic apps are both written in JavaScript. Ionic apps can be written using a single code base in the libraries React, Angular, or Vue \cite{noauthor_ionic_nodate}.
 
-\subsubsection{Databases}
+\subsubsection{Databases}\label{subsubsection:Databases}
 There exist many databases, but the section \ref{subsec:Databases}(Databases) narrowed the possible choices down to the time series database InfluxDB and the real-time database provided by Firebase. 
 
-SMOL, as a framework for creating digital twins (DTs), supports InfluxDB and provides examples for querying time series data which made it an easy choice. 
+SMOL, as a framework for creating digital twins (DTs), supports InfluxDB and provides open-source examples for querying time series data which made it an easy choice. 
 
-When it comes to real-time databases, we saw that the real-time database by Firebase is based on web-sockets, which is more performant than polling due to data being accessed in real-time and due to low latency. There is also no limit to the number of nodes that can be pushed to a list in Firebase, which let us handle an unlimited number of smartphones as stated in \ref{subsec:Scope}. Redis was also considered as a real-time database that could be used for our implementation, but we had prior experience with Firebase, and integrating it should take less time. It is a cloud-hosted solution \cite{noauthor_firebase_nodate} and one can download the Google Cloud SDK Shell to authenticate and interact with the services provided by Firebase.
+When it comes to real-time databases, we saw that the real-time database by Firebase is based on web-sockets, which is more performant than polling due to data being accessed in real-time and due to low latency. There is also no limit to the number of nodes that can be pushed to a list in Firebase, which let us handle an unlimited number of smartphones as stated in \ref{subsec:Scope}. Although this can be very costly if the user base scales out of proportion. Redis was also considered as a real-time database that could be used for our implementation, but we had prior experience with Firebase, and integrating it should take less time. It is a cloud-hosted solution \cite{noauthor_firebase_nodate} and one can download the Google Cloud SDK Shell to authenticate and interact with the services provided by Firebase.
 
-Using a database in the communication between clients and the server allows for an operator to easily check the assigned clients and informed decisions sent back to the physical twin (PT). From our early implementation, it was also made clear that \emph{real physical devices} (not just emulated ones) should be detected by the physical twin (PT). However, We should ask ourselves why we should use a real-time database at all, which is later discussed in \ref{subsec:ClientServerCommunication} where we also look at FastAPI and the communication between architectural components. 
+Furthermore, using a database in the communication between clients and the server allows for an operator to easily check the assigned clients, as well as which clients should be informed. From our early implementation, it was made clear that \emph{real physical devices} (not just emulated ones) should be detected by the physical twin (PT). 
 
-\subsubsection{Semantic Digital Twin}
-\ref{subsec:SMOL}(SMOL) describes that SMOL (Semantic Micro Object Language) can be used as a framework for creating digital twins (DTs) and that knowledge graphs can be generated by using the command \verb|dump| in the REPL provided by the SMOL interpreter. The knowledge graph can capture a knowledge base, such as a dynamic asset model, in which static data is separated from dynamic data. This asset model, combined with the SMOL program, produces the knowledge graph. It is possible to access the asset model from the SMOL program. As SMOL also integrates other semantic technologies, such as SHACL for validation and SPARQL for querying, it could be a good fit for our implementation.
+Lastly, we should ask ourselves why we should use a real-time database in our client-server communication, but this is later discussed in \ref{subsec:ClientServerCommunication}(Client-server communication) where we also look at FastAPI and communication between architectural components.
+
+The \textbf{Server} in Figure \ref{fig:initial_components} has not been explicitly described yet in this thesis as its main function was to enable a bidirectional flow of data between the PT and the digital twin (DT). Most people in general are familiar with Java,  a well-known and established programming language, and our fellow students are quite familiar with its syntax as well.
+
+\subsubsection{Semantic Digital Twins}\label{subsubsection:SemanticDigitalTwins}
+\ref{subsec:SMOL}(SMOL) describes that SMOL (Semantic Micro Object Language) can be used as a framework for creating digital twins (DTs) and that it integrates semantic technologies. Knowledge graphs can be generated by using the \verb|dump|-command in the REPL provided by the SMOL interpreter. The knowledge graph can capture a knowledge base, such as a dynamic asset model, in which static data is separated from dynamic data. This asset model combined with the SMOL program, produces the knowledge graph. It is also possible to access the asset model from the SMOL program. As SMOL also integrates semantic languages, such as SHACL for validation and SPARQL for querying, it could be a good fit for our implementation.
+
+\subsection{Structural requirements}\label{subsec:Requirements}
+We have analyzed the research questions, the building domain, and the dynamic asset model in which static and dynamic data is separated. Technologies have also been examined and justified. From this, we create the structural requirements for our implementation, which is an \emph{unordered} nested list in which all levels are also \emph{unordered}. It is structured into the parts \textbf{Client}, \textbf{Server}, \textbf{Databases}, and \textbf{Digital Twin}.
+\newline
+
+\noindent\textbf{Structural requirements:}
+\begin{itemize}
+    \item \textbf{Client}
+    \begin{itemize}
+        \item Client can choose to send its newest status (ID, latitude, longitude) 
+        \item Appropriate client needs to be warned 
+        \item Show appropriate in-app messages to the user
+        \item Ask for permission to track the physical position of the device
+        \item Clearly show when the physical location of the device is tracked
+        \item Clearly show when the physical location of the device is \emph{not} tracked
+    \end{itemize}
+    \item \textbf{Server}
+    \begin{itemize}
+        \item Reloads asset model with tracked clients
+        \item Access and read the generated knowledge graph
+        \item \textbf{1.} Forward the sensor data to a time series database, which the DT accesses
+        \item \textbf{2.} Forward the informed decisions to a real-time database, which the PT accesses
+        \item Should be possible to do \textbf{1.} and \textbf{2.} above at the same time
+    \end{itemize}
+    \item \textbf{Databases}
+    \begin{itemize}
+        \item Realtime database
+        \begin{itemize}
+            \item Store the ID and physical location of the clients
+            \item Store data about which clients (in the PT) the DT made an informed decision on behalf of
+        \end{itemize}
+        \item Time series database
+        \begin{itemize}
+            \item Store the time series data
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{Digital Twin}
+    \begin{itemize} 
+        \item \textbf{3.} DS gets the newest sensor data from the time series database
+        \item \textbf{4.} Access the smartphones by their IDs in the asset model
+        \item Create smartphone objects by combining data from \textbf{3.} and \textbf{4.} above. 
+        \item Access \emph{only} the areas from the asset model that are \emph{critical}
+        \item Check if smartphones are inside any critical areas
+        \item Handle if there are any smartphones that don't have a registered physical location
+        \item Provide examples of SPARQL queries
+        \item Show informative messages in the REPL during program execution
+    \end{itemize}
+\end{itemize}
+
+In addition to this, operators should be able to access the knowledge graph and edit the asset model either offline or online. Lastly, it should be possible for an administrator to check the data stored in both the real-time database and the time-series database, whilst protecting clients' privacy as much as possible.
 
 
-\newpage
 \section{Implementation}\label{sec:Implementation}
+This chapter describes the implemented solution based on the structural requirements in \ref{subsec:Requirements}, by describing each of the following parts in it:
+\begin{itemize}
+    \item Client
+    \item Server
+    \item Databases
+    \item Digital Twin
+\end{itemize}
+In the first section we describe an \emph{early version} of the final implementation based on the initial architecture of software components in Figure \ref{fig:initial_components}. 
+
+Then we look at a revised version in Figure \ref{fig:components}, and describe what we implemented in the final solution. For each of the architectural components in the figure, we also reference the section that describes it in \ref{sec:Background}(Background), and the design decision that enables it in \ref{sec:Analysis}(Analysis and design). We also reference the corresponding \emph{item} in the structural requirement \emph{part} we are describing.
+
+\subsection{Early implementation}
+Due to the extensive architecture, we chose to implement an early version by letting all of the architectural components in Figure \ref{fig:initial_components} communicate first. The \textbf{Physical Twin} in the figure consists of \textbf{Mobile Assets} which are smartphones. Based on the background information in \ref{subsec:AppDevelopment}(Background - App Development), and from further narrowing of the technologies in \ref{subsubsection:AppDevelopment}(Analysis - App Development), a Flutter app should be created for cross-platform support.
+
+Figure \ref{fig:recording_off} and \ref{fig:recording_on} show the location recording toggle in the app, off and on, respectively. The recording is off by default, and when it is pressed, it changes color and starts recording. Then when it is pressed again, the latest physical location of the device is sent, alongside its ID, as a status message to the server.
+
+We created a Maven project (a tool for managing our project) and used the object-oriented programming language Java for our server implementation. To let the server track many clients, we first assigned an ID to the client when it connected to the server (the server kept track of all clients by their IDs), which was then later sent alongside the client's physical location as status update messages. As this was an early implementation, we implemented client-server communication over TCP (Transmission Control Protocol). This is also further discussed in \ref{subsec:ClientServerCommunication}(Client-server communication).
+
+\begin{figure}[H]
+    \centering
+    \begin{minipage}[c]{0.34\linewidth}
+        \includegraphics[width=\linewidth]{graphics/recording_off.png}
+        \caption{Shows that the location recording is off (green button).}
+        \label{fig:recording_off}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.34\linewidth}
+        \includegraphics[width=\linewidth]{graphics/recording_on.png}
+        \caption{Shows that the location recording is on (red button).}
+        \label{fig:recording_on}
+    \end{minipage}
+\end{figure}
+
+\subsection{Implemented solution}\label{subsec:ImplementedSolution}
+
+\subsubsection{Client}
+Comment: Dart
+Comment: Google Maps
+Comment: Privacy
+    Comment: Permissions
+    Comment: Position recording toggle
+    Comment: Mention not too much personal data is collected (pseudo-anonymity?), only position and id, but more can be read in (ref.) Discussion.
+
+\subsubsection{Server}
+The server communicates both ways through the use of databases, and at the same time by using threads (as long as there is sensor data). This enables seamless bidirectional data flow between the PT and the DT.
+
+\subsubsection{Databases}
+Firebase real-time database..
+
+InfluxDB Time-series database..
+\subsubsection{Digital Twin}
+
+
 Comment: Look how static data is separated from dynamic data in knowledge graph (smartphones have to be objects to correctly reflect it..)
-
-Comment: Class diagram for entities in domain from Google docs here?
-
-Comment: Sections ordered as Client, Server, Twin due to flow of data (sending sensor data from PT), and maybe change order in background?
 
 Comment: Time series access is put in a digital shadow, as shadows can be used for a one-way flow of data (then ref to background/introduction)
 
@@ -547,13 +650,6 @@ Boolean hasPosition(Double lat, Double long)
 end
 \end{verbatim}
 
-\subsection{Client}
-\subsubsection{Dart}
-\subsubsection{Google Maps}
-\subsubsection{Privacy}
-Comment: Permissions
-Comment: Position recording toggle
-Comment: Mention not too much personal data is collected (pseudo-anonymity?), only position and id, but more can be read in (ref.) Discussion.
 
 \subsection{Server}
 \subsubsection{Java}
@@ -571,6 +667,7 @@ Comment: Reading from knowledge graph generated from program state which uses as
 
 
 \subsection{Closing the loop (bidirectional communication between PT and DT)}
+Comment: Screenshot of app being inside critical area
 
 
 
@@ -582,17 +679,19 @@ Comment: Reading from knowledge graph generated from program state which uses as
 \subsubsection{Server automatically reloads asset model}
 \subsubsection{Operator manually updates asset model}
 \subsection{Plotting with Mermaid}
-\subsection{User evaluation}
+\subsection{Evaluation of number of smartphones}
 \subsubsection{Users}
 \subsubsection{Test with many physical devices}
 \subsubsection{Results}
+\subsection{How the asset model changes through time}
+Evaluation of how the RDF graph produced from the asset model changes through time to show static vs dynamic data
 
 
 
 
 \newpage
 \section{Discussion}\label{sec:Discussion}
-\subsection{Client and server communication}\label{subsec:ClientServerCommunication}
+\subsection{Client-server communication}\label{subsec:ClientServerCommunication}
 Early on we let the clients communicate with the server over TCP. This meant the IP of the server had to be known in the case of using a public network (such as at IFI) where a new IP was assigned, This meant we could only simulate using virtual device and there was a lack of support for actual physical devices devices. We looked at web sockets and FastAPI, but due to the convenience of easy integration with Firebase, came to the conclusion that Firebase Realtime Database should be used. Although another solution uses FastAPI in the architectural interconnection of its architecture (not between client and server in this case) \cite{waszak_let_2022}, Firebase was chosen because of previous experience with integrating the environment in app development. The difference between FastAPI and Firebase Realtime database in terms of performance, however, remains unclear, but as Firebase is based on websockets, it was good enough to justify our use case.
 
 Comment: Check if adding smartphone individuals to ontology reloads other parts of the file as well.
@@ -600,16 +699,26 @@ Comment: Check if adding smartphone individuals to ontology reloads other parts 
 Comment: Can't (or shouldnt) be possible for an operator to change the dynamic parts of the asset model.
 
 Comment: Privacy
-    Pseudoanonymity, data is location dependant, use movement pattern to correlate data (identify data subjects)
+    Pseudoanonymity, data is location dependant, use movement pattern to correlate data (identify data subjects) Screenshot of permission in app.
 
-
+Comment: We use files for storing data in DT
 Comment: RDFS Reasoning in server as some examples instead of just writing to and reading from asset model
 
 Comment: However, we should keep in mind that we are creating a simple ontology. We are using HermiT because it conveniently came with the installment of Protégé. Other reasoners can be added as plugins.
 
 Comment: Different graphs for static and dynamic data.. scales poorly and have to use graph embeddings (ref. Let the asset decide paper), although also mention that the knowledge graph is generated from the program state and from ontology where the dynamics are reflected already. Mention Neo4j as used by (cite those that use it in their implementation).
 
+Comment: If SMOL allows us to do this… we can add the positions to the asset model from the SMOL program as well, and this way we don't have to generate the knowledge graph, and the server can instead read from the asset model, and this way we can inform the users way faster! (Can do this if time after writing the thesis). In other words, we can simply run the SMOL program, and don’t have to generate the knowledge graph by using ‘dump’ in the REPL, and so everything is fully automatic as long as the server is running…
 
+\subsection{How data changes}
+A clear separation between static and dynamic data is how often it changes through time. 
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.16]{graphics/dynamic_arrow.png}
+    \caption{This figure shows how static and dynamic different data components are based on how often the specific data component changes through time in our implementation.}
+    \label{fig:my_label}
+\end{figure}
 
 
 \newpage
