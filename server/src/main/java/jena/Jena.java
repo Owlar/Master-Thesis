@@ -16,15 +16,13 @@ public class Jena {
         Property property = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_endangered");
         Property id = ResourceFactory.createProperty("https://github.com/Edkamb/SemanticObjects/Program#MovableEntity_movableEntityId");
         ResIterator iterator = model.listSubjectsWithProperty(property);
-        if (iterator.hasNext()) {
-            while (iterator.hasNext()) {
-                Resource current = iterator.nextResource();
-                boolean isEndangered = Boolean.parseBoolean(current.getProperty(property).getString());
-                if (isEndangered) {
-                    // To make it easier to retrieve from Firebase in client
-                    String currentPropertyId = current.getProperty(id).getString();
-                    res.put(currentPropertyId, currentPropertyId);
-                }
+        while (iterator.hasNext()) {
+            Resource current = iterator.nextResource();
+            boolean isEndangered = Boolean.parseBoolean(current.getProperty(property).getString());
+            if (isEndangered) {
+                // To make it easier to retrieve from Firebase in client
+                String currentPropertyId = current.getProperty(id).getString();
+                res.put(currentPropertyId, currentPropertyId);
             }
         }
         return res;
