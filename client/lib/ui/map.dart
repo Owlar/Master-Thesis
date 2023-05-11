@@ -66,9 +66,9 @@ class _MapState extends State<Map> {
                   ),
                 ),
                 floatingActionButton: _messages.isEmpty ? FloatingActionButton.large (
-                  onPressed: () => _start(),
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: const Icon(Icons.location_on_outlined, size: 60),
+                    onPressed: () => _start(),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: const Icon(Icons.location_on_outlined, size: 60),
                 ) : FloatingActionButton.large (
                     onPressed: () => _stop(),
                     backgroundColor: Theme.of(context).colorScheme.secondary,
