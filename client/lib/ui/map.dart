@@ -155,7 +155,7 @@ class _MapState extends State<Map> {
   Future<void> _showDecision(String id) async {
     bool isEndangered = await _service.isEndangered(id);
     if (isEndangered) {
-      _showSnackBar("You are currently inside a critical area! Medical zones are shown in green.");
+      _showSnackBar("You are currently inside a critical area! Medical zones are shown in blue.");
       _warn();
     } else {
       _showSnackBar("You are safe!");

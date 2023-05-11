@@ -63,7 +63,7 @@
     "elementType": "geometry.fill",
     "stylers": [
       {
-        "color": "#4f7a28"
+        "color": "#2A3282"
       }
     ]
   },
@@ -72,7 +72,7 @@
     "elementType": "labels.text",
     "stylers": [
       {
-        "color": "#4f7a28"
+        "color": "#2A3282"
       }
     ]
   },
