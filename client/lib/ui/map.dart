@@ -40,7 +40,7 @@ class _MapState extends State<Map> {
     return Container(
         decoration: BoxDecoration(
             border: Border.all(
-                color: _warned ? Colors.redAccent : Colors.greenAccent,
+                color: _warned ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primary,
                 width: 7.0
             )
         ),
@@ -67,10 +67,11 @@ class _MapState extends State<Map> {
                 ),
                 floatingActionButton: _messages.isEmpty ? FloatingActionButton.large (
                   onPressed: () => _start(),
+                  backgroundColor: Theme.of(context).colorScheme.primary,
                   child: const Icon(Icons.location_on_outlined, size: 60),
                 ) : FloatingActionButton.large (
                     onPressed: () => _stop(),
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
                     child: const Icon(Icons.location_off_outlined, size: 60)
                 ),
               )
