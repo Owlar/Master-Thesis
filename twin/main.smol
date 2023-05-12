@@ -288,7 +288,6 @@ main
     ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
                 "Checking which smartphone(s) in domain we don't know are endangered or not"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
-                "TODO: Make it possible to manually check if a smartphone is inside a critical area"
     */
 
     breakpoint;
