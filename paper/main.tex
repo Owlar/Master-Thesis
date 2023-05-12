@@ -49,7 +49,7 @@ A digital twin (DT) is a digital representation of some physical system, referre
 
 There exist challenges in handling mobile assets. Some systems mainly focus on tracking mobile assets and the accuracy of their physical location \cite{marcheta_development_2022,akram_design_2021}. If we keep the company's assets in mind, such a system could be improved upon by better understanding and controlling asset behavior. 
 
-Furthermore, there is existing research about using Building Information Modeling (BIM) with standard data formats, such as JSON\footnote{\url{https://www.json.org/json-en.html}} or Resource Description Framework (RDF)\footnote{\url{https://www.w3.org/RDF/}} to better define static building infrastructure \cite{pauwels_live_2023}. \citeauthor{pauwels_live_2023} proposes how, and to what extent, such data can be used in robot navigation. Although BIM can be used, by default it has some challenges regarding interoperability due to heterogeneous data \cite{dinis_bim_2022,godager_concept_2021}. 
+Furthermore, there is existing research about using Building Information Modeling (BIM) with standard data formats, such as JSON or Resource Description Framework (RDF), to better define static building infrastructure \cite{pauwels_live_2023}. \citeauthor{pauwels_live_2023} proposes how, and to what extent, such data can be used in robot navigation. Although BIM can be used, by default it has some challenges regarding interoperability due to heterogeneous data \cite{dinis_bim_2022,godager_concept_2021}. 
 
 It is stated by \citeauthor{godager_concept_2021} that although BIM could serve as a basis for DTs by providing lots of relevant information, DTs give even more context about the built environment, especially by monitoring assets from near real-time data. A lot of work goes into modeling physical assets in general \cite{waszak_let_2022}, and using BIM is also very costly due to frequent updates by maintainers \cite{hamledari_ifc-based_2018}.
 
@@ -100,6 +100,8 @@ As noted by \citeauthor{pauwels_live_2023} many physical objects, such as furnit
 
 The areas are predefined squares with latitude and longitude ranges, where we assume the coordinates align. Square areas are easier to compute and scale into larger areas, and we are not concerned with other shapes such as polygons. The analysis of what certain area(s) are (e.g. what does a critical area mean) is also outside the scope of this thesis.
 
+We are also assuming the PT contains a building in which there can be smartphones since we create a digital representation of a building in the DT.
+
 Figure \ref{fig:simple_building} shows a simple building with two rooms connected by an inner wall with a door (open) in it.
 
 \begin{figure}[H]
@@ -130,15 +132,14 @@ This section describes the background information of this thesis. Starting off w
 
 The \emph{idea} of a digital twin can be traced back to the 1960s in NASA's space exploration days, where multiple simulations were employed to evaluate the issues with the space mission Apollo 13 \cite{noauthor_digital_nodate, fuller_digital_2020}. The \emph{term} digital twin was first introduced to the public by Michael Grieves in a presentation given in 2002 which was also later documented in \cite{grieves_michael_digital_2014} in 2014. This set the foundation for developing digital twins \cite{grieves_michael_digital_2014, fuller_digital_2020}.
 
-As of today, there is no agreed-upon definition of a DT. However, it can be referred to as a digital representation of some physical system. There is no restriction on the size or scale of the system, which means the entity could be a single asset or a system of systems for that matter \cite{li_digital_2022, waszak_let_2022}. The  counterpart existing in real life is commonly referred to as the physical twin (PT), and is observed by the DT in near real-time. There should be a bidirectional flow of data between the DT and the PT throughout the life cycle of the PT. In other words, the DT gets updated sensor data from the PT, and sends informed decisions back to it \cite{madni_leveraging_2019, waszak_let_2022, kamburjan_digital_2022}.
+As of today, there is no agreed-upon definition of a DT. However, it can be referred to as a digital representation of some physical system. There is no restriction on the size or scale of the physical system, which means the entity could be a single asset or a system of systems for that matter \cite{li_digital_2022, waszak_let_2022}. It exists in real life and is commonly referred to as the physical twin (PT), and is observed by the DT in near real-time. There should be a bidirectional flow of data between the DT and the PT throughout the life cycle of the PT. In other words, the DT gets updated sensor data from the PT, and sends informed decisions back to it \cite{madni_leveraging_2019, waszak_let_2022, kamburjan_digital_2022}.
 
 
+There are multiple misconceptions about DTs. One such misconception is that a digital shadow (DS) is some sort of a DT. This misconception often leads people to build shadows instead of DTs. \cite{fuller_digital_2020, li_digital_2022}.  Although very similar, a digital shadow (DS) does not have the bidirectional data flow that a DT does. Instead, there is a one-way flow from the PT to the digital counterpart, which often leads to a change in the DS, but not vice versa \cite{kritzinger_digital_2018, li_digital_2022}. Secondly, as told by \citeauthor{fuller_digital_2020}, a common misconception is that the DT must be an exact 3D copy of a physical entity, such as a building.
 
-There are multiple misconceptions about DTs. One such misconception is that a digital shadow (DS) is some sort of a DT. This misconception often leads people to building shadows instead of DTs. \cite{fuller_digital_2020, li_digital_2022}.  Although very similar, a digital shadow (DS) does not have the bidirectional data flow that a DT does. Instead, there is a one-way flow from the PT to the digital counterpart, which often leads to a change in the DS, but not vice versa \cite{kritzinger_digital_2018, li_digital_2022}. Secondly, as told by \citeauthor{fuller_digital_2020}, a common misconception is that the DT must be an exact 3D copy of a physical entity, such as a building.
+In order to capture diverse data and formalize knowledge represented in DTs, knowledge graphs should be used \cite{kamburjan_programming_2021, waszak_let_2022}. \citeauthor{waszak_let_2022} created a DT architecture in which static and dynamic data sources were not explicitly stored in a common knowledge graph but instead linked to one another for better scaling and heterogeneity.
 
-In order to capture diverse data and formalise knowledge represented in DTs, knowledge graphs should be used \cite{kamburjan_programming_2021, waszak_let_2022}. \citeauthor{waszak_let_2022} created a DT architecture in which static and dynamic data sources were not explicitly stored in a common knowledge graph, but instead linked to one another for better scaling and heterogeneity.
-
-DTs have had many applications in various disciplines over the years. Although the idea of a digital twin was adopted early in the aerospace industry by NASA \cite{li_digital_2022}, later years have seen widespread use elsewhere \cite{fuller_digital_2020, waszak_let_2022, macchi_exploring_2018}:
+DTs have had many applications in various disciplines over the years. Although the idea of a digital twin was adopted early in the aerospace industry by NASA \cite{li_digital_2022}, later years have seen widespread use elsewhere \cite{fuller_digital_2020, waszak_let_2022, macchi_exploring_2018}, such as:
 
 \begin{itemize}
     \item Smart Cities
@@ -148,17 +149,14 @@ DTs have had many applications in various disciplines over the years. Although t
 \end{itemize}
 
 
-There are many challenges with DTs. Some of these concern data, privacy, and costs of modeling physical assets \cite{fuller_digital_2020, waszak_let_2022}. DTs depend on the accuracy of the sensor data sent by the PTs. General Data Protection Regulation (GDPR)\footnote{\url{https://gdpr-info.eu/}} works to ensure privacy and security of personal data. As an example, no personal data should be collected without the permission of the \emph{data subject} (i.e. user), stated in GDPR Article 13 and 14 \cite{noauthor_guide_nodate}.
+There are many challenges with DTs. Some of these concern data, privacy, and costs of modeling physical assets \cite{fuller_digital_2020, waszak_let_2022}. General Data Protection Regulation (GDPR)\footnote{\url{https://gdpr-info.eu/}} works to ensure the privacy and security of personal data. As an example, no personal data should be collected without the permission of the \emph{data subject} (i.e. user), stated in GDPR Article 13 and 14 \cite{noauthor_guide_nodate}.
 
 
-It is important to understand what a DT is and what it is not. We should try to "close the loop" by sending informed decisions back to the physical counterpart so that it reflects the newest state of the DT. A DS could be used alongside the DT with the only goal of being a timestamped snapshot of some specific physical asset \cite{bergs_concept_2021}. When implementing one should also think about the challenges of digital twins, such as the accuracy of sensor data, privacy concerns, and costs. We should not get too caught up with modeling an exact 3D replica of an asset. On the other hand, we \emph{should} use existing semantic technologies such as knowledge graphs for formal knowledge representation from a variety of data sources.
-
-
-
+It is important to understand what a DT is and what it is not. We should try to "close the loop" by sending informed decisions back to the physical counterpart so that it reflects the newest state of the DT. A DS could be used alongside the DT with the only goal of being a timestamped snapshot of some specific physical asset \cite{bergs_concept_2021}. When implementing one should also think about the challenges of digital twins, such as privacy concerns and costs. We should not get too caught up with modeling an exact 3D replica of an asset. On the other hand, we \emph{should} use existing semantic technologies such as knowledge graphs for formal knowledge representation from a variety of data sources.
 
 
 \subsection{Semantic Web}
-Semantic Web was \emph{envisioned} by Sir Tim Berners-Lee as an extension of the World Wide Web (WWW) in which data was linked. Linked data is about making links so people and machines can explore the web of data, and should follow the four rules \cite{tim_berners-lee_linked_nodate} below: 
+Semantic Web was \emph{envisioned} by Sir Tim Berners-Lee as an extension of the World Wide Web (WWW) in which data was linked. Linked data is about making links so people and machines can explore the web of data, and according to Berners-Lee, should follow the four rules \cite{tim_berners-lee_linked_nodate} below: 
 
 \begin{enumerate}
     \item Uniform Resource Identifiers (URIs) should be used as names for things.
@@ -179,7 +177,7 @@ In order to \emph{create} an ideal future Web of linked data where computers can
 
     \begin{figure}[H]
         \centering
-        \includegraphics[scale=0.2]{graphics/rdf_triple_simple.png}
+        \includegraphics[scale=0.16]{graphics/rdf_triple_simple.png}
         \caption{Example of an RDF triple consisting of a subject, a predicate, and an object.}
         \label{fig:rdf_triple_simple}
     \end{figure}
@@ -228,7 +226,7 @@ WHERE
     
 
 \begin{itemize}
-    \item \textbf{Web Ontology Language (OWL)} is a language for expressing rich knowledge of concepts (phrases in natural language) in an application domain \cite{szolovits_overview_1977}, as well as relations between entities. More specifically, ontologies describe domains in terms of classes, properties and individuals \cite{bechhofer_owl_2009}.
+    \item \textbf{Web Ontology Language (OWL)} is a language for expressing rich knowledge of concepts (phrases in natural language) in an application domain \cite{szolovits_overview_1977}, as well as relations between entities. More specifically, ontologies describe domains in terms of classes, properties, and individuals \cite{bechhofer_owl_2009}.
 
     \item \textbf{Shapes Constraint Language (SHACL)} is a language for validating an RDF graph against a set of conditions as shapes expressed in another RDF graph. It is said that "data graphs" can be validated against "shapes graphs" \cite{noauthor_shapes_nodate}.
     
@@ -336,7 +334,7 @@ Figure \ref{fig:hermit_in_protege} shows an ontology that is \emph{inconsistent}
 There also exist other technologies that provide reasoner tools. Some notable mentions include, but are not limited to:
 \begin{itemize}
     \item{\textbf{Apache Jena}} is an open source framework that has the Inference API which include reasoner tools that can be used to reason over data, as well as checking content of triple stores \cite{noauthor_apache_nodate-1}. The source code is publicly available\footnote{\url{https://github.com/apache/jena}}.
-    \item{\textbf{OWL API}} is a Java framework that let us create, serialise or manipulate ontologies written in OWL \cite{noauthor_owl_nodate}, and its source code is openly accessible\footnote{\url{https://github.com/owlcs/owlapi}}. Its recent development is more focused towards OWL 2 however.
+    \item{\textbf{OWL API}} is a Java framework that lets us create, serialize or manipulate ontologies written in OWL \cite{noauthor_owl_nodate}, and its source code is openly accessible\footnote{\url{https://github.com/owlcs/owlapi}}. Its recent development is more focused towards OWL 2 however.
     \item\hyperref[subsec:SMOL]{\textbf{SMOL}} provide reasoning tools through its interpreter, which implements \emph{semantic lifting} (i.e. generating a knowledge graph from the current state of a SMOL program) \cite{noauthor_semantic_nodate}. 
     
     The knowledge graph is generated by using the \verb|dump| command in SMOLs Read-Eval-Print Loop (REPL) (i.e. user inputs in a terminal are read and results are returned to the user). The knowledge graph is generated as an output file with the filename extension \verb|.ttl|. Reasoning is done automatically by the interpreter whenever \verb|access| or \verb|member| are executed. Apache Jena reasoner is used for \verb|access|, whilst \verb|member| triggers reasoning over an OWL concept with HermiT. Validating with SHAQL does however not require reasoning.
@@ -363,7 +361,7 @@ Devices are often equipped with a GPS (Global Positioning System), which gets si
 Databases are collections of information that exist for a long time, often over many years \cite{garcia-molina_database_2002}. They can be divided into relational and non-relational (NoSQL) databases and are often compared as such \cite{mohamed_relational_2014}. Relational databases have existed for many decades and store data in tables (which consist of columns and rows), whilst \emph{NoSQL} (i.e. not only SQL) databases store data in JSON documents \cite{garcia-molina_database_2002, sudiartha_data_2020}. Examples of relational databases are MySQL and PostgreSQL, whereas examples of NoSQL databases are: 
 \begin{itemize}
     \item \textbf{MongoDB} is a well-known NoSQL database for storing data in JSON documents and its source code is publicly available\footnote{\url{https://github.com/mongodb/mongo}}.
-    \item \textbf{Firebase Realtime Database} is a cloud-hosted NoSQL database that stores data as JSON  \cite{noauthor_firebase_nodate}. Furthermore, data is stored and synchronized in real-time to cross-platform clients.
+    \item \textbf{Firebase Realtime Database} is a cloud-hosted NoSQL database that stores data as JSON objects  \cite{noauthor_firebase_nodate}. Furthermore, data is synchronized in real-time to cross-platform clients.
     \item \textbf{InfluxDB} is a NoSQL database for storing \emph{time series data} (i.e. "sequence of data points indexed in time order" \cite{noauthor_what_nodate})  \cite{noauthor_influxdb_nodate}, and its source code is also openly accessible\footnote{\url{https://github.com/influxdata/influxdb}}.
 \end{itemize}
 
@@ -405,7 +403,7 @@ Firebase Realtime Database has multi-platform support for clients, such as suppo
 
 \newpage
 \section{Problem analysis and design}\label{sec:Analysis}
-This chapter examines the problem statement (H) and its three guiding research questions (RQ1, RQ2, RQ3) in \ref{sec:Introduction}(Introduction), based on the theoretical background information and general code examples in \ref{sec:Background}(Background). We create a building domain based on the analysis of the research questions. Then we examine what a dynamic asset model entails, and how static data can be separated from dynamic data in it. Different technologies described in \ref{sec:Background}, such as databases, frameworks for creating applications (apps), and semantic digital twins are considered. Lastly, we present the resulting structural requirements as the basis for our proof-of-concept implementation.
+This chapter examines the problem statement (H) and its three guiding research questions (RQ1, RQ2, RQ3) in \ref{sec:Introduction}(Introduction), based on the theoretical background information and general code examples in \ref{sec:Background}(Background). We create a building domain based on the analysis of the research questions. Then we examine what a dynamic asset model entails, and how static data can be separated from dynamic data in it. Different technologies described in \ref{sec:Background}, such as databases, frameworks for creating applications (apps), and semantic digital twins are considered. Lastly, we present the resulting structural requirements as the basis for the implementation.
 
 \subsection{Research questions}
 To better understand what we should analyze, we should take an extra look at the hypothesis (H), as well as the three research questions (RQ1, RQ2, RQ3). We also look at how they adhere to the problem statement.
@@ -431,15 +429,22 @@ A digital twin (DT) based on a \emph{dynamic} asset model should be able to reco
     \item Automatic updates of dynamic positional data from the server
 \end{itemize}
 
-\subsubsection{Second research question (RQ2)}
+\subsubsection{Second research question (RQ2)}\label{subsubsec:RQ2}
 RQ2 asks whether we can "enable bidirectional data flow between the PT and DT, such that the digital twin gets updated sensor data from the mobile devices in the PT and sends informed decisions back". Bidirectional data flow is data that is exchanged both ways, and not just in one direction between the physical twin (PT) and digital twin (DT), or vice versa. The DT observes the PT in near real-time and gets updated sensor data from its physical counterpart. The DT should then send informed decisions back to it. A lot of value is derived from the DT making an informed decision on behalf of a mobile asset in the PT, and it is crucial that the appropriate smartphone user is notified.
+
+The DT could conclude to make an informed decision if some criteria are met. As an example of a criteria, we look at how we can check if a smartphone is inside a critical area. Using what is shown in Figure \ref{fig:simple_building} as a basis, an area's two border corners are expressed as follows:
+\begin{enumerate}
+    \item $(x_1, y_1)$
+    \item $(x_2, y_2)$
+\end{enumerate}
+Meaning, if we want to check if a smartphone's physical location (point) $(x, y)$ is inside such an area, we can check if the following is true:\newline\newline$(x >= x_1\:AND\: x <= x_2)\:OR\:(x >= x_2\:AND\:x <= x_1)$\newline$AND$\newline$(y >= y_1\:AND\:y <= y_2)\:OR\:(y >= y_2\:AND\:y <= y_1)$\include\newline We also include both directions so maintainers can freely choose border corners for an area, which makes it easier to use and aligns with the RQ1.
 
 
 \subsubsection{Third research question (RQ3)}
 RQ3 is concerned with if we can "clearly separate dynamic data (smartphone's position) from static data (building infrastructure) in the asset model and in the DT". The hypothesis (H) states that the asset model should be of a simple building, which means some data don't have to change as existing building infrastructure can be expressed with \emph{static data} based on coordinates of the room border corners as shown in Figure \ref{fig:simple_building}. The room(s) as square area(s) constitute a simple building. In contrast to static data, the mobile assets can change at any time, and their physical location also changes constantly hence their positional data is \emph{dynamic}.
 
 \subsection{Building domain}
-From considering the three research questions, we have created a possible domain including a built environment based on static data, as well as movable entities with their physical location as dynamic data, as shown in Figure \ref{fig:static_built_environment}. \textbf{Physical 2D space} is provided for context of outside and is in two dimensions as described in \ref{subsec:Scope}(Thesis scope and outline). This means that altitude is not taken into account. Note that the relationships between some entities use \emph{composition} (i.e. indicates a very strong relationship between the entities, which means that if the owing entity (e.g. \textbf{Physical 2D space}) is destroyed, so is the entity linked to it (e.g. \textbf{Building} \cite{pilone_uml_2005}) (In this case the composition can be thought of as a black hole..)
+From considering the three research questions, we have created a possible domain including a built environment based on static data, as well as movable entities with their physical location as dynamic data, as shown in Figure \ref{fig:static_built_environment}. \textbf{Physical 2D space} is provided for context of outside and is in two dimensions as described in \ref{subsec:Scope}(Thesis scope and outline). This means that altitude is not taken into account. Note that the relationships between some entities use \emph{composition} (i.e. indicates a very strong relationship between the entities, which means that if the owing entity (e.g. \textbf{Physical 2D space}) is destroyed, so is the entity linked to it (e.g. \textbf{Building} \cite{pilone_uml_2005}) (it can be thought of as a black hole..)
 
 \begin{figure}[H]
     \centering
@@ -483,7 +488,7 @@ Research question 1 (RQ1) is concerned with an asset model that is \emph{extensi
 \subsubsection{Further data separation}\label{subsubsec:FurtherDataSeparation}
 If we were to illustrate querying an asset model with a SPARQL query (SPARQL Query Language for RDF), the consensus is to use red color for core parts of SPARQL syntax or language, whilst the color blue is used for examples of query-specific values or text that goes into SPARQL queries \cite{noauthor_sparql_nodate}. Keeping this in mind, we still use blue text color for static data and red text color for dynamic data in this thesis because they are, respectively, calming or disruptive. 
 
-It is important to look at the differences between the sensor data and the informed decisions in terms of what the data can be used for. The DT gets updated sensor data from the PT, and sends informed decisions back, as RQ2 states. The updated sensor data from the PT is the newest physical location from the mobile assets in the PT. It is crucial that the PT can use this data \emph{as is}, and therefore the data should be exact coordinates (latitude, longitude), and identifiable. We should also think about what an informed decision means. An informed decision is a conclusion made by the DT when there is sufficient information to determine something on behalf of the PT to control it. An example of this is the DT sending a warning back to the PT when it is determined that smartphones are inside a critical area. The analysis of what a critical area \emph{is} however, is not taken into account, as stated in \ref{subsec:Scope}(Thesis scope and outline). Therefore, the DT should not decide that an area is dangerous. This could be a job for an operator responsible for defining the areas in the asset model.
+It is important to look at the differences between the sensor data and the informed decisions in terms of what the data can be used for. The DT gets updated sensor data from the PT, and sends informed decisions back, as RQ2 states. The updated sensor data from the PT is the newest physical location from the mobile assets in the PT. It is crucial that the PT can use this data \emph{as is}, and therefore the data should be exact coordinates (latitude, longitude), and identifiable. We should think about what an informed decision means. An informed decision is a conclusion made by the DT when there is sufficient information to determine something on behalf of the PT to control it. An example of this is the DT sending warnings back to the PT when the DT has determined that smartphones are inside critical areas. The analysis of what a critical area \emph{is} however, is not taken into account, as stated in \ref{subsec:Scope}(Thesis scope and outline). Therefore, the DT should not decide that an area is dangerous. This could be a job for an operator responsible for defining the areas in the asset model. 
 
 Lastly, we should separate the static analysis of what a critical area is from the dynamic snapshots of smartphones at a certain point in time. This way the dynamic behavior doesn't affect the static behavior. Some background information on a digital shadow (DS) was given in \ref{subsec:DigitalTwins}(Digital Twins). A DS could be created to handle one-way data flow and to further separate data, as well as give modularity to our implementation.
 
@@ -506,9 +511,9 @@ Furthermore, using a database in the communication between clients and the serve
 
 Lastly, we should ask ourselves why we should use a real-time database in our client-server communication, but this is later discussed in \ref{subsec:ClientServerCommunication}(Client-server communication) where we also look at FastAPI and communication between architectural components.
 
-The \textbf{Server} in Figure \ref{fig:initial_components} has not been explicitly described yet in this thesis as its main function was to enable a bidirectional flow of data between the PT and the digital twin (DT). Most people in general are familiar with Java,  a well-known and established programming language, and our fellow students are quite familiar with its syntax as well.
+The \textbf{Server} in Figure \ref{fig:initial_components} has not been explicitly described yet in this thesis as its main function was to enable a bidirectional flow of data between the PT and the digital twin (DT). Most people in general are familiar with Java,  a well-known and established programming language, and our fellow students are quite familiar with its syntax as well. Lastly, The OWL API and Apache Jena have many open-source examples in Java, which is another reason we should use Java in our server implementation and not e.g. Kotlin (which the SMOL interpreter is written in). 
 
-\subsubsection{Semantic Digital Twins}\label{subsubsection:SemanticDigitalTwins}
+\subsubsection{Semantic Digital Twins}\label{subsubsec:SemanticDigitalTwins}
 \ref{subsec:SMOL}(SMOL) describes that SMOL (Semantic Micro Object Language) can be used as a framework for creating digital twins (DTs) and that it integrates semantic technologies. Knowledge graphs can be generated by using the \verb|dump|-command in the REPL provided by the SMOL interpreter. The knowledge graph can capture a knowledge base, such as a dynamic asset model, in which static data is separated from dynamic data. This asset model combined with the SMOL program, produces the knowledge graph. It is also possible to access the asset model from the SMOL program. As SMOL also integrates semantic languages, such as SHACL for validation and SPARQL for querying, it could be a good fit for our implementation.
 
 \subsection{Structural requirements}\label{subsec:Requirements}
@@ -520,7 +525,7 @@ We have analyzed the research questions, the building domain, and the dynamic as
     \item \textbf{Client}
     \begin{itemize}
         \item Client can choose to send its newest status (ID, latitude, longitude) 
-        \item Appropriate endangered clients needs to be warned 
+        \item Appropriate endangered clients need to be warned 
         \item Show appropriate in-app messages to the user
         \item Ask for permission to track the physical position of the device
         \item Clearly show when the physical location of the device is tracked
@@ -528,11 +533,11 @@ We have analyzed the research questions, the building domain, and the dynamic as
     \end{itemize}
     \item \textbf{Server}
     \begin{itemize}
-        \item Reloads asset model with tracked clients
-        \item Access and read the generated knowledge graph
         \item \textbf{1.} Forward the sensor data to a time series database, which the DT accesses
         \item \textbf{2.} Forward the informed decisions to a real-time database, which the PT accesses
         \item Should be possible to do \textbf{1.} and \textbf{2.} above at the same time
+        \item Reloads asset model with tracked clients
+        \item Access and read the generated knowledge graph
     \end{itemize}
     \item \textbf{Databases}
     \begin{itemize}
@@ -546,7 +551,7 @@ We have analyzed the research questions, the building domain, and the dynamic as
             \item Store the time series data
         \end{itemize}
     \end{itemize}
-    \item \textbf{Digital Twin}
+    \item \textbf{Semantic Digital Twin}
     \begin{itemize} 
         \item \textbf{3.} DS gets the newest sensor data from the time series database
         \item \textbf{4.} Access the smartphones by their IDs in the asset model
@@ -565,21 +570,21 @@ In addition to this, operators should be able to access the knowledge graph and 
 
 
 \section{Implementation}\label{sec:Implementation}
-This chapter describes the implemented solution based on the structural requirements in \ref{subsec:Requirements}, by describing each of the following parts in it:
+This chapter describes the proof-of-concept implementation based on the structural requirements in \ref{subsec:Requirements}(Structural requirements), by describing each of the following parts in it:
 \begin{itemize}
     \item Client
     \item Server
     \item Databases
-    \item Digital Twin
+    \item Semantic Digital Twin
 \end{itemize}
 In the first section we describe an \emph{early version} of the final implementation based on the initial architecture of software components in Figure \ref{fig:initial_components}. 
 
-Then we look at a revised version in Figure \ref{fig:components}, and describe what we implemented in the final solution. For each of the architectural components in the figure, we also reference the section that describes it in \ref{sec:Background}(Background), and the design decision that enables it in \ref{sec:Analysis}(Analysis and design). We also reference the corresponding \emph{item} in the structural requirement \emph{part} we are describing.
+Then we look at the revised final version in Figure \ref{fig:components}, and describe what we implemented. For each of the larger architectural components in the figure, we reference the section that describes it in \ref{sec:Background}(Background), and the design decision that enables it in \ref{sec:Analysis}(Analysis and design). We also reference the corresponding \emph{item} in the structural requirement \emph{part} we are in.
 
 \subsection{Early implementation}\label{subsec:EarlyImplementation}
-Due to the extensive architecture, we chose to implement an early version by letting all of the architectural components in Figure \ref{fig:initial_components} communicate first. The \textbf{Physical Twin} in the figure consists of \textbf{Mobile Assets} which are smartphones. Based on the background information in \ref{subsec:AppDevelopment}(Background - App Development), and from further narrowing of the technologies in \ref{subsubsection:AppDevelopment}(Analysis - App Development), a Flutter app should be created for cross-platform support.
+Due to the extensive architecture, we chose to implement an early version by letting all of the architectural components in Figure \ref{fig:initial_components} communicate first. The \textbf{Physical Twin} in the figure consists of \textbf{Mobile Assets} which are smartphones. Based on the background information in \ref{subsec:AppDevelopment}(Background - App Development), and from further narrowing of the technologies in \ref{subsubsection:AppDevelopment}(Analysis - App Development), a Flutter app was created for cross-platform support.
 
-Figure \ref{fig:recording_off} and \ref{fig:recording_on} show the location recording toggle function in the app, off and on, respectively. The recording is off by default, and when the button is pressed, it starts tracking the position of the device and changes color. Then when it is pressed again, the latest physical location of the device is sent, alongside its ID, as a status message to the server.
+Figure \ref{fig:recording_off} and \ref{fig:recording_on} show the location recording toggle function in the app, off and on, respectively. The recording is off by default, and when the button is pressed, it starts tracking the position of the device and changes color. Then when it is pressed again, the latest physical location of the device is sent, alongside its ID, as a status message to the server over TCP (Transmission Control Protocol).
 
 \begin{figure}[H]
     \centering
@@ -596,15 +601,15 @@ Figure \ref{fig:recording_off} and \ref{fig:recording_on} show the location reco
     \end{minipage}
 \end{figure}
 
-We created a Maven project (a tool for managing the project) and used the object-oriented programming language Java for the server implementation. To let the server track many clients, we first assigned an ID to the client when it connected to the server (the server kept track of all clients by their IDs), which was then later sent alongside the client's physical location as status update messages. As this was an early implementation, we implemented client-server communication over TCP (Transmission Control Protocol). This is also further discussed in \ref{subsec:ClientServerCommunication}(Client-server communication).
+We created a Maven project (a tool for managing the project) and used the object-oriented programming language Java for the server implementation. To let the server track many clients, we first assigned an ID to the client when it connected to the server, and kept track of all assigned clients. The client received its assigned ID from the server which was later sent alongside the client's physical location as status update messages when pressing the button again. As this was an early implementation, we implemented client-server communication over TCP (Transmission Control Protocol) which is further discussed in \ref{subsec:ClientServerCommunication}(Client-server communication).
 
-An asset model (ontology) of a simple building was also created as shown in Figure \ref{fig:simple_building} (this time with coordinates as data properties which were "added" to individuals of the \verb|MovableEntity| class suggested in \ref{subsubsec:DynamicAssetModel}(Dynamic asset model). We used Protégé to create it and export it as an OWL document (file). This file was then accessed in a new SMOL program based on the background information in \ref{subsubsec:Technologies}(Technologies) and \ref{subsubsec:CoreLanguage}, and from further analysis in \ref{subsubsec:StaticAndDynamicData}(Static and dynamic data). 
+An asset model (ontology) of a simple building was also created as shown in Figure \ref{fig:simple_building} (this time with coordinates as data properties which were "added" to individuals of the \verb|MovableEntity| class suggested in \ref{subsubsec:DynamicAssetModel}(Dynamic asset model). We used Protégé to create the domain and exported it as an OWL document (file). This file was then accessed in a new SMOL program based on the background information in \ref{subsubsec:Technologies}(Technologies) and \ref{subsubsec:CoreLanguage}, and from further analysis in \ref{subsubsec:StaticAndDynamicData}(Static and dynamic data). 
 
 To sum up, in the early version of the implementation a simple app was created to send sensor data (physical location from GPS-sensor in the devices as described in \ref{subsec:AppDevelopment}) to a server. Furthermore, the file containing information about a simple building domain was accessed in SMOL.
 
 
 \subsection{Implemented solution}\label{subsec:ImplementedSolution}
-Figure \ref{fig:components} shows the architectural components in the proof-of-concept implementation. More specifically, it illustrates the \textbf{Mobile Assets} in the \textbf{Physical Twin}, the \textbf{Digital Twin}, and the \textbf{Server} which enables communication between them both ways. In addition to this, the figure illustrates that \textbf{Firebase Realtime database} is used as a channel between the \textbf{Physical Twin} and the \textbf{Server}, and that \textbf{InfluxDB time-series database} is used for storing the sensor data which \emph{can} be accessed from the \textbf{SMOL} program, as shown in the example function in \ref{fig:access_time_series}.
+Figure \ref{fig:components} shows the architectural components in the final implementation. More specifically, it illustrates the \textbf{Mobile Assets} in the \textbf{Physical Twin}, its \textbf{Digital Twin} based on a dynamic \textbf{Asset Model}, and the \textbf{Server} which enables the communication between the PT and DT both ways. In addition to this, the figure illustrates that \textbf{Firebase Realtime database} is used as a channel between the \textbf{Physical Twin} and the \textbf{Server}, and that \textbf{InfluxDB time-series database} is used for storing the sensor data which \emph{can} be accessed from the \textbf{SMOL} program, as shown in the example function in \ref{fig:access_time_series}.
 
 \begin{figure}[H]
     \centering
@@ -613,142 +618,154 @@ Figure \ref{fig:components} shows the architectural components in the proof-of-c
     \label{fig:components}
 \end{figure}
 
-For further reference on how \emph{we} set up SMOL for the this implementation, see \ref{subsec:Setup}(Setup).
+In the following sections, we describe the architectural \emph{components} in the figure one by one based on the background information and the analysis, and by referencing the corresponding \emph{part} (Client, Server, Databases, or Semantic Digital Twin) in the structural requirements.
 
-In the following sections, we are describing the architectural \emph{components} one by one based on the background information and the analysis, and by referencing the corresponding \emph{part} (Client, Server, Databases, or Digital Twin) in \ref{subsec:Requirements}{Structural requirements}.
+For further reference on how we setup SMOL to be used in this thesis, see \ref{subsec:Setup}(Setup).
 
 \subsubsection{Client}
-\subsection{Digital Twin}\label{subsec:DigitalTwins}
-A Flutter app written in Dart was created, based on the background information on app development in industry in \ref{subsec:AppDevelopment}(Background - App Development), and from the analysis of technologies in \ref{subsubsection:AppDevelopment} which indicates that Flutter is popular in industry. \ref{subsec:EarlyImplementation}(Early implementation) describes the toggling of location recording in the app, but from the paragraph about GDPR (General Data Protection Regulation) in \ref{subsec:DigitalTwins} and the requirement "Ask for permission to track the physical position of the device" we implemented asking for permission to access it. The section \ref{subsec:privacy} discusses privacy further.
+A Flutter app was written in Dart, based on the background information on app development in industry in \ref{subsec:AppDevelopment}(Background - App Development), and from the analysis of related technologies in \ref{subsubsection:AppDevelopment}(Analysis - App Development) which describes that Flutter is popular in industry. \ref{subsec:EarlyImplementation}(Early implementation) describes the toggling of location recording in the app, but from the paragraph about GDPR (General Data Protection Regulation) in \ref{subsec:DigitalTwins} and the requirement "Ask for permission to track the physical position of the device" we implemented location permissions. The section \ref{subsec:privacy}(Privacy) discusses privacy further.
 
-The source code of the app was structured into the parts: 
+The source code of the app was structured into the following parts: 
 \begin{itemize}
     \item \verb|main.dart| which initializes the app and Firebase
-    \item \verb|map.dart| which is the UI (User interface) in the app. This is done by rendering Flutter widgets which behave much like components in e.g. React. Simply put, the UI is what the user \emph{sees} in the app, and the widgets are parts of what the user \emph{sees}.
-    \item \verb|service.dart| communicates (reads, writs) with Firebase
-    \item the model-class \verb|status.dart| can be used to create status objects sent to Firebase
+    \item \verb|map.dart| which contains code for the UI (User interface) in the app. This is done by rendering Flutter widgets that behave much like components in e.g. React. Simply put, the UI is what the user \emph{sees} in the app and is built from the widgets.
+    \item \verb|service.dart| accesses Firebase, and writes to, or reads from it.
+    \item the model-class \verb|status.dart| is used to create status objects which are sent as JSON to Firebase in which it is stored as a JSON object, as described in \ref{subsec:Databases}(Background - Databases).
 \end{itemize}
 We used the Google Maps SDK (Software Development Kit) in the implementation to integrate the map and its functions in the app, as described in \ref{subsec:AppDevelopment}(App Development).
 
-Some of the requirements set forth in the structural requirements were already implemented in the earlier version of the app, such as "Client can choose to send its newest status (ID, latitude, longitude)" However, there are two requirements stating that we have to \emph{clearly} show when the recording function is off/on. In order to clearly show it for those that are color blind as well, the colors of the button changed to blue and red, respectively. Figure \ref{fig:color_theme} shows the final color theme, which is located in the previously mentioned file \verb|main.dart|: 
+Some of the requirements set forth in the structural requirements were already implemented in the earlier version of the app, such as "Client can choose to send its newest status (ID, latitude, longitude)" However, there are two requirements stating that we have to \emph{clearly} show when the recording function is off/on. In order to clearly show it for those that are color blind as well, the colors of the button changed to blue and red, respectively. Figure \ref{fig:color_theme} shows the final color theme, which is located in the previously mentioned file \verb|main.dart| and can be accessed from anywhere in the app. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.70]{graphics/color_theme.png}
+    \includegraphics[scale=0.50]{graphics/color_theme.png}
     \caption{The color theme in the app.}
     \label{fig:color_theme}
 \end{figure}
 
-The following Dart code in Figure \ref{fig:location_toggle} shows the rendering of the location recording button which uses the color theme above. Since the Flutter widgets are rendered and the color of the button was initially set, we had to update the state to change the color of the button. This was done by keeping track of the status messages by adding new status messages to the list, or emptying the list in \verb|setState(() { });|. The code shows the use of a ternary operator, which is syntactic sugar for the conditional operators \verb|if| and \verb|else|.
+The Dart code in Figure \ref{fig:location_toggle} shows the rendering of the location recording button which uses the color theme above. Since the Flutter widgets are rendered and the color of the button was initially set, we had to keep track of state to change the color of the button. This was done by adding new status messages to \verb|_messages| or emptying the list in \verb|setState(() { });|. The underscore as the leading character in \verb|_messages| means that the member is only visible in its class, much like using \verb|private| for members in Java. The code also shows the use of a ternary operator, which is syntactic sugar for the conditional operators \verb|if| and \verb|else|.
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.60]{graphics/location_toggle.png}
+    \includegraphics[scale=0.50]{graphics/location_toggle.png}
     \caption{Rendering of the location recording button in the app.}
     \label{fig:location_toggle}
 \end{figure}
 
-Furthermore, when recording of the physical location stops, the appropriate endangered clients are warned, as required in Structured Requirements. The appropriate (endangered) clients get the informed decision stored by Firebase \emph{stores}, which the real-time database gets from the Digital Twin (DT) \emph{through} the server (as long as the DT has made a decision from sufficient information as analysed in \ref{subsubsec:FurtherDataSeparation}(Further data separation). Figure \ref{fig:safe_smartphone} and \ref{fig:safe_smartphone} show the conclusion of being safe and endangered, respectively.
+Furthermore, when recording of the physical location stops, the appropriate (endangered) clients are warned, as required in in the structured requirements. Firebase \emph{stores} the informed decisions, which the real-time database gets from the Digital Twin (DT) \emph{through} the server (as long as the DT has made a decision from sufficient information as analysed in \ref{subsubsec:FurtherDataSeparation}(Further data separation). Figure \ref{fig:safe_smartphone} and \ref{fig:safe_smartphone} show the conclusion of being safe and endangered, respectively.
 
 \begin{figure}[H]
     \centering
     \begin{minipage}[c]{0.40\linewidth}
         \includegraphics[width=\linewidth]{graphics/safe_smartphone.png}
-        \caption{Shows that the mobile asset (smartphone) in the PT is \emph{safe} which is decided by the DT.}
+        \caption{Shows that the mobile asset (smartphone) in the PT is \emph{safe} which is concluded by the DT.}
         \label{fig:safe_smartphone}
     \end{minipage}
     \hfill
     \begin{minipage}[c]{0.40\linewidth}
         \includegraphics[width=\linewidth]{graphics/endangered_smartphone.png}
-        \caption{Shows an \emph{endangered} smartphone from the informed decision to be inside a critical area, decided by the DT.}
+        \caption{Shows an \emph{endangered} smartphone from the informed decision to be inside a critical area, concluded by the DT.}
         \label{fig:endangered_smartphone}
     \end{minipage}
 \end{figure}
 
 \subsubsection{Server}
-The server communicates both ways through the use of databases, and at the same time by using threads (as long as there is sensor data). Thus the server enables seamless bidirectional data flow between the PT and the DT. As described 
+The main purpose of the server is full communication both ways simultaneously between the PT and the DT through the databases, which it does by using threads. Thus the server enables seamless bidirectional data flow between the PT and the DT. The \emph{items} in the \emph{server}-part in \ref{subsec:Requirements}(Structural requirements) support this. When the server runs, connections to Firebase and InfluxDB (time-series database) are setup first. Then the server forward sensor data to the DT and informed decisions to the PT simultaneously. The server prepares to send sensor data to the time-series database whenever there are new clients in the PT by keeping a reference to the list of smartphones stored in Firebase. Figure \ref{fig:insert_point} shows how a measurement point is inserted into InfluxDB. A point is made from the model-class \verb|Data|. More specifically, the instance of the \verb|Data|-class is a timestamped status message.
 
-Comment: Java...
-Comment: Reloading asset model...
-    Comment: Writing to asset model
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.70]{graphics/insert_point.png}
+    \caption{Inserting a measurement point in the Data-bucket in InfluxDB}
+    \label{fig:insert_point}
+\end{figure}
 
-Comment: reading with apache jena, and writing to owl api. Discuss that there were difficulties with writing to asset model with apache jena so owlapi was used. However, we are not reasoning, we are just reading from knowledge graph (maybe asset model if time, and writing to reload asset model with smartphones)
-Comment: Reading from knowledge graph generated from program state which uses asset model
+According to the structural requirements, the server should reload the asset model with clients that are currently tracked and access the generated knowledge graph from the DT. To reload the asset model, we used the exported OWL document (file) and put the file into the DT file structure (we later discuss how data can be stored, the reasons for using files, and the limitations to this in \ref{subsec:StoringData}(Storing data), which the server accesses and writes to using the Java framework OWL API described in \ref{subsec:Reasoning}. Based on the background information of semantic technologies in \ref{subsubsec:Technologies}, and the example of adding \textbf{individuals} of \textbf{MovableEntity} to the asset model (ontology) in \ref{subsubsec:StaticAndDynamicData}(Static and dynamic), we created a function for adding data of a smartphone to the file. Before this, we tried to use Apache Jena to reload the asset model, but it could not write data in Turtle syntax to the asset model, and we suspect some compatibility issues with the Turtle syntax in the file exported from Protégé.
+
+Apache Jena was used to access the endangered mobile assets in the knowledge graph which was generated from a combination of the knowledge base and the state of the SMOL program in the DT. More specifically, a model of the RDF graph was loaded, and the informed decisions were forwarded to Firebase to "close the loop" of the bidirectional flow of data between the PT and the DT, as shown in Figure \ref{fig:components}.
 
 \subsubsection{Databases}
-Comment: Firebase real-time database..
-Comment: InfluxDB Time-series database..
-\subsubsection{Digital Twin}
+This section shortly describes how data is stored in Firebase and InfluxDB.
+In Firebase, the assigned clients are stored as unstructured nodes (JSON objects) in the list \verb|mobiles|. As discovered in the analysis of technologies in \ref{subsubsection:Databases}(Analysis - Databases), the number of nodes that can be stored are \emph{limitless}. The IDs of the endangered smartphones are also stored in a list, that is accessed by a function in \verb|service.dart| in the app. Time-series data is stored in InfluxDB in a bucket named \verb|Data|, in which there is sensor data that the SMOL program in the DT accesses. From this, the structural requirements regarding databases are met.
 
 
+\subsubsection{Semantic Digital Twin}
+From the background information on DTs in \ref{subsec:DigitalTwins}(Digital twins) we created a digital twin, based on a dynamic asset model of a simple building, that handled mobile assets. The DT and its parts was semantically enriched from using the semantic technologies presented in Technologies, as well as from using SMOL as an enabler of semantics from the analysis of it in \ref{subsubsec:SemanticDigitalTwins}(Semantic Digital Twins). 
 
-
-
-
-Comment: Look how static data is separated from dynamic data in knowledge graph (smartphones have to be objects to correctly reflect it..)
-
-Comment: Time series access is put in a digital shadow, as shadows can be used for a one-way flow of data (then ref to background/introduction)
-
-From Firebase: "Offline	Firebase apps remain responsive even when offline because the Firebase Realtime Database SDK persists your data to disk. Once connectivity is reestablished, the client device receives any changes it missed, synchronizing it with the current server state." 
-
-Comment: Instead of updating a graph database with a knowledge graph, it is feasible to store it in the twin, as it is automatically generated by using the SMOL interpreter using the 'dump' command in the SMOL REPL and saved in a file which the server can access directly) (Should this be in Discussion?)
-
-Comment: Flutter is a framework for developing applications from a single codebase and is created by Google\footnote{\url{https://developers.google.com/learn/pathways/intro-to-flutter}}. Flutter supports development for many platforms, such as Mobile, Desktop and Embedded, but we are focusing on mobile assets as stated in the \hyperref[subsec:Scope]{scope of this thesis}.
-// Todo: refer back to background aswell
-
-
-
-An area's two border corners are expressed as follows:
+The \emph{semantic} digital twin was created in SMOL by using its core language described in \ref{subsubsec:CoreLanguage}(Core Language). And by using the SMOL Interpreter (\verb|smol.jar|) in the file structure to read and execute the SMOL program. The SMOL program consists of two modular parts, namely: 
 \begin{enumerate}
-    \item $(x_1, y_1)$
-    \item $(x_2, y_2)$
+    \item \textbf{DS} (Digital Shadow) is a timestamped snapshot of a specific smartphone, as well as being used to access updated sensor data, from the descriptions in \ref{subsubsec:FurtherDataSeparation}.
+    \item \textbf{Digital Twin} is a digital representation of the PT. It accesses: 
+    \begin{enumerate}
+        \item the critical areas in a building domain defined in the asset model
+        \item the smartphones by their IDs from the asset model
+        \item the updated physical location of the smartphones from the asset model, based on a revised version of Figure \ref{fig:access_time_series}.
+    \end{enumerate}
 \end{enumerate}
-Meaning, if we want to check if a smartphone's physical location (point) $(x, y)$ is inside such an area, we can check if the following is true:\newline\newline$(x >= x_1\:AND\: x <= x_2)\:OR\:(x >= x_2\:AND\:x <= x_1)$\newline$AND$\newline$(y >= y_1\:AND\:y <= y_2)\:OR\:(y >= y_2\:AND\:y <= y_1)$\include\newline We also include both directions so maintainers can freely choose border corners for an area. 
 
-Comment: refer back to the thesis scope here
-\begin{verbatim}
-Boolean hasPosition(Double lat, Double long)
-    Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) 
-    | ((lat >= this.latitude2) & (lat <= this.latitude1));
-    
-    Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) 
-    | ((long >= this.longitude2) & (long <= this.longitude1));
+From this, smartphone objects are created by combining the data as shown in Figure \ref{fig:smartphone_object} by matching the IDs accessed from InfluxDB and the smartphones in the asset model. The \emph{first four requirements} in the Semantic Digital Twin-part in \ref{subsec:Requirements} are thus met. 
 
-    if (inAnyLatitudeRange & inAnyLongitudeRange) then
-        return True;
-    end
-    return False;
-end
-\end{verbatim}
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.80]{graphics/smartphone_object.png}
+    \caption{Creating a smartphone object by using the smartphone ID from the asset model in combination with the corresponding updated coordinates of the smartphone from InfluxDB. \textbf{False} simply means the smartphone is not concluded to be endangered yet, as this happens later on in the function in which this object is created.}
+    \label{fig:smartphone_object}
+\end{figure}
+
+Referencing the requirement "Check if smartphones are inside any critical areas" we must understand what it \emph{means} before we can implement it. An example is described in \ref{subsubsec:RQ2}, where an informed decision can be made if the \emph{criteria} in the example evaluate to be true. The code implementation of it is shown in Figure \ref{fig:inside_critical_area}, where the function is located inside the Area-class. Meaning, we write \verb|area.hasPosition(lat, long)| to check if \verb|area| contains the smartphone with latitude (\verb|lat| and longitude \verb|long|).
 
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.64]{graphics/inside_critical_area.png}
+    \caption{Checking if a smartphone is inside a critical area based on coordinates, assuming they align.}
+    \label{fig:inside_critical_area}
+\end{figure}
 
-\subsection{Digital Twin}
-\subsubsection{Semantic Micro Object Language (SMOL)}
-\subsubsection{Ontology}
-\subsubsection{Querying}
-\subsubsection{Digital Shadow}
+If the DT concludes that a smartphone \emph{is} inside \emph{any} of the critical areas, the twin sets \verb|smartphone.endangered = True;| and adds the smartphone object to the specific area's list of endangered smartphones as a result, which is shown in Figure \ref{fig:add_endangered}. Note that what is shown in the figure is inside a while-loop for the context of the counter \verb|j|.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.80]{graphics/add_endangered.png}
+    \caption{Automatically checking if a smartphone is inside a critical area, and if it is, it is set to be endangeredm and is is added to the list of the critical area's list of endangered smartphones.}
+    \label{fig:add_endangered}
+\end{figure}
 
+Regarding the last requirements of this part, informational messages, such as examples of SPARQL queries, are shown in the REPL during the program execution. Figure \ref{fig:sparql_smol} show how we can \emph{manually} manually check which smartphones are inside a critical and thus are endangered, and the results (information about endangered smartphones). The querying is done in the SMOL REPL, which is started from the information in \ref{subsubsec:SMOLInterpreter}(SMOL Interpreter).
 
-\subsection{Closing the loop (bidirectional communication between PT and DT)}
-Comment: Screenshot of app being inside critical area
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.44]{graphics/sparql_smol}
+    \caption{Querying with SPARQL.}
+    \label{fig:sparql_smol}
+\end{figure}
 
+The DT handles newly added smartphones to the asset model that don't have a physical location as well, and thus all requirements are met.
 
+Lastly, \ref{subsubsec:SemanticDigitalTwins} describes the use of \verb|dump| in the REPL (Read-eval-print loop) to generate the knowledge graph, which the server uses by doing the following:
+\begin{enumerate}
+    \item creates a \emph{model} of the knowledge graph with Apache Jena
+    \item reads the model
+    \item iterates over the resources (smartphones) in it
+    \begin{itemize}
+        \item if the smartphone is endangered, the ID of it is added to a list 
+    \end{itemize}
+    \item adds the list of IDs to Firebase
+\end{enumerate}
 
+Clients in the PT then access Firebase, and are warned if they are in danger from the informed decision, which closes the loop.
 
 \newpage
 \section{Evaluation}\label{sec:Evaluation}
-\subsection{Setup}\label{Setup}
-To setup SMOL to use it in the implementation, we used 
-\verb|git clone https://github.com/smolang/SemanticObjects.git|, and created a \verb|smol.jar| file which was put in the created folder at the relative file path \verb|master/twin|. Then we navigated into it with \verb|cd master/twin| and used the SMOL interpreter (\verb|smol.jar|) as described in \ref{subsubsec:SMOLInterpreter}. A good and more general guide to using SMOL is publicly available in \verb|README.md|\footnote{\url{https://github.com/smolang/SemanticObjects}}.
+\subsection{Setup}\label{subsec:Setup}
+To setup SMOL to use in the implementation, we used \newline 
+\verb|git clone https://github.com/smolang/SemanticObjects.git|
+A \verb|smol.jar| file was put in the created folder at the relative file path \verb|master/twin|. Then we navigated into it with \verb|cd master/twin| and used the SMOL interpreter (\verb|smol.jar|) as described in \ref{subsubsec:SMOLInterpreter}. A good and more general guide to using SMOL is publicly available in \verb|README.md|\footnote{\url{https://github.com/smolang/SemanticObjects}}.
 Comment: Overview:
 setup
 time it takes to make an informed decision
 test runs in SMOL
    server reloads asset model
    operator adds smartphones
-plotting with mermaid in a README.md file (url: https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
-test many, many smartphones
+plotting many many smartphones with mermaid in a README.md file (url: https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
 
 
 \subsection{Setup of client, server and twin}
@@ -757,7 +774,6 @@ test many, many smartphones
 \subsubsection{Operator manually updates asset model}
 \subsection{Plotting with Mermaid}
 \subsection{Evaluation of number of smartphones}
-\subsubsection{Users}
 \subsubsection{Test with many physical devices}
 \subsubsection{Results}
 \subsection{How the asset model changes through time}
@@ -769,18 +785,26 @@ Evaluation of how the RDF graph produced from the asset model changes through ti
 \newpage
 \section{Discussion}\label{sec:Discussion}
 Comment: Look at alternatives to what is alr eady implemented, restrictions
+\subsection{Storing data}\label{subsec:StoringData}
 Comment: Using files and not storing RDF graphs in graph databases like other solutions (ref. Maren, Sintef papers)
+Comment: Instead of updating a graph database with a knowledge graph, it is feasible to store it in the twin, as it is automatically generated by using the SMOL interpreter using the 'dump' command in the SMOL REPL and saved in a file which the server can access directly) (Should this be in Discussion?)
 \subsection{Client-server communication}\label{subsec:ClientServerCommunication}
-Early on we let the clients communicate with the server over TCP. This meant the IP of the server had to be known in the case of using a public network (such as at IFI) where a new IP was assigned, This meant we could only simulate using virtual device and there was a lack of support for actual physical devices devices. We looked at web sockets and FastAPI, but due to the convenience of easy integration with Firebase, came to the conclusion that Firebase Realtime Database should be used. Although another solution uses FastAPI in the architectural interconnection of its architecture (not between client and server in this case) \cite{waszak_let_2022}, Firebase was chosen because of previous experience with integrating the environment in app development. The difference between FastAPI and Firebase Realtime database in terms of performance, however, remains unclear, but as Firebase is based on websockets, it was good enough to justify our use case.
+Early on we let the clients communicate with the server over TCP. This meant the IP of the server had to be known in the case of using a public network (such as at IFI) where a new IP was assigned, This meant we could only simulate using virtual device and there was a lack of support for actual physical devices devices. We looked at web sockets and FastAPI, but due to the convenience of easy integration with Firebase, came to the conclusion that Firebase Realtime Database should be used. Although another solution uses FastAPI in the architectural interconnection of its architecture (not between client and server in this case) \cite{waszak_let_2022}, Firebase was chosen because of previous experience with integrating the environment in app development. The difference between FastAPI and Firebase Realtime database in terms of performance, however, remains unclear, but as Firebase is based on websockets, it was good enough to justify using it.
+
+\subsection{Areas}
+Directions not included, instead we assume the operator knows how to create the building domain including the static building infrastructure consisting of square areas.
 
 Comment: Reasonng with apache jena and owlapi in server, instead we just loading a model of knowledge graph with apache jena and writing to asset model with owlapi
 Comment: Check if adding smartphone individuals to ontology reloads other parts of the file as well.
 
 Comment: Can't (or shouldnt) be possible for an operator to change the dynamic parts of the asset model.
 
+
+
 \subsection{Privacy}\label{subsec:privacy}
 Comment: Privacy
     Pseudoanonymity, data is location dependant, use movement pattern to correlate data (identify data subjects) Screenshot of permission in app.
+Clients get new ID's every time the physical location is recorded to deal with any privacy concerns that are left.
 
 Comment: We use files for storing data in DT
 Comment: RDFS Reasoning in server as some examples instead of just writing to and reading from asset model
@@ -806,6 +830,9 @@ A clear separation between static and dynamic data is how often it changes throu
 \section{Conclusion and further work}\label{sec:Conclusion}
 \subsection{Summary}
 \subsection{Contributions}
+Comment: DT based on a dynamic asset model, reloaded by a server, in which static and dynamic data is separated
+Comment: asset model is extensible by adding newly registered smartphones and the DT takes it into account
+Comment: separating static analysis of what a critical area is from the dynamic snapshots of smartphone physical locations in a digital shadow, also separated with the source code of the digital twin for modularity
 \subsection{Further work}
 \subsubsection{SMOL as a language under development}
 Comment: Writing to Influx directly from SMOL is not possible and the time it takes to warn smartphones is limited by 'dump' to the knowledge graph.
