@@ -59,7 +59,7 @@ class _MapState extends State<Map> {
                   myLocationButtonEnabled: false,
                   compassEnabled: true,
                   zoomGesturesEnabled: true,
-                  zoomControlsEnabled: false,
+                  rotateGesturesEnabled: true,
                   initialCameraPosition: CameraPosition(
                       target: const LatLng(59.94416434370449, 10.719385296106339),
                       zoom: _zoomLevel
