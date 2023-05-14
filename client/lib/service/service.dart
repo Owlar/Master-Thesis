@@ -11,8 +11,8 @@ class Service {
 
 
   Future<void> addStatus(Status status) async {
-    DatabaseReference reference = FirebaseDatabase.instance.ref("mobiles");
-    await reference.push().set({
+    DatabaseReference reference = FirebaseDatabase.instance.ref("mobiles/${status.id}");
+    await reference.set({
       "id": status.id,
       "latitude": status.latitude,
       "longitude": status.longitude

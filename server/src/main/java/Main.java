@@ -13,12 +13,13 @@ import owl.Owl;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main {
 
     private DatabaseReference reference = null;
     private InfluxDB influxDB = null;
-    private boolean hasSensorData = false;
 
 
     public static void main(String[] args) {
@@ -36,29 +37,29 @@ public class Main {
 
         System.out.println("Running..");
 
-        Map<String, String> res;
-        do {
-            new Worker().start();
-            res = Jena.getEndangeredSmartphones();
-            if (!res.isEmpty()) {
-                warnEndangeredClients(res);
-            }
-        } while (!hasSensorData);
+        Forwarding forwarding = new Forwarding();
+        Timer timer = new Timer();
+        timer.schedule(forwarding, 0, 10000);
+    }
 
-        System.out.println("Warning clients(s): " + res.values());
+    class Forwarding extends TimerTask {
+
+        @Override
+        public void run() {
+            Map<String, String> res;
+            prepareData();
+            res = Jena.getEndangeredSmartphones();
+            if (res.size() != 0) {
+                warnEndangeredClients(res);
+                System.out.println("Forwarded informed decision to PT!");
+            }
+        }
     }
 
     private void warnEndangeredClients(Map<String, String> results) {
         reference = FirebaseDatabase.getInstance().getReference("endangered");
-        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> { };
+        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {};
         reference.setValue(results, completionListener);
-    }
-
-    class Worker extends Thread {
-        @Override
-        public void run() {
-            prepareData();
-        }
     }
 
 
@@ -99,13 +100,13 @@ public class Main {
                     String json = new Gson().toJson(snapshot.getValue(Object.class));
                     Data data = new Gson().fromJson(json, Data.class);
                     influxDB.insertDataPoint(data);
+                    System.out.println("Forwarded sensor data to DT!");
                     try {
                         Owl.addIndividual(data);
                     } catch (OWLOntologyCreationIOException e) {
                         e.printStackTrace();
                     }
                 }
-                hasSensorData = true;
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

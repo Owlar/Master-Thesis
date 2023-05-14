@@ -17,7 +17,6 @@ public class Data {
     @Column(name = "longitude")
     public Double longitude;
 
-    // It's used even though it says it isn't?
     @Column(timestamp = true)
-    public Instant instant = Instant.now();
+    public Instant instant;
 }

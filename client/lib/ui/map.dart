@@ -24,6 +24,7 @@ class _MapState extends State<Map> {
   late GoogleMapController _googleMapController;
   late LatLng _smartphonePosition;
   late Status _currentStatus;
+  late int _id = -1;
 
   Set<Status> _messages = {};
   bool _warned = false;
@@ -54,11 +55,13 @@ class _MapState extends State<Map> {
                   onMapCreated: (GoogleMapController googleMapController) {
                     _controller.complete(googleMapController);
                     _googleMapController = googleMapController;
+                    _assignClient();
                   },
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
                   compassEnabled: true,
                   zoomGesturesEnabled: true,
+                  zoomControlsEnabled: false,
                   rotateGesturesEnabled: true,
                   initialCameraPosition: CameraPosition(
                       target: const LatLng(59.94416434370449, 10.719385296106339),
@@ -109,9 +112,8 @@ class _MapState extends State<Map> {
 
 
   Future<void> _createStatus() async {
-    int id = await _service.getId();
     _currentStatus = Status(
-        id: id.toString(),
+        id: _id.toString(),
         latitude: _smartphonePosition.latitude.toString(),
         longitude: _smartphonePosition.longitude.toString(),
         endangered: false
@@ -207,6 +209,13 @@ class _MapState extends State<Map> {
     });
   }
 
+
+
+  Future<void> _assignClient() async {
+    if (_id == -1) {
+      _id = await _service.getId();
+    }
+  }
 
 }
 
