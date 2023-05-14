@@ -229,8 +229,8 @@ main
     // 2. CREATE SMARTPHONES
     print("---");
     List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
-    if (coordinates == null) then
-        print("2. Could not get positions of any smartphones from InfluxDB!");
+    if (coordinates == null | smartphonesDomain == null) then
+        print("2. Could not get positions of any smartphones from InfluxDB! Smartphones must send their physical location!");
     else
         if (smartphonesDomain == null) then
             print("2. No smartphone(s) in asset model!");
@@ -249,24 +249,29 @@ main
     twin.printCriticalAreas();
 
 
-
+    Int length = 0;
     // 4. CREATE ONLY REGISTERED SMARTPHONES THAT HAVE NO POSITION
-    Int length = smartphonesDomain.length();
-    // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position.
-    if (i < length) then
-        print("4. Printing the smartphone(s) without a position");
-        twin.createMovableEntitiesWithNoPosition(i, length, smartphonesDomain);
+    if (smartphonesDomain == null) then
+        print("4. There are no mobile assets in the asset model! Smartphones must send their physical location, or they should be manually added to the file 'building.owl'.");
     else
-        print("4. All smartphone(s) in domain have a position");
+        length = smartphonesDomain.length();
+        // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position.
+        if (i < length) then
+            print("4. Printing the smartphone(s) without a position");
+            twin.createMovableEntitiesWithNoPosition(i, length, smartphonesDomain);
+        else
+            print("4. All smartphone(s) in domain have a position");
+        end
     end
-
 
 
     // 5. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
     print("---");
     print("5. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
     List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
-    twin.printAllMovableEntities(smartphones);
+    if (smartphones != null) then
+        twin.printAllMovableEntities(smartphones);
+    end
 
 
 
