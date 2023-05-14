@@ -42,8 +42,9 @@ public class Main {
         timer.schedule(forwarding, 0, 10000);
     }
 
-    class Forwarding extends TimerTask {
 
+
+    class Forwarding extends TimerTask {
         @Override
         public void run() {
             Map<String, String> res;
@@ -56,11 +57,14 @@ public class Main {
         }
     }
 
+
+
     private void warnEndangeredClients(Map<String, String> results) {
         reference = FirebaseDatabase.getInstance().getReference("endangered");
         DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {};
         reference.setValue(results, completionListener);
     }
+
 
 
     public void setupFirebase() {
@@ -114,5 +118,7 @@ public class Main {
             }
         });
     }
+
+
 
 }
