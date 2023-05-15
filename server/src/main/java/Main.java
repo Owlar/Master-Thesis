@@ -20,6 +20,7 @@ public class Main {
 
     private DatabaseReference reference = null;
     private InfluxDB influxDB = null;
+    private boolean hasSensorData = false;
 
 
     public static void main(String[] args) {
@@ -47,12 +48,13 @@ public class Main {
     class Forwarding extends TimerTask {
         @Override
         public void run() {
-            Map<String, String> res;
-            prepareData();
-            res = Jena.getEndangeredSmartphones();
-            if (res.size() != 0) {
-                warnEndangeredClients(res);
-                System.out.println("Forwarded informed decision to PT!");
+            getSensorData();
+
+            if (hasSensorData) {
+                Map<String, String> res = Jena.getEndangeredSmartphones();
+                if (res.size() != 0) {
+                    warnEndangeredClients(res);
+                }
             }
         }
     }
@@ -61,8 +63,10 @@ public class Main {
 
     private void warnEndangeredClients(Map<String, String> results) {
         reference = FirebaseDatabase.getInstance().getReference("endangered");
-        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {};
+        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) ->
+                System.out.println("Forwarded informed decision to PT!");
         reference.setValue(results, completionListener);
+        reference.removeValue(completionListener);
     }
 
 
@@ -96,7 +100,7 @@ public class Main {
 
 
 
-    public void prepareData() {
+    public void getSensorData() {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -110,6 +114,7 @@ public class Main {
                     } catch (OWLOntologyCreationIOException e) {
                         e.printStackTrace();
                     }
+                    hasSensorData = true;
                 }
             }
             @Override

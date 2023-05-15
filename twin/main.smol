@@ -23,9 +23,9 @@ class DigitalTwin()
     Unit createCriticalAreas()
         List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
         if (criticalAreasDomain == null ) then
-            print("1. Could not get any critical area(s) from asset model! Add critical area(s) to the asset model (building.owl)!");
+            print("1. Could not get any critical areas from asset model! Add critical areas to the asset model (building.owl)!");
         else
-            print("1. Creating critical area(s):");
+            print("1. Creating critical areas:");
             List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
             List<String> namesCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:name ?obj }");
             
@@ -79,7 +79,7 @@ class DigitalTwin()
             // Check if a smartphone is inside any of the critical areas which keep track of which smartphones are inside it
             while (j < lengthAreas) do
                 a = areas.get(j);
-                isInsideACriticalArea = a.hasPosition(lat, long);
+                isInsideACriticalArea = a.containsPoint(lat, long);
                 if (isInsideACriticalArea) then
                     smartphone.endangered = True;
                     a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
@@ -114,7 +114,7 @@ class DigitalTwin()
             if (a.smartphones != null) then
                 Int length2 = a.smartphones.length();
                 Int j = 0;
-                print("Has smartphone(s):");
+                print("Has smartphones:");
                 while (j < length2) do
                     MovableEntity next = a.smartphones.get(j);
                     print(next.movableEntityId);
@@ -128,7 +128,7 @@ class DigitalTwin()
         end
     end
 
-    Unit createMovableEntitiesWithNoPosition(Int i, Int length, List<Int> smartphonesDomain)
+    Unit createMovableEntitiesWithNoPhysicalLocation(Int i, Int length, List<Int> smartphonesDomain)
         while (i < length) do
             Int id2 = smartphonesDomain.get(i);
             // Endangered set to False because it can't be determined, hence not True
@@ -169,7 +169,7 @@ class DigitalTwin()
 
         if (canCheck) then
             print("---");
-            print("6. Smartphone(s) with known position(s) that can be checked:");
+            print("6. Smartphones with known physical locations that can be checked:");
             i = 0;
             while (i < length) do
                 MovableEntity movableEntity2 = smartphones.get(i);
@@ -189,7 +189,7 @@ end
 
 class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2, List<MovableEntity> smartphones)
     // We are checking if a point (smartphone) is inside an area, assuming its coordinate ranges form a square area where the coordinates align
-    Boolean hasPosition(Double lat, Double long)
+    Boolean containsPoint(Double lat, Double long)
         Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
         Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
 
@@ -230,13 +230,13 @@ main
     print("---");
     List<Int> smartphonesDomain = access("SELECT ?obj WHERE{ ?a a domain:MovableEntity . ?a domain:movableEntityId ?obj }");
     if (coordinates == null | smartphonesDomain == null) then
-        print("2. Could not get positions of any smartphones from InfluxDB! Smartphones must send their physical location!");
+        print("2. Could not get sensor data of any smartphones from InfluxDB! Smartphones must send their physical location!");
     else
         if (smartphonesDomain == null) then
-            print("2. No smartphone(s) in asset model!");
+            print("2. No smartphones in asset model!");
         else
-            print("2. Smartphone(s) with position(s) from InfluxDB:");
-            // Variable 'i' to keep track of which smartphone(s) don't have a position
+            print("2. Smartphones with known physical locations from InfluxDB:");
+            // Variable 'i' to keep track of which smartphones don't have a physical location
             i = twin.createMovableEntities(smartphonesDomain, coordinates);
         end
     end
@@ -245,29 +245,29 @@ main
 
     // 3. PRINT CRITICAL AREAS AND ANY ENDANGERED SMARTPHONES INSIDE IT
     print("---");
-    print("3. Printing critical area(s) and any endangered smartphone(s) inside it:");
+    print("3. Printing critical areas and any endangered smartphones inside it:");
     twin.printCriticalAreas();
 
 
     Int length = 0;
-    // 4. CREATE ONLY REGISTERED SMARTPHONES THAT HAVE NO POSITION
+    // 4. CREATE ONLY NEWLY ADDED SMARTPHONES THAT HAVE NO PHYSICAL LOCATION
     if (smartphonesDomain == null) then
         print("4. There are no mobile assets in the asset model! Smartphones must send their physical location, or they should be manually added to the file 'building.owl'.");
     else
         length = smartphonesDomain.length();
         // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position.
         if (i < length) then
-            print("4. Printing the smartphone(s) without a position");
-            twin.createMovableEntitiesWithNoPosition(i, length, smartphonesDomain);
+            print("4. Printing the smartphones without a physical location");
+            twin.createMovableEntitiesWithNoPhysicalLocation(i, length, smartphonesDomain);
         else
-            print("4. All smartphone(s) in domain have a position");
+            print("4. All smartphones in domain have a physical location");
         end
     end
 
 
-    // 5. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A POSITION
+    // 5. PRINTING ALL SMARTPHONES, WITH OR WITHOUT A PHYSICAL LOCATION
     print("---");
-    print("5. Printing all smartphone(s) as instance(s) of prog:MovableEntity:");
+    print("5. Printing all smartphones as instances of prog:MovableEntity:");
     List<MovableEntity> smartphones = access("SELECT ?obj WHERE{ ?obj a prog:MovableEntity. ?obj prog:MovableEntity_movableEntityId ?id } ORDER BY DESC(?id)");
     if (smartphones != null) then
         twin.printAllMovableEntities(smartphones);
@@ -275,23 +275,23 @@ main
 
 
 
-    // 6. INFORMATION ABOUT SMARTPHONES WITH KNOWN POSITIONS THAT CAN BE VERIFIABLY CHECKED AND HOW
+    // 6. INFORMATION ABOUT SMARTPHONES WITH KNOWN PHYSICAL LOCATIONS THAT CAN BE VERIFIABLY CHECKED AND HOW
     twin.printVerifiableCheck(i, length, smartphones);
 
-    /*          "Checking which smartphone(s) are in the domain"
+    /*          "Checking which smartphones are in the domain"
     query SELECT ?obj WHERE{ ?obj a domain:MovableEntity }
                 "Checking if smartphone 1 exists"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId "1" }
-                "Checking which smartphone(s) are inside a critical area and displaying information about them"
+                "Checking which smartphones are inside a critical area and displaying information about them"
     query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_endangered true. ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }
-                "Checking which smartphone(s) are safe"
+                "Checking which smartphones are safe"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }
                 "Checking if smartphone 2 is endangered"
     query SELECT ?obj ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId "2". ?obj prog:MovableEntity_endangered ?endangered }
-                "Checking smartphone(s), displaying everything and sorting smartphone(s) by ID"
+                "Checking smartphones, displaying everything and sorting smartphones by ID"
     query SELECT ?id ?latitude ?longitude ?endangered WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_latitude 
     ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered } ORDER BY ASC(?id)
-                "Checking which smartphone(s) in domain we don't know are endangered or not"
+                "Checking which smartphones in domain we don't know are endangered or not"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
     */
 
