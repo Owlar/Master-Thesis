@@ -4,7 +4,7 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
 # How to run?
 ### Preliminaries
 1. Have minimum Java Runtime version 11 (class file version 55) on the local machine. 
-    * To setup, download Java JDK 11 from Oracle (sign-in required). 
+    * Download Java JDK 11 from Oracle (sign-in required). 
     * Environment variables need to be set as well. More specifically, set JAVA_HOME to the source of the downloaded JDK, and Path to %JAVA_HOME%\bin (and move it to the top when using Windows).
 
 
@@ -45,7 +45,7 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
     > flutter upgrade
     > flutter pub get
     ````
-    If there are any undefined code, e.g. due to Firebase, simply run what follows:
+    If there is any undefined code, e.g. due to Firebase, simply run what follows:
     ````flutter
     > flutter pub get
     ````
