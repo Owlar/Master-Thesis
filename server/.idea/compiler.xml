@@ -9,5 +9,8 @@
         <module name="server" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="wrapper" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
 </project>
