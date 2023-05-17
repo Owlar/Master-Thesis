@@ -14,17 +14,18 @@ Repository for my Master Thesis at the University of Oslo Spring 2023
     ````
 
 ### Server
-3. The server has a Maven wrapper. To run the server from with all the required dependencies:
-    * For Unix systems:
+3. The server has a Maven wrapper that builds the code:
+* For Unix systems:
     ````flutter
     > ./mvnw clean install
     ````
-    * For Windows systems:
+* For Windows systems:
     ````flutter
     > mvnw.cmd clean install
     ````
+    
 
-### Digital Twin
+### Twin
 4. To run SMOL REPL with necessary commands:
     ````flutter
     > java -jar smol.jar -d http://www.semanticweb.org/oscarlr/ontologies/2023/2/building# -b building.owl
