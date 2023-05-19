@@ -67,7 +67,7 @@ class DigitalTwin()
             Double long = coordinates.get(i);
 
             Int index = half - i;
-            // We get ID from asset model and not InfluxDB because operator might have added smartphones without a position yet in asset model
+            // We get ID from asset model and not InfluxDB because operator might have added smartphones without a physical location yet in asset model
             Int id = smartphonesDomain.get(index - 1);
 
             MovableEntity smartphone = new MovableEntity(id, lat, long, False);
@@ -255,7 +255,7 @@ main
         print("4. There are no mobile assets in the asset model! Smartphones must send their physical location, or they should be manually added to the file 'building.owl'.");
     else
         length = smartphonesDomain.length();
-        // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a position.
+        // Checking if there are more smartphones added to the asset model manually by an operator which in case the smartphones will not have a physical location.
         if (i < length) then
             print("4. Printing the smartphones without a physical location");
             twin.createMovableEntitiesWithNoPhysicalLocation(i, length, smartphonesDomain);
