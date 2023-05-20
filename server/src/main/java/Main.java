@@ -110,6 +110,7 @@ public class Main {
                     String json = new Gson().toJson(snapshot.getValue(Object.class));
                     Data data = new Gson().fromJson(json, Data.class);
                     influxDB.insertDataPoint(data);
+                    System.out.println("Forwarded sensor data of ID: " + data.id + " to DT!");
                     try {
                         Owl.addIndividual(data);
                     } catch (OWLOntologyCreationIOException e) {

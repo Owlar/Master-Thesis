@@ -2,7 +2,7 @@
 Repository for my Master Thesis at the University of Oslo Spring 2023
 
 # How to run?
-### Preliminaries
+### Prerequisites
 1. Have minimum Java Runtime version 11 (class file version 55) on the local machine. 
     * Download Java JDK 11 from Oracle (sign-in required). 
     * Environment variables need to be set as well. More specifically, set JAVA_HOME to the source of the downloaded JDK, and Path to %JAVA_HOME%\bin (and move it to the top when using Windows).
