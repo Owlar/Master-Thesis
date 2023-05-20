@@ -25,7 +25,6 @@ class _MapState extends State<Map> {
   late LatLng _smartphonePosition;
   late Status _currentStatus;
   late int _id = -1;
-  late Stopwatch _stopwatch;
 
   Set<Status> _messages = {};
   bool _warned = false;
@@ -87,8 +86,6 @@ class _MapState extends State<Map> {
 
 
   Future<void> _stop() async {
-    _stopwatch.stop();
-    _showSnackBar(_stopwatch.elapsed.toString());
     _showDecision(_currentStatus.id);
     setState(() {
       _messages = {};
@@ -98,8 +95,6 @@ class _MapState extends State<Map> {
 
 
   Future<void> _start() async {
-    _stopwatch = Stopwatch();
-    _stopwatch.start();
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);

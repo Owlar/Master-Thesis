@@ -21,6 +21,7 @@ public class Main {
     private DatabaseReference reference = null;
     private InfluxDB influxDB = null;
     private boolean hasSensorData = false;
+    private boolean hasWarned = false;
 
 
     public static void main(String[] args) {
@@ -51,9 +52,11 @@ public class Main {
             getSensorData();
 
             if (hasSensorData) {
-                Map<String, String> res = Jena.getEndangeredSmartphones();
-                if (res.size() != 0) {
-                    warnEndangeredClients(res);
+                if (!hasWarned) {
+                    Map<String, String> res = Jena.getEndangeredSmartphones();
+                    if (res.size() != 0) {
+                        warnEndangeredClients(res);
+                    }
                 }
             }
         }
@@ -63,10 +66,11 @@ public class Main {
 
     private void warnEndangeredClients(Map<String, String> results) {
         reference = FirebaseDatabase.getInstance().getReference("endangered");
-        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) ->
-                System.out.println("Forwarded informed decision to PT!");
+        DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {
+            System.out.println("Forwarded informed decision to PT!");
+            hasWarned = true;
+        };
         reference.setValue(results, completionListener);
-        reference.removeValue(completionListener);
     }
 
 
