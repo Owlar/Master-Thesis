@@ -5,19 +5,22 @@
 \usepackage{listings}
 \usepackage{float}
 \usepackage{fancyvrb}
+\usepackage{graphicx}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{fvextra}
 \usepackage{soul}
 \usepackage{minted}
+\AtBeginEnvironment{minted}{%
+  \renewcommand{\fcolorbox}[4][]{#4}}
 \usepackage{amssymb}
 \usepackage{pifont}
 \usepackage{multirow}
 \graphicspath{ {./graphics/} }
 \usepackage[backend=biber,natbib,style=numeric]{biblatex}
+\usepackage[hidelinks,colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
 \usepackage{hyperref}
 \addbibresource{references.bib}
-
 
 \begin{document}
 
@@ -28,8 +31,7 @@
 \duoforside[dept={Institute for Informatics}, program={Informatics: Programming and System Architecture}, short]
 
 \section*{Abstract}
-This thesis proposes a solution to the challenge of handling mobile assets in a semantic digital twin based on a dynamic asset model in which static data (existing building infrastructure) is separated from dynamic data (smartphone's physical location). The digital twin (DT) is created in Semantic Micro Object Language (SMOL) for easy integration with semantic technologies, such as semantic knowledge graphs. In order to semantically enrich the DT further, a model of a building is created in Web Ontology Language (OWL). A hybrid smartphone application is implemented having the mobile assets in mind, which sends their updated status. The privacy of the data subjects is protected as much as possible. The DT is an up-to-date digital representation of the PT, and it reconfigures in near real-time if the PT or any of the mobile assets inside it changes. If a person is located inside a dangerous area, the app warns the appropriate user from the informed decision sent by the DT.
-
+This thesis proposes a solution to the challenge of handling mobile assets in a semantic digital twin (DT) based on a dynamic asset model in which static data (existing building infrastructure) is separated from dynamic data (physical location). The semantic DT easily integrates with semantic technologies, and is enriched by them. A cross-platform app is created for mobile assets to send their status, whilst protecting privacy of data subjects as much as possible. The DT is an up-to-date digital representation of the PT, and it reconfigures in near real-time if the PT changes. An endangered person is warned in the app, concluded to be inside a critical area by the digital counterpart, evaluated to be true for 234 of 234 smartphones. Appropriate clients are warned. We provide informative messages in the SPARQL endpoint provided by the SMOL REPL. The solution is extensible, and can be easily maintained by manual operations. Formalized knowledge of the domain is ensured when automatically reading from it, even if the set of heterogeneous mobile assets change.
 
 \newpage
 
@@ -60,7 +62,7 @@ There exist challenges in handling mobile assets. Some systems mainly focus on t
 
 Furthermore, there is existing research about using Building Information Modeling (BIM) with standard data formats, such as JSON or Resource Description Framework (RDF), to better define static building infrastructure \cite{pauwels_live_2023}. \citeauthor{pauwels_live_2023} proposes how, and to what extent, such data can be used in robot navigation. Although BIM can be used, by default it has some challenges regarding interoperability due to heterogeneous data \cite{dinis_bim_2022,godager_concept_2021}.
 
-Handling mobile assets in a DT based on an \emph{asset model} (i.e. a file that contains an organized description of an asset's composition and properties \cite{kamburjan_twinning-by-construction_2022}) that is \emph{dynamic} is unexplored territory.
+Handling mobile assets in a DT based on a dynamic \emph{asset model} (i.e. a file that contains an organized description of an asset's composition and properties \cite{kamburjan_twinning-by-construction_2022}) is unexplored territory.
 
 \subsection{Motivation}\label{subsec:Motivation}
 Given the gap that exists in connecting tracking systems, asset models, and digital twins, there is still room for improvement. The problem is that there exist no systems that have a digital twin (DT) based on a dynamic asset model which can track an unlimited number of heterogeneous smartphones. In an attempt to formalize heterogeneous data and make it understood by computers, semantic web technologies should be used. More specifically, we aim to semantically enrich a model of a building to increase interoperability, as well as keep it inexpensive and easy to maintain.
@@ -92,7 +94,7 @@ Having the aforementioned in mind, an overview of the main architectural compone
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.14]{graphics/initial_thesis_overview.png}
-    \caption{Overview of \emph{main} architectural components in this thesis}
+    \caption{Overview of \emph{main} architectural components}
     \label{fig:initial_components}
 \end{figure}
 
@@ -136,14 +138,14 @@ This chapter describes the background information of this thesis. Starting off w
 \subsubsection{Historic background}
 The \emph{idea} of a digital twin can be traced back to the 1960s in NASA's space exploration days, where multiple simulations were employed to evaluate the problems with the space mission Apollo 13 \cite{noauthor_digital_nodate, fuller_digital_2020}. The \emph{term} digital twin was first introduced to the public by Michael Grieves in a presentation given in 2002, and in 2014 conceptualized as a virtual representation of a factory replication \cite{grieves_michael_digital_2014}. This set the foundation for developing digital twins \cite{grieves_michael_digital_2014, fuller_digital_2020}. Since then, DTs have had many applications in various disciplines, and in recent years especially in smart cities, healthcare, manufacturing, and asset management \cite{fuller_digital_2020, waszak_let_2022, macchi_exploring_2018}
 
-\subsubsection{For the scope of this thesis}
-As of today, a DT is referred to as a digital representation of some physical system \cite{grieves_digital_2017}, that has no restriction on the size or scale of it, which means the entity could be a single asset or a system of systems for that matter \cite{li_digital_2022, waszak_let_2022}. It exists in real life and is commonly referred to as the physical twin (PT), and is observed by the DT in near real-time. There should be a bidirectional flow of data between the DT and the PT throughout the life cycle of the PT. In other words, the DT gets updated sensor data from the PT, and sends informed decisions back to it \cite{madni_leveraging_2019, waszak_let_2022, kamburjan_digital_2022}. From this, and for the scope of this thesis, a DT is a digital representation of a system that tracks many mobile assets. The DT sends informed decisions to the physical counterpart in which the appropriate mobile assets perform actions.
+\subsubsection{For the scope of this thesis}\label{subsubsec:ForTheScope}
+As of today, a DT is referred to as a digital representation of some physical system \cite{grieves_digital_2017}, that has no restriction on the size or scale of it, which means the entity could be a single asset or a system of systems for that matter \cite{li_digital_2022, waszak_let_2022}. The physical system exists in real life and is commonly referred to as the physical twin (PT), and is observed by the DT in near real-time. There should be a bidirectional flow of data between the DT and the PT throughout the life cycle of the PT. In other words, the DT gets updated sensor data from the PT, and sends informed decisions back to it \cite{madni_leveraging_2019, waszak_let_2022, kamburjan_digital_2022}. From this, and for the scope of this thesis, a DT is a digital representation of a system that tracks many mobile assets. The DT sends informed decisions to the physical counterpart in which the appropriate mobile assets perform actions.
 
-There are multiple misconceptions about DTs. One such misconception is that a digital shadow (DS) is some sort of a DT. This misconception often leads people to build shadows instead of DTs. \cite{fuller_digital_2020, li_digital_2022}.  Although very similar, a digital shadow (DS) does not have the bidirectional data flow that a DT does. Instead, there is a one-way flow from the PT to the digital counterpart, which often leads to a change in the DS, but not vice versa \cite{kritzinger_digital_2018, li_digital_2022}. Secondly, as told by \citeauthor{fuller_digital_2020}, a common misconception is that the DT must be an exact 3D copy of a physical entity, such as a building.
+There are multiple misconceptions about DTs. One such misconception is that a digital shadow (DS) is a DT. This misconception often leads people to build shadows instead of DTs. \cite{fuller_digital_2020, li_digital_2022}.  Although very similar, a digital shadow (DS) does not have the bidirectional data flow that a DT does. Instead, there is a one-way flow from the PT to the digital counterpart, which often leads to a change in the DS, but not vice versa \cite{kritzinger_digital_2018, li_digital_2022}. Secondly, as told by \citeauthor{fuller_digital_2020}, a common misconception is that the DT must be an exact 3D copy of a physical entity, such as a building.
 
 In order to capture diverse data and formalize knowledge represented in DTs, knowledge graphs should be used \cite{kamburjan_programming_2021, waszak_let_2022}. \citeauthor{waszak_let_2022} created a DT architecture in which static and dynamic data sources were not explicitly stored in a common knowledge graph but instead linked to one another for better scaling and heterogeneity.
 
-To sum up, it is important to understand what a DT is and what it is not. We should try to "close the loop" by sending informed decisions back to the physical counterpart so that it reflects the newest state of the DT. A DS could be used alongside the DT with the only goal of being a timestamped snapshot of some specific physical asset \cite{bergs_concept_2021}. When implementing one should also think about the challenges of digital twins, such as privacy concerns and costs. We should not get too caught up with modeling an exact 3D replica of an asset. On the other hand, we \emph{should} use existing semantic technologies such as knowledge graphs for formal knowledge representation from a variety of data sources.
+To sum up, it is important to understand what a DT is and what it is not. We should try to "close the loop" by sending informed decisions back to the physical counterpart so that it reflects the newest state of the DT. A DS could be used alongside the DT with the only goal of being a timestamped snapshot of some specific physical asset \cite{bergs_concept_2021}. When implementing one should also think about the challenges of digital twins. We should not get too caught up with modeling an exact 3D replica of an asset. On the other hand, we \emph{should} use existing semantic technologies, such as knowledge graphs, to formally represent knowledge from a variety of data sources.
 
 
 \subsection{Semantic Web}
@@ -229,7 +231,7 @@ Commonly, these technologies can be used to create \emph{semantic} \hyperref[sub
 \subsection{Asset Model}\label{subsec:AssetModel}
 Although BIM (Building Information Modeling) can be used with RDF and JSON to create static building infrastructure as mentioned in Section \ref{sec:Introduction}, some meaning is lost in translation due to a lack of semantic enrichment. BIM can be used in DTs for more context about the built environment which includes asset behavior \cite{godager_concept_2021}. However, a digital twin should aim to have interoperability between heterogeneous data sources.
 
-OWL documents can easily be created (from export), loaded into, and maintained in ontology editors, such as Protégé\footnote{\url{https://protege.stanford.edu}}. Such a tool can be used to give semantics to e.g. a model of a building, as well as spending less time on creating and maintaining it compared to BIM. 
+OWL documents can easily be created (from exporting), loaded into, and maintained in ontology editors, such as Protégé\footnote{\url{https://protege.stanford.edu}}. Such a tool can be used to give semantics to e.g. a model of a building, as well as spending less time on creating and maintaining it compared to BIM. 
 
 Figure \ref{fig:building_ontology} shows an example of an ontology of the simple building shown in Figure \ref{fig:simple_building} in Turtle Syntax (i.e. data format for RDF data model \cite{noauthor_terse_nodate}). This ontology uses semantic technologies outlined in Section \ref{subsubsec:Technologies}, such as RDF, which again is used by OWL to formalise knowledge in this specific building domain. For a more compact view of the ontology, URLs are removed and the coordinates of the room border corners are purposely left out, and some white space and comments are also removed. We also do not take directions into account meaning the room R1 will always be left of R2, and R2 always to the right of R1. Note that this is just an example of an ontology and that a real building domain would be many times more complex.
 
@@ -277,7 +279,7 @@ The source code of SMOL is publicly available\footnote{\url{https://github.com/s
 
 \begin{figure}[H]
     \centering
-    \caption{A simple SMOL program}
+    \caption{A simple SMOL program (example.smol)}
     \label{fig:smol_program}
     \begin{Verbatim}[frame=single]
 class Smartphone(Int id, String name, Boolean isBlackBerry) end
@@ -307,7 +309,7 @@ MO>
 \subsection{Reasoning}\label{subsec:Reasoning}
 OWL was previously mentioned in Section \ref{subsubsec:Technologies} as a language for expressing rich knowledge of concepts and relations between entities. We should keep in mind, however, that this formalized knowledge should be reasoned over and put in context to draw conclusions based on criteria. There are many technologies that let us do this.
 \subsubsection{HermiT}
-HermiT is a reasoner for OWL 2 \cite{glimm_hermit_2014}, which is an upgraded version of OWL. \citeauthor{glimm_hermit_2014} describes that the reasoner support both object and data property classification, as well as SPARQL query answering. HermiT is built into the ontology editor Protégé and can be used to reason over an ontology directly in the editor. Other plugins for reasoning can be added to the ontology editor, but it is convenient that HermiT comes with the installation.
+HermiT is a reasoner for OWL 2 \cite{glimm_hermit_2014}, which is an upgraded version of OWL. \citeauthor{glimm_hermit_2014} describes that the reasoner support both object and data property classification, as well as SPARQL query answering. HermiT is built into the ontology editor Protégé and can be used to reason over an ontology directly in the editor. Other plugins for reasoning can be added to the ontology editor, but it is convenient that HermiT comes pre-installed with the desktop version.
 
 Figure \ref{fig:hermit_in_protege} shows an ontology that is \emph{inconsistent} (an ontology that cannot have any models and entails everything \cite{horridge_explaining_2009, huang_reasoning_2004}). The information window \textbf{Help for inconsistent ontologies} tells us that the OWL reasoner (HermiT) will no longer be able to provide any useful information about the ontology. The ontology is inconsistent because the object properties \textbf{hasWallLeft} and \textbf{hasWallRight} are disjoint (having no elements in common), and the individual \textbf{R1} has both object properties. This makes no sense because the room can't have the wall on its left side and at the same time have it on its right side. This could be fixed by simply removing the object property \textbf{hasWallLeft} from the individual according to the context. The effect of an inconsistent ontology is that no meaningful conclusions can be drawn from it \cite{horridge_explaining_2009}.
 
@@ -322,7 +324,7 @@ There also exist other technologies that provide reasoner tools. Some notable me
 \begin{itemize}
     \item{\textbf{Apache Jena}} is an open source framework that has the Inference API which include reasoner tools that can be used to reason over data, as well as checking content of triple stores \cite{noauthor_apache_nodate-1}. The source code is publicly available\footnote{\url{https://github.com/apache/jena}}.
     \item{\textbf{OWL API}} is a Java framework that lets us create, serialize or manipulate ontologies written in OWL \cite{noauthor_owl_nodate}, and its source code is openly accessible\footnote{\url{https://github.com/owlcs/owlapi}}. Its recent development is more focused towards OWL 2 however.
-    \item\hyperref[subsec:SMOL]{\textbf{SMOL}} provide reasoning tools through its interpreter, which implements \emph{semantic lifting} (i.e. generating a knowledge graph from the current state of a SMOL program) \cite{noauthor_semantic_nodate}. 
+    \item{\textbf{SMOL}} provide reasoning tools through its interpreter, which implements \emph{semantic lifting} (i.e. generating a knowledge graph from the current state of a SMOL program) \cite{noauthor_semantic_nodate}. 
     
     The knowledge graph is generated by using the \verb|dump| command in SMOLs Read-Eval-Print Loop (REPL) (i.e. user inputs in a terminal are read and results are returned to the user). The knowledge graph is generated as an output file with the filename extension \verb|.ttl|. Reasoning is done automatically by the interpreter whenever \verb|access| or \verb|member| are executed. Apache Jena reasoner is used for \verb|access|, whilst \verb|member| triggers reasoning over an OWL concept with HermiT. Validating with SHAQL does however not require reasoning.
 \end{itemize}
@@ -394,18 +396,18 @@ Given the gap that was identified in Section \ref{subsec:Motivation}, the hypoth
 
 \subsection{Research questions (RQ1, RQ2, RQ3)}
 \subsubsection{RQ1}\label{subsubsec:RQ1}
-RQ1 is concerned with creating a dynamic asset model of a simple building. From the descriptions of asset models in Section \ref{subsec:AssetModel}, an ontology of a simple building was created, as shown in Figure \ref{fig:building_ontology}. This asset model is a simplified version of an exported OWL document (file). It can be created in an ontology editor, such as Protégé. Although other ontology editors can be used, we should use Protégé due to its user-friendliness and the extensive documentation provided in its user guide \cite{horridge_practical_2011}. This exported file is provided to and used by the digital twin (DT) by using the SMOL interpreter.
+RQ1 is concerned with creating a dynamic asset model of a simple building. From the descriptions of asset models in Section \ref{subsec:AssetModel}, an ontology of a simple building was created, as shown in Figure \ref{fig:building_ontology}. This asset model is a simplified version of an exported OWL document (file). It can be created in an ontology editor, such as Protégé. Although other ontology editors can be used, we should use Protégé due to its user-friendliness and the extensive documentation provided in its user guide \cite{horridge_practical_2011}. This exported file is provided to and used by the digital twin (DT) by using the SMOL interpreter. Section \ref{subsubsec:DynamicAssetModel} further examines what a \emph{dynamic} asset model entails.
 
 RQ1 is also concerned with creating an asset model that is \emph{extensible}. Being extensible in this context means that an operator should be able to manually add new smartphones that have no registered physical location, or add existing building infrastructure to the ontology. We provide a template for movable entities, which is used to add new movable entities to the domain according to context. More specifically, new smartphone individuals without physical location data are added to the asset model. The usage of the template is shown below. Changeable parts in the template are highlighted. This should be added to the OWL document (file), either by the server or manually by an operator:
 
+\begin{small}
 \begin{Verbatim}[commandchars=\\\{\}, breakanywhere=true]
 ### \hl{http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#smartphone5}
 \hl{:smartphone5} rdf:type owl:NamedIndividual ,
                       :MovableEntity ;
              :movableEntityId "\hl{5}" .
-\end{Verbatim}  
-
-Section \ref{subsubsec:DynamicAssetModel} further examines what a \emph{dynamic} asset model entails.
+\end{Verbatim}
+\end{small}
 
 \subsubsection{RQ2}\label{subsubsec:RQ2}
 RQ2 asks whether we can "enable bidirectional data flow between the PT and DT, such that the digital twin gets updated sensor data from the mobile devices in the PT and sends informed decisions back". Bidirectional data flow is data that is exchanged both ways, and not just in one direction between the physical twin (PT) and digital twin (DT), or vice versa. The DT observes the PT in near real-time and gets updated sensor data from its physical counterpart. The DT should then send informed decisions back to it. A lot of value is derived from the DT making an informed decision on behalf of a mobile asset in the PT, and it is crucial that the appropriate smartphone user is notified.
@@ -420,14 +422,14 @@ Meaning, to check if a smartphone's physical location (point) $(x, y)$ is inside
 \subsubsection{RQ3}
 RQ3 is concerned with how we can "separate dynamic data (smartphone’s physical location) from static data
 (building infrastructure) in the asset model". Hypothesis (H) states that the asset model should be of a simple building. The rooms with a square area constitute it. In contrast to building infrastructure, mobile assets that are tracked can change at any time, as well as their continuously changing physical locations. As described in Section \ref{subsec:Scope}, we are not concerned with other movable entities in the building domain apart from the mobile assets. And, even though the data of the building infrastructure may change, it will not change during program execution in SMOL. This is not the case with the time series data accessed from InfluxDB in SMOL. However, one way to separate the dynamic data from the static data is by examining \emph{how} often changes occur through time, where separate means not affecting one another. More specifically, when reloading the asset model, the static data should not be affected by the data data considered dynamic. Further analysis of static and dynamic data is described in Section \ref{subsubsec:StaticAndDynamicData}, and also later discussed in Section \ref{subsec:DiscussDynamicData}.
-
+\newline
 
 \subsection{Building domain}\label{subsec:BuildingDomain}
 From considering the three research questions, we have created a possible domain including a built environment based on static data, as well as movable entities with their physical location as dynamic data, as shown in Figure \ref{fig:static_built_environment}. \textbf{Physical 2D space} is provided for the context of outside and is in two dimensions as described in Section \ref{subsec:Scope}. This means that altitude is not taken into account. Note that the relationships between some entities use \emph{composition} (i.e. indicates a very strong relationship between the entities, which means that if the owing entity (e.g. \textbf{Physical 2D space}) is destroyed, so is the entity linked to it (e.g. \textbf{Building} \cite{pilone_uml_2005}) (it can be thought of as a black hole..)
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.16]{graphics/static_built_environment.png}
+    \includegraphics[scale=0.14]{graphics/static_built_environment.png}
     \caption{A UML class diagram that illustrates the separation of static and dynamic behavior}
     \label{fig:static_built_environment}
 \end{figure}
@@ -453,8 +455,8 @@ Figure \ref{fig:static_dynamic_asset_model} shows the separation of static and d
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.22]{graphics/static_dynamic_asset_model.png}
-    \caption{The separation of \textbf{Static} and \textbf{Dynamic} data, illustrated in blue and red, respectively}
+    \includegraphics[scale=0.18]{graphics/static_dynamic_asset_model.png}
+    \caption{The separation of static and dynamic data illustrated in blue and red, respectively}
     \label{fig:static_dynamic_asset_model}
 \end{figure}
 
@@ -548,7 +550,7 @@ Having the structural requirements described in Section \ref{subsec:Requirements
 \begin{figure}[H]
     \centering
     \includegraphics[scale=0.12]{graphics/wireframe_app.png}
-    \caption{Shows a wireframe of the UI in the app}
+    \caption{Wireframe of the UI in the app}
     \label{fig:wireframe_app}
 \end{figure}
 
@@ -564,7 +566,7 @@ This chapter describes the proof-of-concept implementation, which is publicly av
 \end{itemize}
 In the first section, we describe the implementation of a prototype based on the initial architectural components in Figure \ref{fig:initial_components}. 
 
-Then we look at the final version in Figure \ref{fig:components}, and describe what was implemented. For each of the larger architectural components in the figure, we reference the section that describes it in Chapter \ref{sec:Background}, and the design decision that enables it in Chapter \ref{sec:Analysis}. We also reference the corresponding \emph{item} in the structural requirement \emph{part} we are in.
+Then we look at the final version in Figure \ref{fig:components}, and describe what was implemented. For each of the larger architectural components in the figure, we reference the section that describes it in Chapter \ref{sec:Background}, and the design decision that enables it in Chapter \ref{sec:Analysis}. We also reference the corresponding \emph{item} in the structural requirement \emph{part} we are in. Along the way, we discuss challenges when developing, as well as which requirements were met and why. Due to this, the last section presents the overall evaluation of the implementation in terms of the structural requirements. Further evaluation is presented in Chapter \ref{sec:Evaluation}.
 
 \begin{figure}[H]
     \centering
@@ -595,7 +597,7 @@ We used the wireframe in Section \ref{subsec:Design} in the prototypical impleme
 
 We created a Maven project (a tool for managing the project) and used the object-oriented programming language Java for the server implementation. To let the server track many clients, we first assigned an ID to the client when it connected to the server which kept track of joining clients. The client received its assigned ID from the server which was later sent alongside the client's physical location as status update messages when pressing the button again. As this was an early adaptation, we implemented client-server communication over TCP (Transmission Control Protocol).
 
-An asset model (ontology) of a simple building was also created, as shown in Figure \ref{fig:simple_building} (this time with coordinates as data properties which were "added" to individuals of the \verb|MovableEntity| class suggested in Section \ref{subsubsec:DynamicAssetModel}. We used Protégé to create the domain and exported it as an OWL document (file). This file was then accessed in a new SMOL program based on the background information in Section \ref{subsubsec:Technologies}, Section \ref{subsubsec:SMOL}, and from further analysis in Section \ref{subsubsec:StaticAndDynamicData}. 
+An asset model (ontology) of a simple building was also created, as shown in Figure \ref{fig:simple_building} (this time with coordinates as data properties which were "added" to individuals of the \verb|MovableEntity| class suggested in Section \ref{subsubsec:DynamicAssetModel}. We used Protégé to create the domain and exported it as an OWL document (file). This file was then accessed in a new SMOL program based on the background information in Section \ref{subsubsec:Technologies}, Section \ref{subsec:SMOL}, and from further analysis in Section \ref{subsubsec:StaticAndDynamicData}. 
 
 To sum up, in the early version of the implementation a simple app was created to send sensor data (physical location from GPS-sensor in the devices as described in Section \ref{subsec:AppDevelopment}) to a server. Furthermore, the file containing information about a simple building domain was accessed in SMOL.
 
@@ -712,16 +714,17 @@ Figure \ref{fig:server_forward_informed_decision} has a call to a function in th
 
 
 Figure \ref{fig:server_forward_informed_decision} shows how the informed decision from the DT is forwarded to Firebase.
-\begin{figure}
+\begin{figure}[H]
     \centering
     \begin{small}
     \begin{minted}[breaklines]{java}
 private void warnEndangeredClients(Map<String, String> results) {
     reference = FirebaseDatabase.getInstance().getReference("endangered");
-    DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) ->
-            System.out.println("Forwarded informed decision to PT!");
+    DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {
+        System.out.println("Forwarded informed decision to PT!");
+        hasWarned = true;
+    };
     reference.setValue(results, completionListener);
-    reference.removeValue(completionListener);
 }
     \end{minted}
     \end{small}
@@ -734,15 +737,18 @@ The server prepares to send sensor data to the time-series database whenever the
 
 \begin{figure}[H]
     \centering
+    \begin{small}
     \begin{minted}{java}
 public void insertDataPoint(Object object) {
     WriteApiBlocking writeApi = db.getWriteApiBlocking();
     writeApi.writeMeasurement(bucket, org, WritePrecision.MS, object);
 }
     \end{minted}
+    \end{small}
     \caption{Inserting a measurement point (timestamped status message) into the Data-bucket in InfluxDB}
     \label{fig:insert_point}
 \end{figure}
+
 
 According to the structural requirements, the server should reload the asset model with clients that are currently tracked and access the generated knowledge graph from the DT. To reload the asset model, we used the exported OWL document (file) and put the file into the DT file structure (we later discuss how data can be stored, the reasons for using files, and the limitations to this in Section \ref{subsec:StoringData}, that the server accesses and writes to using the Java framework OWL API which is described in Section \ref{subsec:Reasoning}. Based on the background information of semantic technologies in Section \ref{subsubsec:Technologies}, and the example of adding \textbf{individuals} of \textbf{MovableEntity} to the asset model (ontology) in Section \ref{subsubsec:StaticAndDynamicData}, we created a function for adding data of a smartphone to the file. Before this, we tried to use Apache Jena to reload the asset model, but it could not write data in Turtle syntax to the asset model, and we suspect some compatibility issues with the Turtle syntax in the file exported from Protégé.
 
@@ -754,11 +760,11 @@ In Firebase, the assigned clients are stored as unstructured nodes (JSON objects
 
 
 \subsubsection{Semantic Digital Twin}
-From the background information of DTs in Section \ref{subsubsec:DigitalTwins} we created a digital twin, based on a dynamic asset model of a simple building, that handled mobile assets. The asset model had areas with predefined coordinates (latitude1, latitude2, longitude1, and longitude2) The DT and its parts were semantically enriched by using the semantic technologies presented in Technologies, as well as by using SMOL as an enabler of semantics from the analysis of it in Section \ref{subsubsec:SemanticDigitalTwins}. 
+From the background information of DTs in Section \ref{subsec:DigitalTwins} we created a digital twin, based on a dynamic asset model of a simple building, that handled mobile assets. The asset model had areas with predefined coordinates (latitude1, latitude2, longitude1, and longitude2) The DT and its parts were semantically enriched by using the semantic technologies presented in Technologies, as well as by using SMOL as an enabler of semantics from the analysis of it in Section \ref{subsubsec:SemanticDigitalTwins}. 
 
 The \emph{semantic} digital twin was created in SMOL by using its core language illustrated in Section \ref{subsec:SMOL}. And by using the SMOL Interpreter (\verb|smol.jar|) in the file structure to read and execute the SMOL program. The SMOL program consists of two modular parts, namely: 
 \begin{enumerate}
-    \item \textbf{DS} (Digital Shadow) acts as a timestamped snapshot of a specific smartphone, as well as being used to access the newest sensor data, from the descriptions in Section \ref{subsubsec:FurtherDataSeparation}. It accesses the latest physical locations from a specified time ago. Based on the descriptions in Section \ref{subsec:Databases}, and from the example in Figure \ref{fig:access_time_series}, we accessed the updated sensor data in the DS. This can be seen in the function in Figure \ref{fig:DigitalShadowInflux}. Note that it looks like we get outdated sensor data (\textbf{first} added to the bucket), but we are actually getting the latest. When this was implemented there was no support for single-quote string delimiters in \verb|access|.
+    \item \textbf{DS} (Digital Shadow) has to purposes. First, it acts as a timestamped snapshot of smartphones at a certain point in time. From the background information in Section \ref{subsubsec:ForTheScope}, we abstract this so that the asset is all tracked mobile assets. Secondly, it is used to access the newest sensor data, from the descriptions in Section \ref{subsubsec:FurtherDataSeparation}. It accesses the latest physical locations from a specified time ago and only gets sensor data. This is based on the descriptions in Section \ref{subsec:Databases}, and from the example in Figure \ref{fig:access_time_series}. This can be seen in the function in Figure \ref{fig:DigitalShadowInflux}. Note that it looks like we get outdated sensor data (\textbf{first} added to the bucket), but we are actually getting the latest. Also note that when this was implemented there was no support for single-quote string delimiters in \verb|access|.
     \item \textbf{Digital Twin} is a digital representation of the PT. It accesses: 
     \begin{enumerate}
         \item the critical areas in a building domain defined in the asset model
@@ -770,7 +776,7 @@ The \emph{semantic} digital twin was created in SMOL by using its core language 
 \begin{figure}[H]
     \centering
     \begin{small}
-    \begin{minted}[breaklines]{dart}
+    \begin{Verbatim}[frame=single,breaklines]
 List<Double> getSmartphoneCoordinates()
     List<Double> coordinates = null;
     coordinates = access(
@@ -786,7 +792,7 @@ List<Double> getSmartphoneCoordinates()
         );
     return coordinates;
 end
-    \end{minted}
+    \end{Verbatim}
     \end{small}
     \caption{Accessing the updated sensor data from InfluxDB}
     \label{fig:DigitalShadowInflux}
@@ -799,17 +805,19 @@ From this, smartphone objects are created by combining the data as shown in Figu
     \begin{minted}{dart}
 MovableEntity smartphone = new MovableEntity(id, lat, long, False);
     \end{minted}
-    \caption{Creating a smartphone object from the smartphone ID in the asset model, in combination with the corresponding updated coordinates from InfluxDB. \textbf{False} simply means the smartphone is not concluded to be endangered yet}
+    \caption{Creating a smartphone object from the smartphone ID in the asset model, in combination with the corresponding updated coordinates from InfluxDB}
     \label{fig:smartphone_object}
 \end{figure}
 
-Referencing the requirement "Check if smartphones are inside any critical areas" we must understand what it \emph{means} before we can implement it. An example is described in Section \ref{subsubsec:RQ2}, where an informed decision can be made if the \emph{criteria} in the example evaluate to be true. The code implementation of it is shown in Figure \ref{fig:inside_critical_area}, where the function is located inside the Area-class. Meaning, we write \verb|area.containsPoint(lat, long)| to check if \verb|area| contains the smartphone with latitude (\verb|lat| and longitude \verb|long|).
+As described in Section \ref{subsec:AssetModel}, a DT should allow for interoperability between various sources of data. By using the common class \verb|MovableEntity| for the entities in the set of movable heterogeneous entities, interoperability was gained in the DT.
+
+Referencing the requirement "Check if smartphones are inside any critical areas" we must understand what it \emph{means} before we can implement it. An example is described in Section \ref{subsubsec:RQ2}, where an informed decision can be made if the \emph{criteria} evaluate to be true. The code implementation of it is shown in Figure \ref{fig:inside_critical_area}, where the function is located inside the Area-class. Meaning, we write \verb|area.containsPoint(lat, long)| to check if \verb|area| contains the smartphone with latitude (\verb|lat|) and longitude (\verb|long|).
 
 
 \begin{figure}[H]
     \centering
     \begin{small}
-    \begin{minted}[breaklines]{dart}
+    \begin{Verbatim}[frame=single,breaklines]
 Boolean containsPoint(Double lat, Double long)
     Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
     Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
@@ -820,29 +828,29 @@ Boolean containsPoint(Double lat, Double long)
         
     return False;
 end
-    \end{minted}
+    \end{Verbatim}
     \end{small}
     \caption{Checking if a smartphone is inside a critical area based on coordinates, assuming they align}
     \label{fig:inside_critical_area}
 \end{figure}
 
-If the DT concludes that a smartphone \emph{is} inside \emph{any} of the critical areas which are accessed from the domain, the twin sets \verb|smartphone.endangered = True;| and adds the smartphone object to the specific area's list of endangered smartphones as a result, which is shown in Figure \ref{fig:add_endangered}. Note that what is shown in the figure is inside a while-loop for the context of the counter \textbf{j}.
+If the DT concludes that a smartphone \emph{is} inside \emph{any} of the critical areas which are accessed from the domain, the twin sets \verb|smartphone.endangered = True;| and adds the object to the list of endangered smartphones for the specific area, which is shown in Figure \ref{fig:add_endangered}. Note that what is shown in the figure is inside a while-loop, hence the use of the counter \textbf{j}.
 
 \begin{figure}[H]
     \centering
-    \begin{minted}[breaklines]{dart}
+    \begin{Verbatim}[frame=single,breaklines]
 a = areas.get(j);
 isInsideACriticalArea = a.containsPoint(lat, long);
 if (isInsideACriticalArea) then
     smartphone.endangered = True;
     a.smartphones = new List<MovableEntity>(smartphone, a.smartphones);
 end
-    \end{minted}
-    \caption{Automatically checking if a smartphone is inside a critical area. If the area contains its point (x, y), the smartphone is set to endangered, and is added to the list of the endangered smartphones for the specific area}
+    \end{Verbatim}
+    \caption{Checking if a smartphone is inside a critical area. If the area contains its point (x, y), the smartphone is set to endangered, and is added to the list of the endangered smartphones for the specific area}
     \label{fig:add_endangered}
 \end{figure}
 
-Regarding the last requirements of this part, informational messages, such as examples of SPARQL queries, are shown in the REPL during the program execution. Figure \ref{fig:sparql_smol} show how we can \emph{manually} manually check which smartphones are inside a critical and thus are endangered, and the results (information about endangered smartphones). The querying is done in the SMOL REPL, which is started from the information in Section \ref{subsubsec:SMOLInterpreter}.
+Regarding the last requirements of this part, informational messages, such as examples of SPARQL queries, are shown in the REPL during the program execution. Figure \ref{fig:sparql_smol} show how we can \emph{manually} check which smartphones are inside a critical and thus are endangered, and the results (information about endangered smartphones). The querying is done in the SMOL REPL, which is started from the information in Section \ref{subsubsec:SMOLInterpreter}.
 
 \begin{figure}[H]
     \centering
@@ -851,7 +859,7 @@ Regarding the last requirements of this part, informational messages, such as ex
     \label{fig:sparql_smol}
 \end{figure}
 
-The DT handles newly added smartphones to the asset model that don't have a physical location as well, and thus all requirements are met.
+The DT handles newly added smartphones to the asset model that don't have a physical location as well. Meaning the knowledge graph reflect there are smartphones in the domain without a physical location, but the system does not however track them. This means the the requirement "Handle new smartphones that don't have a physical location" is not \emph{fully} met.
 
 Lastly, Section \ref{subsubsec:SemanticDigitalTwins} describes the use of \verb|dump| in the REPL (Read-eval-print loop) to generate the knowledge graph, which the server uses by doing the following:
 \begin{enumerate}
@@ -866,15 +874,12 @@ Lastly, Section \ref{subsubsec:SemanticDigitalTwins} describes the use of \verb|
 
 Clients in the PT then access Firebase, and are warned if they are in danger from the informed decision, which closes the loop.
 
-\section{Evaluation}\label{sec:Evaluation}
-This chapter evaluates the developed implementation in terms of which structural requirements in Section \ref{subsec:Requirements} are met from the analysis in this thesis in Chapter \ref{sec:Analysis}, and from performing various test runs in the following sections. We start by presenting the overall evaluation of the implementation according to the requirements. In the following section, we shortly describe how we set up SMOL to be used in the implementation. Then we provide test runs of the server automatically reloading the asset model, and of an operator manually editing the asset model by adding smartphones to it. Then we evaluate how long it takes to warn endangered clients of an informed decision. We also evaluate how the system scales with many heterogeneous smartphones, and plot the results in Data Explorer in InfluxDB.
+\subsection{Which requirements are met?}\label{subsec:WhichRequirements}
+This section \emph{presents} the overall evaluation of the developed implementation in terms of which structural requirements in Section \ref{subsec:Requirements} were met, based on the analysis in Chapter \ref{sec:Analysis}. The Structural requirements were divided into four parts, one for each of the \emph{main} architectural components shown in Figure \ref{fig:components}: \textbf{Client}, \textbf{Server}, \textbf{Databases (\textbf{Firebase Realtime} and \textbf{InfluxDB Time Series}}, and \textbf{Semantic Digital Twin}. Table \ref{tab:overall_evaluation} \emph{presents} the overall evaluation.
 
-The Structural requirements were divided into four parts, one for each of the \emph{main} architectural components shown in Figure \ref{fig:components}: \textbf{Client}, \textbf{Server}, \textbf{Databases (\textbf{Firebase Realtime} and \textbf{InfluxDB Time Series}}, and \textbf{Semantic Digital Twin}. 
-
-The overall evaluation is shown in Table \ref{tab:overall_evaluation}:
-\begin{small}
 \begin{table}[H]
     \centering
+    \scalebox{0.8}{
     \begin{tabular}{|l|l|c|}
     \hline
     & \textbf{Requirement} & \textbf{Status} \\
@@ -906,101 +911,122 @@ The overall evaluation is shown in Table \ref{tab:overall_evaluation}:
     & Show informative messages in the REPL during program execution & \checkmark \\
     \hline
     \end{tabular}
-    \caption{Overall evaluation of the structural requirements}
+    }
+    \caption{Shows which structural requirements were met}
     \label{tab:overall_evaluation}
 \end{table}
-\end{small}
+
+The only requirement that was not fully met, was "Handle new smartphones that don’t have a physical location". The SMOL program accesses the asset model and creates objects from all smartphones in it, but only adds the physical location to the smartphones that have their data in InfluxDB. There is no further support for adding the latitude and longitude to the objects. There is error handling in the SMOL program, and the REPL prints information regarding this. We also assumes that an operator \emph{knows} how to add smartphones to the asset model by either loading it into an ontology editor or use the template described in Section \ref{subsubsec:RQ1}.
+\newpage
 
 
-The only requirement that was not fully met, was that the DT should be able to handle any smartphones that didn't have a registered physical location. The SMOL program accesses the asset model and creates objects from all smartphones in it, but only adds the physical location to the smartphones that have their data in InfluxDB. However, there is no further support for adding the latitude and longitude to the objects. However, this is reflected in the knowledge graph, there is error handling in the SMOL program, and the REPL prints information regarding this. We also assumes that an operator \emph{knows} how to add smartphones to the asset model by either loading it into an ontology editor or use the template described in Section \ref{subsubsec:RQ1}.
-
+\section{Evaluation}\label{sec:Evaluation}
+ This chapter evaluates the developed implementation from various test runs. We start by shortly describing how we set up SMOL to be used in the implementation. Then we provide guided test runs of the server automatically reloading the asset model, and of an operator manually editing the asset model by adding smartphones to it, \emph{demonstrating} the evaluation of requirements in Table \ref{tab:overall_evaluation}. Then we evaluate how long it takes to manually warn endangered clients. We also evaluate how the system scales with many heterogeneous smartphones, and plot the results in the Data Explorer view in InfluxDB.
 
 \subsection{Setup of SMOL}\label{subsec:Setup}
-To setup SMOL to use in the implementation in this thesis, we cloned the GitHub repository with
+To setup SMOL to use in the implementation in this thesis, we cloned the GitHub repository\footnote{\url{https://github.com/smolang/SemanticObjects}} with
 \newline 
 \verb|git clone https://github.com/smolang/SemanticObjects.git|
 \newline
-Then we created jar-file, named \verb|smol.jar|, from the source code, and put the file in the created folder at the relative file path \verb|master/twin|. Then we navigated into it with \verb|cd master/twin| and used the SMOL interpreter (\verb|smol.jar|) as described in Section \ref{subsubsec:SMOLInterpreter}. A good and more general guide to using SMOL is publicly available\footnote{\url{https://github.com/smolang/SemanticObjects}}.
+Then we created jar-file, named \verb|smol.jar|, from the source code, and put the file in the created folder at the relative file path \verb|master/twin|. Then we navigated into it with \verb|cd master/twin| and used the SMOL interpreter (\verb|smol.jar|) as described in Section \ref{subsubsec:SMOLInterpreter}.
 
 \subsection{Test runs}\label{subsec:test_runs}
-When evaluating the implementation, it's important that we do it in a real-life environment. We are therefore performing the test runs on a public network with real physical devices. We will not evaluate in terms of performance in this section, as this is done in Section \ref{subsec:time_to_warn}. We instead provide a guide to using the implemented solution by describing what is going on, illustrating the running components, and examining it in terms of the requirements. It is a single test run of bidirectional data flow.
+When evaluating the implementation, it's important that we do it in a real-life environment. We are therefore performing the test runs on a public network with physical devices running the app. We provide a \emph{guide} for the implemented solution by describing what is going on, illustrating the running components, and examining it in terms of the requirements. It is a single test run of bidirectional data flow.
 
 Before we started the test runs, we emptied the databases, removed smartphones from the asset model, ran the SMOL program, and generated the knowledge graph. To set up the digital twin, we moved inside the \verb|twin|-directory, containing the file \verb|smol.jar|, in the terminal, and then used:
 
 \begin{small}
-\begin{lstlisting}[breaklines]
-    java -jar smol.jar -d http://www.semanticweb.org/oscarlr/ontologies/2023/2/building# -b building.owl
-\end{lstlisting}
+\begin{Verbatim}[frame=single,commandchars=\\\{\}, breakanywhere=true,breaklines]
+java -jar smol.jar -d http://www.semanticweb.org/oscarlr/ontologies/2023/2/building# -b building.owl
+\end{Verbatim}
 \end{small}
 From this, the REPL was ready to use, and the knowledge graph reflected that there were \emph{no} tracked smartphones.
 
-\subsubsection{Automatically reloading asset model}
-As the scene was set, we first started the server. Then we ran the SMOL program in the DT, and as expected, there were no time-series data, nor any detected clients, as no smartphones had sent their physical location.
-We pressed the button shown in the map in the app in Figure \ref{fig:safe_smartphone}. The server is checking if there is any sensor data to forward to the DT (or whenever there is a change in the document by keeping the reference in the server code) in intervals, and if there is an informed decision that should be forwarded to the PT. As the smartphone had sent its physical location, it was assigned an ID, added to Firebase, which was detected by the server, as shown in Figure \ref{fig:detected_by_server}.
+\subsubsection{Automatically reloading asset model}\label{subsubsec:automatically_reloading}
+As the scene was set, we first started the server (although we do not have to first, as we use a channel). Then we ran the SMOL program in the DT, and as expected, there were no time-series data, nor any detected clients, as no smartphones had sent their physical location yet.
+We pressed the button in the app to send our physical location. The server is checking if there is any sensor data to forward to the DT (or whenever there is a change in the document by keeping the reference in the server code) in intervals, and if there is an informed decision that should be forwarded to the PT. As the smartphone had sent its physical location, it was assigned an ID, added to Firebase, which was detected by the server, as shown in Figure \ref{fig:detected_by_server}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.50]{graphics/detected_by_server.png}
+    \includegraphics[scale=0.38]{graphics/detected_by_server.png}
     \caption{Shows the server detecting a smartphone}
     \label{fig:detected_by_server}
 \end{figure}
 
 Based on the background information in Section \ref{subsec:AssetModel}, the server added the smartphone individual to the asset model according to the template described in Section \ref{subsubsec:RQ1}.
 
-Whenever the server notices a change in the physical data in Firebase (or in timed intervals), all physical location data is timestamped and sent to InfluxDB. When the DS in the twin gets this data, the DT uses it to get a picture of the physical location of the smartphones at a specific point in time. Figure \ref{fig:influx} shows the time-series data in the graph view in InfluxDB. We can see that the server constantly forwards the sensor data. This is also the basis for \textbf{InfluxDB} in Figure \ref{fig:static_dynamic_asset_model}.
+Whenever the server notices a change in the physical data in Firebase, all physical location data is timestamped and sent to InfluxDB. When the DS in the twin gets this data, the DT gets a picture of the physical location of the smartphones at a specific point in time. Figure \ref{fig:influx} shows the time-series data in the graph view in InfluxDB. We can see that the server constantly forwards the sensor data. This is also the basis for \textbf{InfluxDB} in Figure \ref{fig:static_dynamic_asset_model}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.40]{graphics/influx.png}
+    \includegraphics[scale=0.30]{graphics/influx.png}
     \caption{Time-series data in InfluxDB}
     \label{fig:influx}
 \end{figure}
 
-We closed and reopened the app twice to get new IDs whilst moving around, and checked the different physical locations in the map view in the time-series database, which is illustrated in Figure \ref{fig:influx_map}. In the figure, different IDs have different colors. We also illustrate that the smartphone with ID 1 (blue) have multiple tracked physical locations. The information window is off the smartphone with ID 2 (red).
+Two new heterogeneous smartphones were added to the pool of tracked clients, and we checked the different physical locations in the map view in the time-series database, which is illustrated in Figure \ref{fig:influx_map}. In the figure, different clients have different colors. We used the \verb|shapeData()|-function to rename the coordinates and get an unique id, namely \verb|s2_cell_id|. Colorized thresholds were added to differentiate based on ID. As can be shown in the figure, import and Flux query used were:
+\begin{small}
+\begin{Verbatim}
+import "experimental/geo"
+
+from(bucket: "Data")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["_measurement"] == "data")
+  |> filter(fn: (r) => r["_field"] == "latitude" or r["_field"] == "longitude")
+  |> geo.shapeData(latField: "latitude", lonField: "longitude", level: 1)
+  |> map(fn: (r) => ({r with _value: r.id, _field: "id"}))
+  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
+\end{Verbatim}
+\end{small}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.50]{graphics/influx_map.png}
+    \includegraphics[scale=0.34]{graphics/influx_map.png}
     \caption{Time-series data represented in a map in InfluxDB from using a Flux query}
     \label{fig:influx_map}
 \end{figure}
 
-After this we ran the SMOL program with \verb|reada main.smol|, and the DT sent the informed decision that all of the clients were inside the critical area IFI. We can also see that all smartphones in the domain have a physical location in "\textbf{4. All smartphone(s) in the domain have a physical location}". A SPARQL query was also run in the REPL with results in which the smartphones are set to endangered.
+After this we ran the SMOL program with \verb|reada main.smol|, and the DT concluded that all of the clients were inside the critical area (IFI). We can also see that "\textbf{4. All smartphone(s) in the domain have a physical location}" shown in Figure \ref{fig:digital_twin_repl}. A SPARQL query was also run in the REPL further evaluated the smartphones to be \textbf{endangered}:
 
-The last thing \emph{we} had to do in the REPL was to use the \verb|dump| to generate the knowledge graph, which the server later read from. The informed decision was forwarded to the PT. The result from this was that the individual clients were warned in the app when they pressed the button, as shown in Figure \ref{fig:endangered_smartphone}.
+\begin{small}
+\begin{Verbatim}[breaklines]
+query SELECT ?id ?endangered ?obj WHERE{ ?obj prog:MovableEntity_movableEntityId ?id. ?obj prog:MovableEntity_endangered ?endangered }
+\end{Verbatim}
+\end{small}
+
+We generated the knowledge graph, which the server later read from. The informed decision was then forwarded to the PT. The result from this was that the appropriate clients were warned in the app when they pressed the button, as shown in Figure \ref{fig:endangered_smartphone}. Note that the app was running meanwhile to preserve ID, due to privacy concerns.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.50]{graphics/digital_twin_repl.png}
+    \includegraphics[scale=0.40]{graphics/digital_twin_repl.png}
     \caption{Shows the informative messages in the REPL from running the SMOL program in the DT}
     \label{fig:digital_twin_repl}
 \end{figure}
 
+As a last test, since the smartphones were already added to the asset model, but had updated locations, we ran the server again, then the SMOL program again (without exiting the REPL), and got the updated locations. Meaning, when the set of IDs remains the same, the DT reflects its physical counterpart much faster. Nonetheless, it is naive to assume \emph{only} the physical locations change.
 
  
 \subsubsection{Manually adding smartphones}
-Now we will manually add smartphones to the asset model by using the previous test run as a basis. The ideal scenario, taking into account what is stated in Chapter \ref{sec:Evaluation} regarding the requirement that was not met, the SMOL program should identify the smartphones with no physical location and the knowledge graph should reflect this. We use the description of manually adding it at the end of Section \ref{subsubsec:StaticAndDynamicData}. 
+Now we will manually add smartphones to the asset model by using the previous test run as a basis. The ideal scenario, taking into account what is stated in Section \ref{subsec:WhichRequirements}, the SMOL program should identify and \emph{know} which smartphones have no physical location. We use the description of manually adding it at the end of Section \ref{subsubsec:StaticAndDynamicData}. 
 
 We stop the server, as it is updating the asset model in intervals, and it does not have to be started again. We also have to \verb|exit| the REPL, load the asset model again and execute the program. 
-The result is that the print "\textbf{4. All smartphone(s) in domain have a physical location}" in Figure \ref{fig:digital_twin_repl} is replaced with what is shown in Figure \ref{fig:manually_adding_smartphone}.
+The result is that the print "\textbf{4. All smartphone(s) in domain have a physical location}" in Figure \ref{fig:digital_twin_repl} is replaced with what is shown in Figure \ref{fig:manually_adding_smartphone}. The figure also show more informative messages. The knowledge graph successfully reflected that it was \emph{known} that smartphone with ID 4 had no physical location.
 
-\begin{figure}
+\begin{figure}[H]
     \centering
-    \includegraphics[scale=0.70]{graphics/manually_adding_smartphone.png}
+    \includegraphics[scale=0.40]{graphics/manually_adding_smartphone.png}
     \caption{Printing any smartphones without a physical location}
     \label{fig:manually_adding_smartphone}
 \end{figure}
 
-We also validate SHACL shapes (described in Section \ref{subsubsec:Technologies}), which evaluates to true. We then skip the breakpoint in the program with \verb|auto|, generating the knowledge graph in which the data of the added smartphone is.
+\subsection{Manually warning}\label{subsec:time_to_warn}
+In this section, we are also evaluating the implementation in terms of how it performs in a realistic setting. Although not the main focus of this thesis, as we are to formalize knowledge, it is nonetheless interesting to take a look at. More specifically we are presenting how long it takes to warn an endangered smartphone, concluded by the DT in a manual manner (writing commands, starting components etc.).  
 
-
-\subsection{How fast can we warn?}\label{subsec:time_to_warn}
-In this section, we are evaluating the implementation in terms of how it performs in a realistic setting. Although not the main focus of this thesis, as we are to formalize knowledge, it is nonetheless interesting to take a look at. More specifically we are presenting how long it takes to warn an endangered smartphone, concluded by the DT.  
 This evaluation, as well as the previous test runs, was performed on a MacBook Air with an M1 (2020) chip with 8 cores, and 8GB of RAM. We are again testing with physical devices over a public network as described in Section \ref{subsec:test_runs}.
 
-The architecture shown in Figure \ref{fig:components} shows the bidirectional flow of data, namely sensor data sent from the PT, and informed decisions sent from the DT. This section evaluates how fast we can warn a specific client with ID. The elapsed time will be presented as the \emph{median} of ten runs, because the results may fluctuate due to the server reading the knowledge graph in intervals, and because it may take some time to generate the knowledge graph in SMOL. Before each run, The REPL is exited, and the asset model is loaded. We are manually using commands, first to load the asset model, then reading and executing the SMOL program at the same time with \verb|reada main.smol|. We are also typing \verb|auto|, and lastly dumping to the knowledge graph in each run. Then we wait for the server forward the informed decision. This time we are however not emptying the databases for a more realistic simulation. Also, because of the way the IDs are assigned, the appropriate clients will be warned.
+The architecture shown in Figure \ref{fig:components} shows the bidirectional flow of data, namely sensor data sent from the PT, and informed decisions sent from the DT. This section evaluates how fast we can warn a specific client with ID. The elapsed time will be presented as the \emph{median} of ten runs, because the results may fluctuate due to the server reading the knowledge graph in intervals, and because it may take some time to generate the knowledge graph in SMOL. Before each run, The REPL is exited, and the asset model is loaded into SMOL. We are manually using commands, first to load the asset model, then reading and executing the SMOL program at the same time with \verb|reada main.smol|. We are also typing \verb|auto|, and lastly dumping to the knowledge graph in each run. Then we wait for the server forward the informed decision. This time we are however not emptying the databases for a more realistic simulation. Also, because of the way the IDs are assigned, the appropriate clients will be warned.
 
-An ideal approach in terms of performance at the expense of ensuring formalized knowledge would have been to read from the asset model directly from the server. The DT has to conclude that some smartphones are inside a critical area and set them to endangered, and writing to the asset model in the SMOL program is currently not supported. This means that the time it takes to warn clients depends on the time it takes to generate the knowledge graph, as well as use the REPL.
+An ideal approach in terms of performance at the expense of ensuring formalized knowledge would have been to read from the asset model directly from the server. The DT has to conclude that some smartphones are inside a critical area and set them to endangered, and writing to the asset model in the SMOL program is currently not supported. This means that the time it takes to warn clients depends on the time it takes to generate the knowledge graph, as well as use the REPL. This is further discussed in Section \ref{subsec:implementation_further_discussion}.
 
 The elapsed time is evaluated by subtracting the end time (stops recording physical location) from the start time (starts recording physical location) in the app. Table \ref{tab:time_manual_work} shows the runs listed in chronological order.
 \begin{table}[H]
@@ -1023,57 +1049,72 @@ The elapsed time is evaluated by subtracting the end time (stops recording physi
          \textbf{Median time} & \textbf{17.732 seconds} \\
          \hline
     \end{tabular}
-    \caption{Median time of sending sensor data to DT, sending the informed decision back to PT in which users are warned in the app}
+    \caption{Median time manually warning clients}
     \label{tab:time_manual_work}
 \end{table}
 
 
 \subsection{Many smartphones}
-In this section, we are evaluating in terms of number of smartphones. Since we don't have access to that many heterogeneous smartphones in the literal sense, we will instead conduct the experiment with one physical device running the app. We can test for scaling, but not for heterogeneity, but this  We will be walking around at IFI toggling the recording button on and off. 
-
-We will edit the source code a little to ensure a new ID is assigned every time the physical location is sent from the smartphone, meaning we are able to simulate many smartphones. The problem with this, however, is the trade-off in terms of performance compared to the ideal scenario. By using different physical devices the performance would be better since we are not constantly sending the updated physical location to Firebase and re-rendering the UI in \emph{one} app. Taking all this into account, when the server gets the sensor data, there will not be much of a difference between this scenario and an ideal scenario.
-
-Then after we have gathered the initial data which is stored in Firebase, we will start the server and look at how the system scales. Coordinates of 150 smartphones were added to Firebase, and then written to the asset model when the server was started. The SMOL program executed in almost no time, although we had to wait for the asset model to be fully written with IDs according to the IDs in InfluxDB.
-
-The following Flux query was used on the time series data in InfluxDB by using the import:
-\begin{small}
-\begin{minted}[breaklines]{dart}
-import "experimental/geo"
-
-from(bucket: "Data")
-  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-  |> filter(fn: (r) => r["_measurement"] == "data")
-  |> filter(fn: (r) => r["_field"] == "latitude" or r["_field"] == "longitude")
-  |> geo.shapeData(latField: "latitude", lonField: "longitude", level: 1)
-  |> map(fn: (r) => ({r with _value: r.id, _field: "id"}))
-  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)
-\end{minted}
-\end{small}
-
-Figure \ref{fig:150_smartphones} shows the physical locations in the map view and that the Flux query above was used. Since we sent from one physical device this time, the pins have the same color with the only exception of the pin of a smartphone with ID 150 which is in purple (although hard to see). The information window in the figure is shown by hovering over this specific smartphone.
-
+In this section, we are evaluating in terms of number of smartphones. Since we don't have access to that many heterogeneous smartphones in the literal sense, we will instead conduct the experiment with one physical device running the app. We can test for scaling, but not for heterogeneity, but this is done in Section \ref{subsubsec:automatically_reloading} anyways. We will be walking around at IFI toggling the recording button on and off. We assume the operator has put sufficient and correct area data in the asset model, by using Google Earth is shown in Figure \ref{fig:google_earth}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[scale=0.42]{graphics/150_smartphones.png}
-    \caption{The result from simulating 150 smartphones}
-    \label{fig:150_smartphones}
+    \includegraphics[scale=0.26]{graphics/google_earth.png}
+    \caption{Area border coordinates (points) of IFI}
+    \label{fig:google_earth}
 \end{figure}
 
-Keeping this figure in mind as the basis for a PT (IFI) with mobile assets in it, we will now check manually with a SPARQL query which of the smartphones should be inside it and are thus endangered, concluded by the DT. The asset model contains IFI as a critical area.
+We will edit the source code a little to ensure a new ID is assigned every time the physical location is sent from the smartphone, meaning we are able to \emph{simulate} many smartphones. The problem with this, however, is the trade-off in terms of performance compared to the ideal scenario. By using different physical devices the performance would be better since we are not constantly sending the updated physical location to Firebase and re-rendering the UI in \emph{one} app. Taking all this into account, when the server gets the sensor data, there will not be much of a difference between this scenario and an ideal scenario.
+
+Then after we have gathered the initial data which is stored in Firebase, we will start the server and look at how the system scales. 234 nodes were added to Firebase, and then written to the asset model when the server was started. The SMOL program executed in almost no time, although we had to wait for the asset model to be fully written with IDs according to the IDs in InfluxDB for some time.
+
+Figure \ref{fig:234_smartphones_map} shows the physical locations in the map view. Since we sent from one physical device this time, the pins have the same color with the only exception of the pin with ID 234 which has the color Ruby (although hard to see when we are Thunder struck). The information window in the figure is shown by hovering over this specific point.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=0.30]{graphics/234_smartphones_map.png}
+    \caption{Map showing 234 smartphones}
+    \label{fig:234_smartphones_map}
+\end{figure}
+
+Keeping this figure in mind as the basis for a PT (IFI) with mobile assets in it, we further evaluated with a SPARQL query which of the smartphones were endangered, concluded by the DT.
 We will now do various simple checks with SPARQL queries in the REPL, to understand if any smartphones in the PT are endangered. First, we can get information about the IFI as a critical area with:
 \newline
 \begin{small}
-\verb|query SELECT ?id ?obj WHERE{?obj prog:Area_name "IFI". ?obj prog:Area_areaId id}| 
+\begin{Verbatim}[breaklines]
+query SELECT ?id ?obj WHERE{ ?obj prog:Area_name "IFI". ?obj prog:Area_areaId id }
+\end{Verbatim}
 \end{small}
 
-Then we check which smartphones are concluded by the DT to be inside IFI, and are thus \emph{endangered}, by running the SPARQL query:
+Then we check which, and how many, smartphones are concluded by the DT to be inside IFI, and are thus \emph{endangered}, by running the following SPARQL query, as shown in Figure \ref{fig:234_smartphones}:
 \newline
 \begin{small}
-\verb|query SELECT ?obj WHERE{?obj prog:MovableEntity_endangered true}|
+\begin{Verbatim}[breaklines]
+query SELECT (Count(?id) AS ?IDs) WHERE{ ?obj prog:MovableEntity_endangered ?id. ?obj prog:MovableEntity_endangered true }
+\end{Verbatim}
 \end{small}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.50]{graphics/234_smartphones.png}
+    \caption{All smartphones are endangered}
+    \label{fig:234_smartphones}
+\end{figure}
 
-This resulted in all 150 smartphones being endangered. From this, the DT is evaluated to be a digital representation of the PT.
+
+In addition, we check if any of the 234 smartphones are \emph{not} endangered, with the following query, which evaluates to \emph{no} objects, hence all are endangered, from the result in Figure \ref{fig:all_are_safe}:
+\newline
+\begin{small}
+\verb|query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered false }|
+\end{small}
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.50]{graphics/all_are_safe.png}
+    \caption{None are safe, which means all are endangered}
+    \label{fig:all_are_safe}
+\end{figure}
+
+
+This resulted in all 234 smartphones being endangered. From this, the DT is evaluated to be a near-real time digital representation of the PT assuming IFI is dangerous. Generating the knowledge graph a took very long time, however, as it is written to a file by default in SMOL. Number of lines written to the file was approximately 14.000.
 
 \newpage
 \section{Discussion}\label{sec:Discussion}
@@ -1088,7 +1129,6 @@ In this thesis, we presented a way to separate data, mainly the two extremes: st
     \caption{This figure shows to what degree data could be considered dynamic}
     \label{fig:dynamic_arrow}
 \end{figure}
-
 
 \subsection{Data in the twin}\label{subsec:StoringData}
 In the digital twin, we are storing data in files. The asset model is stored as the file (\verb|building.owl|), and the knowledge graph is stored in a file named (\verb|output.ttl|). The proposals from \citeauthor{waszak_let_2022} and \citeauthor{gulnes_graph-based_2020} provide solutions for storing data in graph databases, such as Neo4j. This allows for better structuring of the data, as well as better representations of the graphs. Due to this, there are limitations with the implementation in this thesis as we store RDF graphs in files. Storing and exporting RDF graphs (such as the data in the asset model) to a graph database like Neo4j would be ideal. Instead of updating a graph database with the updated knowledge graph, produced from the combination of the program state and knowledge base, it could be considered feasible to store it in the twin. However, this means the server must know where the file is located in the local structure, as well as be able to access it. A better solution would therefore be to store it in a graph database and then get this data over the internet, assuming we want a clear architectural separation of the server and the twin. The architecture in this thesis is already very extensive and therefore we had to make some choices on what to focus on.
@@ -1110,7 +1150,7 @@ Pseudoanonymous data still qualifies as personal data under GDPR (General Data P
 The paragraph describing privacy in Section \ref{subsec:AppDevelopment} states that no personal data should be collected without the permission of the user (data subject). Because of this, the implemented app requests the data subject for permission to access the physical location of the device running it. We realize that to protect data even further, the specific purpose for data collection should be specified.
 
 
-\subsection{Further discussion of implementation}
+\subsection{Further discussion of implementation}\label{subsec:implementation_further_discussion}
 An alternative to the implemented digital twin (DT) is to make it wait a little while after it makes the informed decision and before it is sent to the physical counterpart, in which the smartphones are individually warned. One possible solution is to conclude that the user has not moved for a little while inside the critical area before the DT warns it. This is a limitation in this implementation as the user may have moved outside the critical area, meaning the informed decision could be misinforming for the user.
 
 The server reads from the knowledge graph and not the asset model.
@@ -1127,8 +1167,10 @@ Recent years have seen a great increase in number of smartphone users. Smartphon
 
 Until now, a system for tracking mobile assets that had a semantic digital twin (DT) based on a dynamic asset model, did not exist. We also made it extensible by letting operators edit the asset model, and easily maintain it in an ontology editor such as Protégé. In addition to this, the implementation ensures static data (building infrastructure) is not affected by dynamic data (physical location of smartphones), and they are therefore separated. Furthermore, nor is the analysis of what a critical area \emph{is} affected by the dynamic snapshots in the twin. By using semantic technologies we have semantically enriched the DT, and formalized the knowledge of the mobile assets in it, which is ensured when the server reads the knowledge graph.
 
-\subsection{Contributions}
-From the research in this thesis, we developed a proof-of-concept implementation. It fully met all of the structural requirements as presented in Table \ref{tab:overall_evaluation}, apart from one that was only met partly. It was also evaluated from different different test runs, in terms of seamless bidirectional data flow, automatic reloading of the asset model, and extensibility. We also conducted an experiment to see how the DT scales with many smartphones in it (we did not try further than 150 mobile assets).
+\subsection{Related work and contributions}
+There exist proposals relying on BIM for a digital twin in a real world 2D environment (university building) \cite{pauwels_live_2023} as well, although BIM is expensive to both create models from, and maintain. BIM \emph{should} be used to create a 3D replica, but to what extent when only 2D navigation is employed, and the set of movable assets change at any time, as described in Chapter \ref{sec:Introduction}. A goal must be to have interoperability between heterogeneous data sources in the domain. DTs should aim to offer even more context about a built environment by tracking assets from near-real time data \cite{godager_concept_2021}. Others focus on accuracy of physical location of monitored assets \cite{marcheta_development_2022, akram_design_2021}, but we should make machines understand us, in a knowledge DT formalism approach with a SPARQL endpoint, as demonstrated in Çhapter \ref{sec:Evaluation}. We must build a semantic web in which data is linked, as descibed in Section \ref{subsec:}. A proposal link static data to dynamic located elsewhere \cite{waszak_let_2022}, although the separation can be done earlier in the model itself later reflected in the knowledge graph.
+
+From the research in this thesis, we developed a proof-of-concept implementation. It fully met all of the structural requirements as presented in Table \ref{tab:overall_evaluation}, apart from one that was only met partly. It was also evaluated from different different test runs, in terms of seamless bidirectional data flow, automatic reloading of the asset model, and extensibility. We also conducted an experiment to see how the DT scales with many smartphones in it (we did bother trying more than 234 mobile assets).
 
 In light of the research and developing the final implementation, we will now address the research questions (RQ1, RQ2, RQ3), and then the hypothesis (H).
 
@@ -1145,9 +1187,10 @@ RQ3 asked, "How to separate dynamic data (smartphone’s physical location) from
 static data (building infrastructure) in the asset model?". There was in-depth analysis of this with illustrative examples in Chapter \ref{sec:Analysis}, and it was also discussed further in Section \ref{subsec:DiscussDynamicData}. The evaluation of the proposed implementation resulted in static data not being affected by dynamic data. This was also kept in mind when reloading the asset model with OWL API in ther server implementation. Also, there was further modularity in the code which separated the static analysis from the dynamic snapshots in the twin. 
 
 \begin{itemize}
-    \item[\textbf{H:}] We can handle mobile assets in a semantic digital twin with the use of a dynamic asset model of a simple building, in which dynamic data (smartphone's physical location) is automatically updated by a server and separated from static data (existing building infrastructure), and informed decisions are sent back to the physical twin.
+    \item[\textbf{H:}] \emph{We can handle mobile assets in a semantic digital twin with the use of a dynamic asset model of a simple building, in which dynamic data (smartphone's physical location) is automatically updated by a server and separated from static data (existing building infrastructure), and informed decisions are sent back to the physical twin.}
 \end{itemize}
-Since all of the research questions guiding the problem statement have been answered, we will now answer to the hypothesis above. We have demonstrated that we have handled mobile assets in a digital twin, but not only by answering to the research questions. Although there were challenges along the way, and things that could have been done differently (such as letting newly added smartphones be tracked as well), we solved what we initially thought was possible.
+Since all of the research questions guiding the problem statement have been answered, we will now answer to the hypothesis above. We have demonstrated that we have handled mobile assets in a semantic digital twin based on a dynamic asset model. Not only by answering to the research questions, but the DT was evaluated to be a near-real time digital representation of the physical counterpart. All but one structural requirement were met as described in Section \ref{subsec:WhichRequirements}, and from evaluating in various guided test runs in Chapter \ref{sec:Evaluation}. 234 of 234 smartphones were concluded to be endangered from conducting an experiment at IFI in a real-life setting, reflected by the knowledge graph for knowledge formalism. Although there were challenges along the way, and things that could have been done differently (such as letting newly added smartphones be tracked as well), we solved more than we initially thought was possible.
+
 
 \subsection{Further work}
 There is further work that can be done by using what is described in this thesis. We will not explain this in too much detail as we want to leave it up to someone else to go in the direction \emph{they} want. But, we hope the proposed implementation from the research in this thesis, will be valuable in future endeavors.
@@ -1158,8 +1201,8 @@ There is further work that can be done by using what is described in this thesis
     \item \textbf{3D:} We only support two dimensions in this thesis, and so further work could be done by adding support for a third dimension, e.g. height. An obvious limitation of this thesis is two rooms (one critical and one not) at different levels with the same latitude and longitude coordinates. Adding support for altitude should not be very hard by using the work in this thesis.
     \item \textbf{Point-in-polygon and Mercator projection:} Since we are only using square areas where we assume the coordinates align, we could not only use the point-in-polygon problem and check if smartphones are inside critical polygon areas. Further work could also be done with Mercator projection, because projecting the areas in this thesis on a map results in other shapes.
     \item \textbf{Proximity detection:} Further work could be done by checking how close smartphones are to other smartphones in the domain, and getting informed decisions from \emph{other clients} directly, effectively warning much faster. It should not come at the expense of privacy, however, as it should be protected as much as possible. We could also further check how close smartphones are to building infrastructure.
-    \item \textbf{Anomaly detection:}: Further work on anomaly detection could be done which could be of great value. An example is if the movement pattern of a smartphone abruptly, and unrealistically, changes compared to the previous behavior. And if it is concluded to be suspicious by e.g. the digital twin, what should then be done?
-    \item \textbf{Statistics} The work in this thesis can be used by, or improved by, other disciplines, such as Statistics. It could be interesting to create statistics on the movement of mobile assets through time.
+    \item \textbf{Anomaly detection:} Further work on anomaly detection could be done which could be of great value. An example is if the movement pattern of a smartphone abruptly, and unrealistically, changes compared to the previous behavior. And if it is concluded to be suspicious by e.g. the digital twin, what should then be done?
+    \item \textbf{Statistics:} The work in this thesis can be used by, or improved by, other disciplines, such as Statistics. It could be interesting to create statistics on the movement of mobile assets through time.
     \item \textbf{Evaluation:} It could be interesting to evaluate how the RDF graph produced from the asset model, or the knowledge graph for that matter, changes through time, and to actually evaluate to what extent data is dynamic.
 \end{itemize}
 
