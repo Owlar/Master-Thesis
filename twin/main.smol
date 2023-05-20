@@ -21,7 +21,7 @@ class DigitalTwin()
     Unit createCriticalAreas()
         List<Int> criticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:areaId ?obj }");
         if (criticalAreasDomain == null ) then
-            print("1. Could not get any critical areas from asset model! Add critical areas to the asset model (building.owl)!");
+            print("1. Something went wrong when accessing critical areas from the asset model! Add critical areas to the asset model (building.owl), or check the formatting!");
         else
             print("1. Creating critical areas:");
             List<Boolean> isCriticalAreasDomain = access("SELECT ?obj WHERE{ ?a a domain:Area. ?a domain:isCriticalArea 'True'. ?a domain:isCriticalArea ?obj }");
@@ -292,6 +292,8 @@ main
     ?latitude. ?obj prog:MovableEntity_longitude ?longitude. ?obj prog:MovableEntity_endangered ?endangered }
                 "Checking which smartphones we don't know are endangered or not"
     query SELECT ?obj WHERE{ ?obj prog:MovableEntity_endangered smol:null }
+                "Number of endangered smartphones"
+    query SELECT (Count(?id) AS ?IDs) WHERE{ ?obj prog:MovableEntity_endangered ?id. ?obj prog:MovableEntity_endangered true }
     */
 
     breakpoint;

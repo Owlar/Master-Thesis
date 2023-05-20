@@ -12,9 +12,7 @@ import owl.Owl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class Main {
 
@@ -112,7 +110,6 @@ public class Main {
                     String json = new Gson().toJson(snapshot.getValue(Object.class));
                     Data data = new Gson().fromJson(json, Data.class);
                     influxDB.insertDataPoint(data);
-                    System.out.println("Forwarded sensor data to DT!");
                     try {
                         Owl.addIndividual(data);
                     } catch (OWLOntologyCreationIOException e) {

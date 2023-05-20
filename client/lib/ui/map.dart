@@ -24,7 +24,7 @@ class _MapState extends State<Map> {
   late GoogleMapController _googleMapController;
   late LatLng _smartphonePosition;
   late Status _currentStatus;
-  late int _id = -1;
+  late int _id = 0;
 
   Set<Status> _messages = {};
   bool _warned = false;
@@ -50,12 +50,11 @@ class _MapState extends State<Map> {
               Scaffold(
                 body: GoogleMap(
                   onTap: (LatLng pos) {
-                    print(pos.toString());
+                    //print(pos.toString());
                   },
                   onMapCreated: (GoogleMapController googleMapController) {
                     _controller.complete(googleMapController);
                     _googleMapController = googleMapController;
-                    _assignClient();
                   },
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
@@ -95,6 +94,7 @@ class _MapState extends State<Map> {
 
 
   Future<void> _start() async {
+    _assignClient();
     final position = await _getPosition();
     setState(() {
       _smartphonePosition = LatLng(position.latitude, position.longitude);
@@ -157,10 +157,10 @@ class _MapState extends State<Map> {
   Future<void> _showDecision(String id) async {
     bool isEndangered = await _service.isEndangered(id);
     if (isEndangered) {
-      _showSnackBar("You are currently inside a critical area! Medical zones are shown in blue.");
+      //_showSnackBar("You are currently inside a critical area! Medical zones are shown in blue.");
       _warn();
     } else {
-      _showSnackBar("You are safe!");
+      //_showSnackBar("You are safe!");
     }
   }
 
@@ -212,9 +212,7 @@ class _MapState extends State<Map> {
 
 
   Future<void> _assignClient() async {
-    if (_id == -1) {
-      _id = await _service.getId();
-    }
+    ++_id;
   }
 
 }
