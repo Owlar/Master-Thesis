@@ -189,10 +189,10 @@ end
 class Area(Int areaId, String name, Boolean isCriticalArea, Double latitude1, Double latitude2, Double longitude1, Double longitude2, List<MovableEntity> smartphones)
     // We are checking if a point (x, y) is inside an area, assuming its coordinates align
     Boolean containsPoint(Double lat, Double long)
-        Boolean inAnyLatitudeRange = ((lat >= this.latitude1) & (lat <= this.latitude2)) | ((lat >= this.latitude2) & (lat <= this.latitude1));
-        Boolean inAnyLongitudeRange = ((long >= this.longitude1 & long <= this.longitude2)) | ((long >= this.longitude2) & (long <= this.longitude1));
+        Boolean inLatitudeRange = (lat >= this.latitude1) & (lat <= this.latitude2);
+        Boolean inLongitudeRange = (long >= this.longitude1) & (long <= this.longitude2);
 
-        if (inAnyLatitudeRange & inAnyLongitudeRange) then
+        if (inLatitudeRange & inLongitudeRange) then
             return True;
         end
         
