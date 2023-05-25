@@ -1,18 +1,28 @@
+import com.github.ajalt.clikt.parameters.arguments.Argument;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
 import com.google.gson.Gson;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.InfluxDBClientOptions;
 import constants.Constants;
 import influx.InfluxDB;
 import jena.Jena;
 import model.Data;
+
+import no.uio.microobject.main.Settings;
+import no.uio.microobject.runtime.REPL;
+
 import org.semanticweb.owlapi.io.OWLOntologyCreationIOException;
 import owl.Owl;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Main {
 
@@ -20,6 +30,7 @@ public class Main {
     private InfluxDB influxDB = null;
     private boolean hasSensorData = false;
     private boolean hasWarned = false;
+    private REPL repl;
 
 
     public static void main(String[] args) {
@@ -34,7 +45,7 @@ public class Main {
 
         setupFirebase();
         setupInflux();
-
+        setupREPL();
         System.out.println("Running..");
 
         Forwarding forwarding = new Forwarding();
@@ -42,14 +53,30 @@ public class Main {
         timer.schedule(forwarding, 0, 10000);
     }
 
-
-
+    private void setupREPL() {
+        HashMap<String, String> emptyPrefixes = new HashMap<>();
+        Settings settings = new Settings(
+                true,
+                false,
+                "src/main/java/resources/",
+                "src/main/resources/building.ttl",
+                Constants.ONTOLOGY.toString(),
+                "https://github.com/Edkamb/SemanticObjects/Program#",
+                "https://github.com/Edkamb/SemanticObjects/Run" + System.currentTimeMillis() + "#",
+                "https://github.com/Edkamb/SemanticObjects#",
+                emptyPrefixes,
+                false
+        );
+        repl = new REPL(settings);
+    }
     class Forwarding extends TimerTask {
         @Override
         public void run() {
             getSensorData();
 
             if (hasSensorData) {
+                launch();
+
                 if (!hasWarned) {
                     Map<String, String> res = Jena.getEndangeredSmartphones();
                     if (res.size() != 0) {
@@ -58,6 +85,14 @@ public class Main {
                 }
             }
         }
+    }
+
+    private void launch() {
+        repl.command("verbose", "true");
+        repl.command("read", "src/main/resources/main.smol");
+        repl.command("auto", "");
+        repl.command("dump", "output.ttl");
+        repl.command("info", "true");
     }
 
 
@@ -87,7 +122,6 @@ public class Main {
             e.printStackTrace();
         }
     }
-
 
 
     public void setupInflux() {

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0.0",
+  "buildSystem": "Gradle",
+  "buildSystemVersion": "7.6",
+  "buildPlugin": "org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper",
+  "buildPluginVersion": "1.6.21",
+  "projectSettings": {
+    "isHmppEnabled": true,
+    "isCompatibilityMetadataVariantEnabled": false
+  },
+  "projectTargets": [
+    {
+      "target": "org.jetbrains.kotlin.gradle.plugin.mpp.KotlinWithJavaTarget",
+      "platformType": "jvm"
+    }
+  ]
+}

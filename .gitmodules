@@ -1,0 +1,4 @@
+
+[submodule "server/SemanticObjects"]
+	path = server/SemanticObjects
+	url = https://github.com/smolang/SemanticObjects

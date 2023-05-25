@@ -13,7 +13,7 @@ public class Owl {
 
     public static void addIndividual(Data data) throws OWLOntologyCreationIOException {
         OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-        File file = new File(Constants.ONTOLOGYFILEPATH.toString());
+        File file = new File("src/main/resources/building.owl");
         IRI ontologyIRI = IRI.create(Constants.ONTOLOGY.toString());
         try {
             OWLOntology ontology = manager.loadOntologyFromOntologyDocument(file);

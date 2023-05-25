@@ -1,3 +1,6 @@
 .DS_Store
 server/target
 server/.idea
+server/.gradle
+server/server.iml
+.idea

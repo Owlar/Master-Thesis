@@ -1,0 +1,151 @@
+@prefix : <http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@base <http://www.semanticweb.org/oscarlr/ontologies/2023/2/building> .
+
+<http://www.semanticweb.org/oscarlr/ontologies/2023/2/building> rdf:type owl:Ontology .
+
+#################################################################
+#    Object Properties
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasArea
+:hasArea rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasDoor
+:hasDoor rdf:type owl:ObjectProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#hasWall
+:hasWall rdf:type owl:ObjectProperty .
+
+
+#################################################################
+#    Data properties
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#areaId
+:areaId rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#isCriticalArea
+:isCriticalArea rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#latitude1
+:latitude1 rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#latitude2
+:latitude2 rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#longitude1
+:longitude1 rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#longitude2
+:longitude2 rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#movableEntityId
+:movableEntityId rdf:type owl:DatatypeProperty .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#name
+:name rdf:type owl:DatatypeProperty .
+
+
+#################################################################
+#    Classes
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Area
+:Area rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Door
+:Door rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#MovableEntity
+:MovableEntity rdf:type owl:Class .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Room
+:Room rdf:type owl:Class ;
+      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasArea ;
+                        owl:someValuesFrom :Area
+                      ] ,
+                      [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasWall ;
+                        owl:someValuesFrom :Wall
+                      ] .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#Wall
+:Wall rdf:type owl:Class ;
+      rdfs:subClassOf [ rdf:type owl:Restriction ;
+                        owl:onProperty :hasDoor ;
+                        owl:someValuesFrom :Door
+                      ] .
+
+
+#################################################################
+#    Individuals
+#################################################################
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area1
+:area1 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "1" ;
+       :isCriticalArea "True" ;
+       :latitude1 "59.94365"^^xsd:double ;
+       :latitude2 "59.94378"^^xsd:double ;
+       :longitude1 "10.71832"^^xsd:double ;
+       :longitude2 "10.71956"^^xsd:double ;
+       :name "IFI" .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area2
+:area2 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "2" ;
+       :isCriticalArea "False" ;
+       :latitude1 "59.943"^^xsd:double ;
+       :latitude2 "59.943"^^xsd:double ;
+       :longitude1 "10.7177"^^xsd:double ;
+       :longitude2 "10.7172"^^xsd:double ;
+       :name "Canteen at IFI" .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area3
+:area3 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "3" ;
+       :isCriticalArea "True" ;
+       :latitude1 "59.9442"^^xsd:double ;
+       :latitude2 "59.9442"^^xsd:double ;
+       :longitude1 "10.7195"^^xsd:double ;
+       :longitude2 "10.7193"^^xsd:double ;
+       :name "Study Room at IFI" .
+
+
+###  http://www.semanticweb.org/oscarlr/ontologies/2023/2/building#area4
+:area4 rdf:type owl:NamedIndividual ,
+                :Area ;
+       :areaId "4" ;
+       :isCriticalArea "True" ;
+       :latitude1 "57.94009"^^xsd:double ;
+       :latitude2 "69.94544"^^xsd:double ;
+       :longitude1 "9.70538"^^xsd:double ;
+       :longitude2 "13.72898"^^xsd:double ;
+       :name "Big Critical Area" .
+
+
+###  Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi
