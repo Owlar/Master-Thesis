@@ -50,11 +50,9 @@ public class Main {
             getSensorData();
 
             if (hasSensorData) {
-                if (!hasWarned) {
-                    Map<String, String> res = Jena.getEndangeredSmartphones();
-                    if (res.size() != 0) {
-                        warnEndangeredClients(res);
-                    }
+                Map<String, String> res = Jena.getEndangeredSmartphones();
+                if (res.size() != 0) {
+                    warnEndangeredClients(res);
                 }
             }
         }
