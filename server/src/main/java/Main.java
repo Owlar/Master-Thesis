@@ -19,7 +19,6 @@ public class Main {
     private DatabaseReference reference = null;
     private InfluxDB influxDB = null;
     private boolean hasSensorData = false;
-    private boolean hasWarned = false;
 
 
     public static void main(String[] args) {
@@ -64,7 +63,6 @@ public class Main {
         reference = FirebaseDatabase.getInstance().getReference("endangered");
         DatabaseReference.CompletionListener completionListener = (databaseError, databaseReference) -> {
             System.out.println("Forwarded informed decision to PT!");
-            hasWarned = true;
         };
         reference.setValue(results, completionListener);
     }
